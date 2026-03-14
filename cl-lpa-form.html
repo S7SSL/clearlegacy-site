@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lasting Power of Attorney — Online Application | Clear Legacy</title>
+<meta name="description" content="Arrange your LPA online in 15 minutes. Property & Financial Affairs and Health & Welfare LPAs prepared and registered with the OPG. From £89.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{overflow-x:hidden;max-width:100%;background:#f5f0e8;font-family:'Lato',sans-serif;color:#1a1a1a}
+:root{--navy:#0f1f3d;--gold:#c9a84c;--cream:#f5f0e8;--white:#fff}
+nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--gold)}
+.logo{font-family:'Playfair Display',serif;font-size:18px;color:#fff;text-decoration:none}.logo span{color:var(--gold)}
+.progress-wrap{background:var(--navy);padding:20px 5% 0}
+.progress-bar{max-width:680px;margin:0 auto;padding-bottom:20px}
+.steps-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
+.bar-track{background:rgba(255,255,255,.1);height:4px;border-radius:2px}
+.bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width .4s}
+.form-wrap{max-width:680px;margin:0 auto;padding:40px 4% 80px}
+.step{display:none}.step.active{display:block}
+.step-num{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-family:'Cormorant Garamond',serif;margin-bottom:6px}
+.step-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:8px;line-height:1.2}
+.step-sub{font-family:'Cormorant Garamond',serif;font-size:17px;color:#666;line-height:1.6;margin-bottom:24px}
+.field{margin-bottom:22px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.3px;margin-bottom:6px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid #d4c9b5;background:#fff;padding:13px 16px;font-size:15px;font-family:'Lato',sans-serif;color:#1a1a1a;outline:none;appearance:none;-webkit-appearance:none}
+.field input:focus,.field textarea:focus{border-color:var(--navy)}
+.field .hint{font-size:12px;color:#888;margin-top:5px;font-family:'Cormorant Garamond',serif;font-style:italic}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230f1f3d' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.radio-group,.check-group{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.radio-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:10px}
+.radio-opt{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d4c9b5;padding:13px 16px;cursor:pointer;transition:border .2s;font-size:14px;font-weight:600}
+.radio-opt:hover{border-color:var(--navy)}
+.radio-opt input{width:18px;height:18px;accent-color:var(--navy);flex-shrink:0}
+.radio-opt.selected{border-color:var(--gold);background:rgba(201,168,76,.08)}
+.person-block{background:#fff;border:1.5px solid #d4c9b5;padding:22px;margin-bottom:14px;position:relative}
+.person-block .block-title{font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #e8e0d0}
+.remove-btn{position:absolute;top:14px;right:14px;background:none;border:none;color:#999;font-size:18px;cursor:pointer;padding:4px 8px}
+.add-btn{background:none;border:1.5px solid var(--navy);color:var(--navy);padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;width:100%;margin-top:4px;transition:all .2s}
+.add-btn:hover{background:var(--navy);color:#fff}
+.info-box{background:rgba(201,168,76,.1);border-left:3px solid var(--gold);padding:16px 20px;margin-bottom:22px;font-family:'Cormorant Garamond',serif;font-size:16px;color:#555;line-height:1.65}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.type-card{border:2px solid #d4c9b5;padding:24px;cursor:pointer;transition:all .2s;background:#fff;text-align:center}
+.type-card.selected{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.type-card h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin-bottom:8px}
+.type-card p{font-size:13px;color:#666;font-family:'Cormorant Garamond',serif;line-height:1.6}
+.type-card .price{font-size:22px;font-weight:700;color:var(--gold);margin-top:10px;font-family:'Playfair Display',serif}
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:36px;gap:14px}
+.btn-back{background:none;border:1.5px solid #c0b49a;color:#888;padding:13px 28px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
+.btn-back:hover{border-color:var(--navy);color:var(--navy)}
+.btn-next{background:var(--navy);color:#fff;border:none;padding:14px 36px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;flex:1;max-width:280px;transition:background .2s}
+.btn-next:hover{background:#1e3460}
+.btn-submit{background:var(--gold);color:var(--navy);border:none;padding:16px 40px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;width:100%;margin-top:14px;transition:background .2s}
+.btn-submit:hover{background:#e8c97a}
+.price-box{background:var(--navy);padding:24px;margin-bottom:28px;text-align:center}
+.price-box .price{font-family:'Playfair Display',serif;font-size:40px;color:var(--gold);font-weight:900}
+.price-box p{color:rgba(255,255,255,.65);font-size:13px;margin-top:6px;font-family:'Cormorant Garamond',serif}
+.confirm-wrap{text-align:center;padding:40px 20px}
+.confirm-icon{font-size:60px;margin-bottom:20px}
+.confirm-wrap h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);margin-bottom:14px}
+.confirm-wrap p{font-family:'Cormorant Garamond',serif;font-size:18px;color:#555;line-height:1.75;max-width:500px;margin:0 auto 24px}
+@media(max-width:600px){.field-row{grid-template-columns:1fr}.radio-group.horizontal{flex-direction:column}.type-grid{grid-template-columns:1fr}.btn-next{max-width:none}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/clearlegacy.html" class="logo">CLEAR <span>LEGACY</span></a>
+  <span style="font-family:'Cormorant Garamond',serif;color:rgba(255,255,255,.5);font-size:14px;font-style:italic">Secure · Confidential · Fixed Fee</span>
+</nav>
+<div class="progress-wrap">
+  <div class="progress-bar">
+    <div class="steps-label"><span id="step-label">Step 1 of 5 — LPA Type</span><span id="step-pct">20%</span></div>
+    <div class="bar-track"><div class="bar-fill" id="bar" style="width:20%"></div></div>
+  </div>
+</div>
+<div class="form-wrap">
+
+<!-- STEP 1: LPA TYPE -->
+<div class="step active" id="step-1">
+  <div class="step-num">Step 1 of 5</div>
+  <h1 class="step-title">Which LPA Do You Need?</h1>
+  <p class="step-sub">Most people require both types. They cover different areas of your life and together provide complete protection.</p>
+  <div class="type-grid">
+    <div class="type-card selected" onclick="selectLPA(this,'pf')">
+      <h3>Property &amp; Financial Affairs</h3>
+      <p>Bank accounts, bills, property, investments. Can be used now or only if you lose capacity.</p>
+      <div class="price">£89</div>
+    </div>
+    <div class="type-card" onclick="selectLPA(this,'hw')">
+      <h3>Health &amp; Welfare</h3>
+      <p>Medical decisions, care arrangements, life-sustaining treatment. Only active if you lose capacity.</p>
+      <div class="price">£89</div>
+    </div>
+  </div>
+  <div class="type-card selected" id="both-card" onclick="selectLPA(this,'both')" style="text-align:center;padding:20px;margin-bottom:20px;border-color:var(--gold);background:rgba(201,168,76,.06)">
+    <h3 style="text-align:center;margin-bottom:6px">Both LPAs — Best Value</h3>
+    <p style="text-align:center">Complete protection for your finances and your health. Save £20 vs purchasing separately.</p>
+    <div class="price">£158</div>
+  </div>
+  <div class="info-box">The OPG registration fee (£82 per LPA) is payable separately and goes directly to the government. This is not included in Clear Legacy's preparation fee.</div>
+  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
+</div>
+
+<!-- STEP 2: ABOUT THE DONOR -->
+<div class="step" id="step-2">
+  <div class="step-num">Step 2 of 5</div>
+  <h1 class="step-title">About You (The Donor)</h1>
+  <p class="step-sub">The "donor" is the person granting the power of attorney — that's you.</p>
+  <div class="field-row">
+    <div class="field"><label>First Name(s)</label><input type="text" id="d-first" placeholder="As it appears on official documents" required></div>
+    <div class="field"><label>Last Name</label><input type="text" id="d-last" required></div>
+  </div>
+  <div class="field"><label>Date of Birth</label><input type="date" id="d-dob" required></div>
+  <div class="field"><label>Address</label><input type="text" placeholder="Full address including postcode" required></div>
+  <div class="field"><label>Email Address</label><input type="email" placeholder="We will send your documents here" required></div>
+  <div class="field"><label>Phone Number</label><input type="tel" placeholder="In case we need to clarify anything" required></div>
+  <div class="info-box">You must have mental capacity to make an LPA. By proceeding, you confirm that you understand the nature and effect of this document.</div>
+  <div class="form-nav"><button class="btn-back" onclick="prevStep(2)">← Back</button><button class="btn-next" onclick="nextStep(2)">Continue →</button></div>
+</div>
+
+<!-- STEP 3: ATTORNEYS -->
+<div class="step" id="step-3">
+  <div class="step-num">Step 3 of 5</div>
+  <h1 class="step-title">Your Attorneys</h1>
+  <p class="step-sub">Attorneys are the people you trust to act on your behalf. You should appoint at least one primary attorney and ideally a replacement.</p>
+  <div id="attorney-list">
+    <div class="person-block">
+      <div class="block-title">Attorney 1 (Primary)</div>
+      <div class="field-row">
+        <div class="field"><label>First Name(s)</label><input type="text" placeholder="Attorney's full first name(s)"></div>
+        <div class="field"><label>Last Name</label><input type="text"></div>
+      </div>
+      <div class="field"><label>Date of Birth</label><input type="date"></div>
+      <div class="field"><label>Address</label><input type="text" placeholder="Full address including postcode"></div>
+      <div class="field-row">
+        <div class="field"><label>Email</label><input type="email"></div>
+        <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Spouse, Son, Daughter, Friend"></div>
+      </div>
+    </div>
+  </div>
+  <button class="add-btn" onclick="addAttorney()">+ Add a Replacement Attorney</button>
+  <div class="field" style="margin-top:24px"><label>If multiple attorneys, how should they act?</label>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="attorney-act" value="jointly-severally"> Jointly and severally — each can act independently (recommended for day-to-day)</label>
+      <label class="radio-opt"><input type="radio" name="attorney-act" value="jointly"> Jointly — all must agree on every decision</label>
+      <label class="radio-opt"><input type="radio" name="attorney-act" value="mixed"> Mixed — jointly for major decisions, severally for day-to-day</label>
+    </div>
+  </div>
+  <div class="form-nav"><button class="btn-back" onclick="prevStep(3)">← Back</button><button class="btn-next" onclick="nextStep(3)">Continue →</button></div>
+</div>
+
+<!-- STEP 4: CERTIFICATE PROVIDER & PREFERENCES -->
+<div class="step" id="step-4">
+  <div class="step-num">Step 4 of 5</div>
+  <h1 class="step-title">Certificate Provider &amp; Preferences</h1>
+  <p class="step-sub">An LPA requires a "certificate provider" to confirm you understand the document and are not being pressured to sign it.</p>
+  <div class="info-box">Your certificate provider must be someone who has known you for at least 2 years OR a professional such as a solicitor, GP or social worker. They cannot be related to you or your attorneys.</div>
+  <div class="person-block">
+    <div class="block-title">Certificate Provider</div>
+    <div class="field-row">
+      <div class="field"><label>Full Name</label><input type="text" placeholder="Certificate provider's full name"></div>
+      <div class="field"><label>Profession / Role</label><input type="text" placeholder="e.g. GP, Solicitor, or 'Known for 5 years'"></div>
+    </div>
+    <div class="field"><label>Email or Address</label><input type="text" placeholder="So we can contact them about signing"></div>
+  </div>
+  <div id="pf-prefs" class="field">
+    <label>Property &amp; Financial LPA — When can your attorney act?</label>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="pf-when" value="anytime"> As soon as the LPA is registered (with my permission while I have capacity)</label>
+      <label class="radio-opt"><input type="radio" name="pf-when" value="incapacity"> Only when I lack mental capacity</label>
+    </div>
+  </div>
+  <div class="field"><label>Any specific instructions or restrictions for your attorney(s)?</label>
+    <textarea placeholder="e.g. 'My attorney must consult my son before selling any property' or 'No investment in cryptocurrency'..."></textarea>
+    <div class="hint">Leave blank if you have no specific restrictions — your attorneys will have full authority within the scope of the LPA.</div>
+  </div>
+  <div class="field"><label>Any preferences (guidance, not binding instructions)?</label>
+    <textarea placeholder="e.g. 'I would prefer to remain in my own home for as long as possible' or 'Please consult my GP before making major health decisions'..."></textarea>
+  </div>
+  <div class="form-nav"><button class="btn-back" onclick="prevStep(4)">← Back</button><button class="btn-next" onclick="nextStep(4)">Continue →</button></div>
+</div>
+
+<!-- STEP 5: REVIEW & PAY -->
+<div class="step" id="step-5">
+  <div class="step-num">Step 5 of 5</div>
+  <h1 class="step-title">Review &amp; Complete</h1>
+  <p class="step-sub">Your LPA questionnaire is complete. Please confirm and proceed to payment.</p>
+  <div class="price-box">
+    <div class="price">£89</div>
+    <p>LPA Preparation Fee — Fixed · Registered with the OPG · OPG fee (£82/LPA) payable separately</p>
+  </div>
+  <div class="info-box">Once we receive your questionnaire and payment, we will prepare your LPA documents within 3 business days and send them to you for review before submission to the OPG.</div>
+  <div class="field">
+    <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm I am over 18, have mental capacity, and the information provided is accurate</label>
+  </div>
+  <button class="btn-submit" onclick="submitLPA()">Submit &amp; Proceed to Payment →</button>
+  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+</div>
+
+</div>
+<script>
+let currentStep=1;const totalSteps=5;
+const labels=['LPA Type','About You','Your Attorneys','Certificate Provider','Review & Complete'];
+function updateProgress(s){const p=Math.round((s/totalSteps)*100);document.getElementById('bar').style.width=p+'%';document.getElementById('step-label').textContent='Step '+s+' of '+totalSteps+' — '+labels[s-1];document.getElementById('step-pct').textContent=p+'%';}
+function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));const el=document.getElementById('step-'+n);if(el)el.classList.add('active');updateProgress(parseInt(n));window.scrollTo(0,0);}
+function nextStep(n){currentStep=n+1;showStep(currentStep);}
+function prevStep(n){currentStep=n-1;showStep(currentStep);}
+document.querySelectorAll('.radio-opt input').forEach(r=>{r.addEventListener('change',function(){const name=this.name;document.querySelectorAll('.radio-opt input[name="'+name+'"]').forEach(x=>{x.closest('.radio-opt').classList.toggle('selected',x===this);});});});
+function selectLPA(el,type){document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
+let attCount=1;
+function addAttorney(){attCount++;const d=document.createElement('div');d.className='person-block';d.id='att-'+attCount;d.innerHTML=`<div class="block-title">Attorney ${attCount} (Replacement)<button class="remove-btn" onclick="this.closest('.person-block').remove()">✕</button></div><div class="field-row"><div class="field"><label>First Name(s)</label><input type="text"></div><div class="field"><label>Last Name</label><input type="text"></div></div><div class="field-row"><div class="field"><label>Email</label><input type="email"></div><div class="field"><label>Relationship</label><input type="text"></div></div>`;document.getElementById('attorney-list').appendChild(d);}
+function submitLPA(){const t=document.getElementById('terms-check');if(!t.checked){alert('Please confirm the declaration to proceed.');return;}window.location.href='https://buy.stripe.com/placeholder';}
+</script>
+</body>
+</html>
