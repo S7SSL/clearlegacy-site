@@ -480,8 +480,38 @@ function submitForm(){
   if(!terms.checked){ alert('Please confirm the declaration to proceed.'); return; }
   // In production: POST to Supabase / n8n / Formspree
   // For now: redirect to Stripe
-  window.location.href = 'https://buy.stripe.com/placeholder'; // Replace with real Stripe link
+  window.location.href = 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03'; // Replace with real Stripe link
 }
 </script>
+
+<script>
+// On final step submit: collect form data, POST to Formspree, redirect to Stripe
+(function() {
+  var STRIPE_URL = "https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03";
+  var SERVICE = "Will";
+  
+  function submitLead(formData) {
+    var payload = {_subject: "New Clear Legacy lead: " + SERVICE, service: SERVICE};
+    formData.forEach(function(val, key) { payload[key] = val; });
+    fetch("https://formspree.io/f/hello@clearlegacy.co.uk", {
+      method: "POST",
+      headers: {"Content-Type": "application/json", "Accept": "application/json"},
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+    window.location.href = STRIPE_URL;
+  }
+
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button[type="submit"], .btn-primary[data-final], #btn-submit, .final-submit');
+    if (!btn) return;
+    e.preventDefault();
+    var inputs = document.querySelectorAll('input, select, textarea');
+    var fd = new FormData();
+    inputs.forEach(function(el) { if(el.name || el.id) fd.append(el.name || el.id, el.value); });
+    submitLead(fd);
+  });
+})();
+</script>
+
 </body>
 </html>
