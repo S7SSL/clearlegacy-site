@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.clearlegacy.co.uk/</loc><lastmod>2026-03-15</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
   <url><loc>https://www.clearlegacy.co.uk/forms/will.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.clearlegacy.co.uk/forms/lpa.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.clearlegacy.co.uk/forms/probate.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.clearlegacy.co.uk/guides/will-cost.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/forms/lpa.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/forms/probate.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/will-cost.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.clearlegacy.co.uk/guides/lpa-guide.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.clearlegacy.co.uk/guides/probate-guide.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.clearlegacy.co.uk/guides/iht-guide.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -20,4 +20,14 @@
   <url><loc>https://www.clearlegacy.co.uk/guides/updating-your-will.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.clearlegacy.co.uk/guides/care-home-fees-inheritance.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.clearlegacy.co.uk/guides/inheritance-tax-gifts.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/executor-duties.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/write-your-own-will.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/when-is-probate-required.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/what-age-make-a-will.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/who-can-witness-a-will.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/contesting-a-will.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/find-a-will-uk.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/mortgage-after-death.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/deed-of-variation.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.clearlegacy.co.uk/guides/nil-rate-band.html</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
