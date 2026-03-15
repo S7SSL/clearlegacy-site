@@ -5,70 +5,78 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Start Your Will Online | Clear Legacy — From £69</title>
 <meta name="description" content="Prepare your Will online in minutes. Expert reviewed, legally valid in England & Wales. Single Will £69, Mirror Wills £99. Start now.">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{overflow-x:hidden;max-width:100%;background:#f5f0e8;font-family:'Lato',sans-serif;color:#1a1a1a}
-:root{--navy:#0f1f3d;--gold:#c9a84c;--cream:#f5f0e8;--white:#fff;--err:#c0392b}
-nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--gold)}
-.logo{font-family:'Playfair Display',serif;font-size:18px;color:#fff;text-decoration:none}
-.logo span{color:var(--gold)}
+html,body{overflow-x:hidden;max-width:100%;background:#ffffff;font-family:'Inter',sans-serif;color:#0a0a0a}
+:root{--blue:#2563eb;--light-blue:#eff6ff;--white:#ffffff;--dark:#0a0a0a;--grey:#6b7280;--border:#e5e7eb;--soft-bg:#f9fafb;--accent:#dbeafe;--err:#dc2626}
+nav{background:var(--white);padding:16px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.logo{font-size:18px;font-weight:600;color:var(--dark);text-decoration:none;letter-spacing:-0.5px}
+.logo span{color:var(--blue)}
+nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 /* PROGRESS */
-.progress-wrap{background:var(--navy);padding:20px 5% 0}
-.progress-bar{max-width:680px;margin:0 auto;padding-bottom:20px}
-.steps-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
-.bar-track{background:rgba(255,255,255,.1);height:4px;border-radius:2px}
-.bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width .4s}
+.progress-wrap{background:var(--white);padding:24px 5% 0;border-bottom:1px solid var(--border)}
+.progress-bar{max-width:680px;margin:0 auto;padding-bottom:24px}
+.steps-label{display:flex;justify-content:space-between;font-size:12px;color:var(--grey);letter-spacing:0.5px;margin-bottom:12px;text-transform:uppercase;font-weight:500}
+.bar-track{background:var(--soft-bg);height:3px;border-radius:2px}
+.bar-fill{height:3px;background:var(--blue);border-radius:2px;transition:width .3s ease}
 /* FORM WRAP */
 .form-wrap{max-width:680px;margin:0 auto;padding:40px 4% 80px}
 .step{display:none}
 .step.active{display:block}
-.step-header{margin-bottom:30px}
-.step-num{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-family:'Cormorant Garamond',serif;margin-bottom:6px}
-.step-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:8px;line-height:1.2}
-.step-sub{font-family:'Cormorant Garamond',serif;font-size:17px;color:#666;line-height:1.6}
+.step-header{margin-bottom:32px}
+.step-num{font-size:12px;color:var(--blue);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.step-title{font-size:28px;color:var(--dark);margin-bottom:8px;line-height:1.3;font-weight:600}
+.step-sub{font-size:15px;color:var(--grey);line-height:1.6}
 /* FIELDS */
-.field{margin-bottom:22px}
-.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.3px;margin-bottom:6px;text-transform:uppercase}
-.field input,.field select,.field textarea{width:100%;border:1.5px solid #d4c9b5;background:#fff;padding:13px 16px;font-size:15px;font-family:'Lato',sans-serif;color:#1a1a1a;transition:border .2s;outline:none;appearance:none;-webkit-appearance:none}
-.field input:focus,.field select,.field textarea:focus{border-color:var(--navy)}
+.field{margin-bottom:24px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--dark);letter-spacing:0.3px;margin-bottom:8px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--white);padding:12px 14px;font-size:15px;font-family:'Inter',sans-serif;color:var(--dark);transition:border .2s;outline:none;appearance:none;-webkit-appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
 .field textarea{min-height:100px;resize:vertical}
-.field .hint{font-size:12px;color:#888;margin-top:5px;font-family:'Cormorant Garamond',serif;font-style:italic}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230f1f3d' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.field .hint{font-size:13px;color:var(--grey);margin-top:6px;font-style:italic}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%232563eb' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 /* RADIO / CHECK GROUPS */
-.radio-group,.check-group{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-.radio-group.horizontal,.check-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:10px}
-.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d4c9b5;padding:13px 16px;cursor:pointer;transition:border .2s;font-size:14px;font-weight:600}
-.radio-opt:hover,.check-opt:hover{border-color:var(--navy)}
-.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--navy);flex-shrink:0}
-.radio-opt.selected,.check-opt.selected{border-color:var(--gold);background:rgba(201,168,76,.08)}
+.radio-group,.check-group{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.radio-group.horizontal,.check-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:12px}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px}
+.radio-opt:hover,.check-opt:hover{border-color:var(--blue);background:var(--light-blue)}
+.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0}
+.radio-opt.selected,.check-opt.selected{border-color:var(--blue);background:var(--light-blue)}
 /* REPEATABLE PERSON */
-.person-block{background:#fff;border:1.5px solid #d4c9b5;padding:22px;margin-bottom:14px;position:relative}
-.person-block .block-title{font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #e8e0d0}
-.remove-btn{position:absolute;top:14px;right:14px;background:none;border:none;color:#999;font-size:18px;cursor:pointer;padding:4px 8px}
+.person-block{background:var(--soft-bg);border:1px solid var(--border);padding:20px;margin-bottom:16px;border-radius:8px;position:relative}
+.person-block .block-title{font-size:12px;font-weight:600;color:var(--dark);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.remove-btn{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--grey);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s}
 .remove-btn:hover{color:var(--err)}
-.add-btn{background:none;border:1.5px solid var(--navy);color:var(--navy);padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;width:100%;transition:all .2s}
-.add-btn:hover{background:var(--navy);color:#fff}
+.add-btn{background:none;border:1px solid var(--blue);color:var(--blue);padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;width:100%;border-radius:6px;transition:all .2s}
+.add-btn:hover{background:var(--blue);color:var(--white)}
 /* CALLOUT */
-.info-box{background:rgba(201,168,76,.1);border-left:3px solid var(--gold);padding:16px 20px;margin-bottom:22px;font-family:'Cormorant Garamond',serif;font-size:16px;color:#555;line-height:1.65}
+.info-box{background:var(--light-blue);border-left:3px solid var(--blue);padding:16px 18px;margin-bottom:24px;font-size:14px;color:var(--dark);line-height:1.6;border-radius:6px}
 /* NAV BUTTONS */
-.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:36px;gap:14px}
-.btn-back{background:none;border:1.5px solid #c0b49a;color:#888;padding:13px 28px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
-.btn-back:hover{border-color:var(--navy);color:var(--navy)}
-.btn-next{background:var(--navy);color:#fff;border:none;padding:14px 36px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;flex:1;max-width:280px;transition:background .2s}
-.btn-next:hover{background:#1e3460}
-.btn-submit{background:var(--gold);color:var(--navy);border:none;padding:16px 40px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;width:100%;transition:background .2s}
-.btn-submit:hover{background:#e8c97a}
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;gap:16px}
+.btn-back{background:var(--white);border:1px solid var(--border);color:var(--grey);padding:12px 24px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;transition:all .2s;border-radius:6px}
+.btn-back:hover{border-color:var(--blue);color:var(--blue);background:var(--light-blue)}
+.btn-next{background:var(--blue);color:var(--white);border:none;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;flex:1;max-width:280px;transition:background .2s;border-radius:6px}
+.btn-next:hover{background:#1d4ed8}
+.btn-submit{background:var(--blue);color:var(--white);border:none;padding:14px 32px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;width:100%;transition:background .2s;border-radius:6px}
+.btn-submit:hover{background:#1d4ed8}
 /* PRICE BOX */
-.price-box{background:var(--navy);padding:24px;margin-bottom:28px;text-align:center}
-.price-box .price{font-family:'Playfair Display',serif;font-size:40px;color:var(--gold);font-weight:900}
-.price-box p{color:rgba(255,255,255,.65);font-size:13px;margin-top:6px;font-family:'Cormorant Garamond',serif}
+.price-box{background:var(--light-blue);border:1px solid var(--border);padding:24px;margin-bottom:28px;text-align:center;border-radius:8px}
+.price-box .price{font-size:40px;color:var(--blue);font-weight:700}
+.price-box p{color:var(--grey);font-size:13px;margin-top:8px}
 /* CONFIRMATION */
 .confirm-wrap{text-align:center;padding:40px 20px}
 .confirm-icon{font-size:60px;margin-bottom:20px}
-.confirm-wrap h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);margin-bottom:14px}
-.confirm-wrap p{font-family:'Cormorant Garamond',serif;font-size:18px;color:#555;line-height:1.75;max-width:500px;margin:0 auto 24px}
+.confirm-wrap h2{font-size:28px;color:var(--dark);margin-bottom:16px;font-weight:600}
+.confirm-wrap p{font-size:15px;color:var(--grey);line-height:1.7;max-width:500px;margin:0 auto 24px}
+.confirm-wrap a{display:inline-block;background:var(--blue);color:var(--white);padding:12px 28px;font-weight:600;font-size:14px;text-decoration:none;letter-spacing:0.5px;text-transform:uppercase;margin-top:16px;border-radius:6px;transition:background .2s}
+.confirm-wrap a:hover{background:#1d4ed8}
+footer{background:var(--soft-bg);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey)}
+footer a{color:var(--blue);text-decoration:none}
+footer a:hover{text-decoration:underline}
 /* MOBILE */
 @media(max-width:600px){
   .field-row{grid-template-columns:1fr}
@@ -82,8 +90,7 @@ nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-be
 </head>
 <body>
 <nav>
-  <a href="/" class="logo">CLEAR <span>LEGACY</span></a>
-  <span style="font-family:'Cormorant Garamond',serif;color:rgba(255,255,255,.5);font-size:14px;font-style:italic">Secure · Confidential · Fixed Fee</span>
+  <a href="/index.html" class="logo">Clear <span>Legacy</span></a>
 </nav>
 
 <div class="progress-wrap">
@@ -180,7 +187,7 @@ nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-be
   <div id="children-section" style="display:none">
     <div id="children-list"></div>
     <button class="add-btn" onclick="addChild()">+ Add a Child</button>
-    <div class="field" style="margin-top:22px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>
+    <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>
       <select id="child-age">
         <option value="18">18 (as soon as legally an adult)</option>
         <option value="21">21</option>
@@ -367,11 +374,15 @@ nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-be
     <h2>Thank You — We Have Your Questionnaire</h2>
     <p>Our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email at the address you provided.</p>
     <p>If we have any questions about your instructions, we will contact you directly before preparing the document.</p>
-    <a href="/" style="display:inline-block;background:var(--navy);color:#fff;padding:14px 32px;font-weight:700;font-size:14px;text-decoration:none;letter-spacing:.5px;text-transform:uppercase;margin-top:10px">Return to Clear Legacy</a>
+    <a href="/index.html">Return to Clear Legacy</a>
   </div>
 </div>
 
 </div><!-- /form-wrap -->
+
+<footer>
+© 2026 Clear Legacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd
+</footer>
 
 <script>
 let currentStep = 1;
@@ -478,39 +489,29 @@ function setPrice(type){
 function submitForm(){
   const terms = document.getElementById('terms-check');
   if(!terms.checked){ alert('Please confirm the declaration to proceed.'); return; }
-  // In production: POST to Supabase / n8n / Formspree
-  // For now: redirect to Stripe
-  window.location.href = 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03'; // Replace with real Stripe link
+  // Collect form data and POST to Formspree, then redirect to Stripe
+  const inputs = document.querySelectorAll('input, select, textarea');
+  const fd = new FormData();
+  inputs.forEach(el => { if(el.name || el.id) fd.append(el.name || el.id, el.value); });
+  submitLead(fd);
 }
-</script>
 
-<script>
-// On final step submit: collect form data, POST to Formspree, redirect to Stripe
-(function() {
-  var STRIPE_URL = "https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03";
-  var SERVICE = "Will";
+function submitLead(formData) {
+  const stripe_url = document.querySelector('input[name="will-type"]:checked')?.value === 'mirror' 
+    ? 'https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04'
+    : 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03';
   
-  function submitLead(formData) {
-    var payload = {_subject: "New Clear Legacy lead: " + SERVICE, service: SERVICE};
-    formData.forEach(function(val, key) { payload[key] = val; });
-    fetch("https://formspree.io/f/hello@clearlegacy.co.uk", {
-      method: "POST",
-      headers: {"Content-Type": "application/json", "Accept": "application/json"},
-      body: JSON.stringify(payload)
-    }).catch(function(){});
-    window.location.href = STRIPE_URL;
-  }
-
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('button[type="submit"], .btn-primary[data-final], #btn-submit, .final-submit');
-    if (!btn) return;
-    e.preventDefault();
-    var inputs = document.querySelectorAll('input, select, textarea');
-    var fd = new FormData();
-    inputs.forEach(function(el) { if(el.name || el.id) fd.append(el.name || el.id, el.value); });
-    submitLead(fd);
+  const payload = {_subject: 'New Clear Legacy lead: Will', service: 'Will'};
+  formData.forEach((val, key) => { payload[key] = val; });
+  
+  fetch('https://formspree.io/f/xvgozwak', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify(payload)
+  }).finally(() => {
+    window.location.href = stripe_url;
   });
-})();
+}
 </script>
 
 <script src="../cl-chat.js"></script>

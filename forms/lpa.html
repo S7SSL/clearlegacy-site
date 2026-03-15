@@ -5,68 +5,79 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arrange Your LPA Online | Clear Legacy — From £89</title>
 <meta name="description" content="Set up a Lasting Power of Attorney online. Property & Financial Affairs and Health & Welfare LPAs from £89. Expert reviewed.">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}html,body{overflow-x:hidden;max-width:100%;background:#f5f0e8;font-family:'Lato',sans-serif;color:#1a1a1a}
-:root{--navy:#0f1f3d;--gold:#c9a84c;--cream:#f5f0e8;--white:#fff}
-nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--gold)}
-.logo{font-family:'Playfair Display',serif;font-size:18px;color:#fff;text-decoration:none}.logo span{color:var(--gold)}
-.progress-wrap{background:var(--navy);padding:20px 5% 0}
-.progress-bar{max-width:680px;margin:0 auto;padding-bottom:20px}
-.steps-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
-.bar-track{background:rgba(255,255,255,.1);height:4px;border-radius:2px}
-.bar-fill{height:4px;background:var(--gold);border-radius:2px;transition:width .4s}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;max-width:100%;background:#ffffff;font-family:'Inter',sans-serif;color:#0a0a0a}
+:root{--blue:#2563eb;--light-blue:#eff6ff;--white:#ffffff;--dark:#0a0a0a;--grey:#6b7280;--border:#e5e7eb;--soft-bg:#f9fafb;--accent:#dbeafe}
+nav{background:var(--white);padding:16px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.logo{font-size:18px;font-weight:600;color:var(--dark);text-decoration:none;letter-spacing:-0.5px}
+.logo span{color:var(--blue)}
+nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
+.progress-wrap{background:var(--white);padding:24px 5% 0;border-bottom:1px solid var(--border)}
+.progress-bar{max-width:680px;margin:0 auto;padding-bottom:24px}
+.steps-label{display:flex;justify-content:space-between;font-size:12px;color:var(--grey);letter-spacing:0.5px;margin-bottom:12px;text-transform:uppercase;font-weight:500}
+.bar-track{background:var(--soft-bg);height:3px;border-radius:2px}
+.bar-fill{height:3px;background:var(--blue);border-radius:2px;transition:width .3s ease}
 .form-wrap{max-width:680px;margin:0 auto;padding:40px 4% 80px}
-.step{display:none}.step.active{display:block}
-.step-num{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-family:'Cormorant Garamond',serif;margin-bottom:6px}
-.step-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:8px;line-height:1.2}
-.step-sub{font-family:'Cormorant Garamond',serif;font-size:17px;color:#666;line-height:1.6;margin-bottom:24px}
-.field{margin-bottom:22px}
-.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.3px;margin-bottom:6px;text-transform:uppercase}
-.field input,.field select,.field textarea{width:100%;border:1.5px solid #d4c9b5;background:#fff;padding:13px 16px;font-size:15px;font-family:'Lato',sans-serif;color:#1a1a1a;outline:none;appearance:none;-webkit-appearance:none}
-.field input:focus,.field textarea:focus{border-color:var(--navy)}
-.field .hint{font-size:12px;color:#888;margin-top:5px;font-family:'Cormorant Garamond',serif;font-style:italic}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230f1f3d' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
-.radio-group,.check-group{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-.radio-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:10px}
-.radio-opt{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d4c9b5;padding:13px 16px;cursor:pointer;transition:border .2s;font-size:14px;font-weight:600}
-.radio-opt:hover{border-color:var(--navy)}
-.radio-opt input{width:18px;height:18px;accent-color:var(--navy);flex-shrink:0}
-.radio-opt.selected{border-color:var(--gold);background:rgba(201,168,76,.08)}
-.person-block{background:#fff;border:1.5px solid #d4c9b5;padding:22px;margin-bottom:14px;position:relative}
-.person-block .block-title{font-size:13px;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #e8e0d0}
-.remove-btn{position:absolute;top:14px;right:14px;background:none;border:none;color:#999;font-size:18px;cursor:pointer;padding:4px 8px}
-.add-btn{background:none;border:1.5px solid var(--navy);color:var(--navy);padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;width:100%;margin-top:4px;transition:all .2s}
-.add-btn:hover{background:var(--navy);color:#fff}
-.info-box{background:rgba(201,168,76,.1);border-left:3px solid var(--gold);padding:16px 20px;margin-bottom:22px;font-family:'Cormorant Garamond',serif;font-size:16px;color:#555;line-height:1.65}
+.step{display:none}
+.step.active{display:block}
+.step-num{font-size:12px;color:var(--blue);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.step-title{font-size:28px;color:var(--dark);margin-bottom:8px;line-height:1.3;font-weight:600}
+.step-sub{font-size:15px;color:var(--grey);line-height:1.6;margin-bottom:24px}
+.field{margin-bottom:24px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--dark);letter-spacing:0.3px;margin-bottom:8px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--white);padding:12px 14px;font-size:15px;font-family:'Inter',sans-serif;color:var(--dark);outline:none;appearance:none;-webkit-appearance:none;transition:border .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+.field .hint{font-size:13px;color:var(--grey);margin-top:6px;font-style:italic}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%232563eb' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.radio-group,.check-group{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.radio-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:12px}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px}
+.radio-opt:hover,.check-opt:hover{border-color:var(--blue);background:var(--light-blue)}
+.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0}
+.radio-opt.selected,.check-opt.selected{border-color:var(--blue);background:var(--light-blue)}
+.person-block{background:var(--soft-bg);border:1px solid var(--border);padding:20px;margin-bottom:16px;border-radius:8px;position:relative}
+.person-block .block-title{font-size:12px;font-weight:600;color:var(--dark);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.remove-btn{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--grey);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s}
+.remove-btn:hover{color:#dc2626}
+.add-btn{background:none;border:1px solid var(--blue);color:var(--blue);padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;width:100%;border-radius:6px;margin-top:4px;transition:all .2s}
+.add-btn:hover{background:var(--blue);color:var(--white)}
+.info-box{background:var(--light-blue);border-left:3px solid var(--blue);padding:16px 18px;margin-bottom:24px;font-size:14px;color:var(--dark);line-height:1.6;border-radius:6px}
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
-.type-card{border:2px solid #d4c9b5;padding:24px;cursor:pointer;transition:all .2s;background:#fff;text-align:center}
-.type-card.selected{border-color:var(--gold);background:rgba(201,168,76,.06)}
-.type-card h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin-bottom:8px}
-.type-card p{font-size:13px;color:#666;font-family:'Cormorant Garamond',serif;line-height:1.6}
-.type-card .price{font-size:22px;font-weight:700;color:var(--gold);margin-top:10px;font-family:'Playfair Display',serif}
-.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:36px;gap:14px}
-.btn-back{background:none;border:1.5px solid #c0b49a;color:#888;padding:13px 28px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;transition:all .2s}
-.btn-back:hover{border-color:var(--navy);color:var(--navy)}
-.btn-next{background:var(--navy);color:#fff;border:none;padding:14px 36px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;flex:1;max-width:280px;transition:background .2s}
-.btn-next:hover{background:#1e3460}
-.btn-submit{background:var(--gold);color:var(--navy);border:none;padding:16px 40px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;width:100%;margin-top:14px;transition:background .2s}
-.btn-submit:hover{background:#e8c97a}
-.price-box{background:var(--navy);padding:24px;margin-bottom:28px;text-align:center}
-.price-box .price{font-family:'Playfair Display',serif;font-size:40px;color:var(--gold);font-weight:900}
-.price-box p{color:rgba(255,255,255,.65);font-size:13px;margin-top:6px;font-family:'Cormorant Garamond',serif}
-.confirm-wrap{text-align:center;padding:40px 20px}
-.confirm-icon{font-size:60px;margin-bottom:20px}
-.confirm-wrap h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);margin-bottom:14px}
-.confirm-wrap p{font-family:'Cormorant Garamond',serif;font-size:18px;color:#555;line-height:1.75;max-width:500px;margin:0 auto 24px}
-@media(max-width:600px){.field-row{grid-template-columns:1fr}.radio-group.horizontal{flex-direction:column}.type-grid{grid-template-columns:1fr}.btn-next{max-width:none}}
+.type-card{border:1px solid var(--border);padding:24px;cursor:pointer;transition:all .2s;background:var(--white);text-align:center;border-radius:8px}
+.type-card:hover{border-color:var(--blue);background:var(--light-blue)}
+.type-card.selected{border-color:var(--blue);background:var(--light-blue);border-width:2px}
+.type-card h3{font-size:17px;color:var(--dark);margin-bottom:8px;font-weight:600}
+.type-card p{font-size:13px;color:var(--grey);line-height:1.6}
+.type-card .price{font-size:22px;font-weight:700;color:var(--blue);margin-top:10px}
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;gap:16px}
+.btn-back{background:var(--white);border:1px solid var(--border);color:var(--grey);padding:12px 24px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;transition:all .2s;border-radius:6px}
+.btn-back:hover{border-color:var(--blue);color:var(--blue);background:var(--light-blue)}
+.btn-next{background:var(--blue);color:var(--white);border:none;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;flex:1;max-width:280px;transition:background .2s;border-radius:6px}
+.btn-next:hover{background:#1d4ed8}
+.btn-submit{background:var(--blue);color:var(--white);border:none;padding:14px 32px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;width:100%;transition:background .2s;border-radius:6px}
+.btn-submit:hover{background:#1d4ed8}
+.price-box{background:var(--light-blue);border:1px solid var(--border);padding:24px;margin-bottom:28px;text-align:center;border-radius:8px}
+.price-box .price{font-size:40px;color:var(--blue);font-weight:700}
+.price-box p{color:var(--grey);font-size:13px;margin-top:8px}
+footer{background:var(--soft-bg);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey)}
+footer a{color:var(--blue);text-decoration:none}
+footer a:hover{text-decoration:underline}
+@media(max-width:600px){
+  .field-row{grid-template-columns:1fr}
+  .radio-group.horizontal{flex-direction:column}
+  .type-grid{grid-template-columns:1fr}
+  .btn-next{max-width:none}
+}
 </style>
 </head>
 <body>
 <nav>
-  <a href="/" class="logo">CLEAR <span>LEGACY</span></a>
-  <span style="font-family:'Cormorant Garamond',serif;color:rgba(255,255,255,.5);font-size:14px;font-style:italic">Secure · Confidential · Fixed Fee</span>
+  <a href="/index.html" class="logo">Clear <span>Legacy</span></a>
 </nav>
 <div class="progress-wrap">
   <div class="progress-bar">
@@ -93,7 +104,7 @@ nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-be
       <div class="price">£89</div>
     </div>
   </div>
-  <div class="type-card selected" id="both-card" onclick="selectLPA(this,'both')" style="text-align:center;padding:20px;margin-bottom:20px;border-color:var(--gold);background:rgba(201,168,76,.06)">
+  <div class="type-card selected" id="both-card" onclick="selectLPA(this,'both')" style="text-align:center;padding:20px;margin-bottom:20px">
     <h3 style="text-align:center;margin-bottom:6px">Both LPAs — Best Value</h3>
     <p style="text-align:center">Complete protection for your finances and your health. Save £20 vs purchasing separately.</p>
     <div class="price">£158</div>
@@ -199,6 +210,11 @@ nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-be
 </div>
 
 </div>
+
+<footer>
+© 2026 Clear Legacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd
+</footer>
+
 <script>
 let currentStep=1;const totalSteps=5;
 const labels=['LPA Type','About You','Your Attorneys','Certificate Provider','Review & Complete'];
@@ -210,36 +226,8 @@ document.querySelectorAll('.radio-opt input').forEach(r=>{r.addEventListener('ch
 function selectLPA(el,type){document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
 let attCount=1;
 function addAttorney(){attCount++;const d=document.createElement('div');d.className='person-block';d.id='att-'+attCount;d.innerHTML=`<div class="block-title">Attorney ${attCount} (Replacement)<button class="remove-btn" onclick="this.closest('.person-block').remove()">✕</button></div><div class="field-row"><div class="field"><label>First Name(s)</label><input type="text"></div><div class="field"><label>Last Name</label><input type="text"></div></div><div class="field-row"><div class="field"><label>Email</label><input type="email"></div><div class="field"><label>Relationship</label><input type="text"></div></div>`;document.getElementById('attorney-list').appendChild(d);}
-function submitLPA(){const t=document.getElementById('terms-check');if(!t.checked){alert('Please confirm the declaration to proceed.');return;}window.location.href='https://buy.stripe.com/5kQ8wIaQ88If931fdD5ZC06';}
-</script>
-
-<script>
-// On final step submit: collect form data, POST to Formspree, redirect to Stripe
-(function() {
-  var STRIPE_URL = "https://buy.stripe.com/5kQ8wIaQ88If931fdD5ZC06";
-  var SERVICE = "LPA";
-  
-  function submitLead(formData) {
-    var payload = {_subject: "New Clear Legacy lead: " + SERVICE, service: SERVICE};
-    formData.forEach(function(val, key) { payload[key] = val; });
-    fetch("https://formspree.io/f/hello@clearlegacy.co.uk", {
-      method: "POST",
-      headers: {"Content-Type": "application/json", "Accept": "application/json"},
-      body: JSON.stringify(payload)
-    }).catch(function(){});
-    window.location.href = STRIPE_URL;
-  }
-
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('button[type="submit"], .btn-primary[data-final], #btn-submit, .final-submit');
-    if (!btn) return;
-    e.preventDefault();
-    var inputs = document.querySelectorAll('input, select, textarea');
-    var fd = new FormData();
-    inputs.forEach(function(el) { if(el.name || el.id) fd.append(el.name || el.id, el.value); });
-    submitLead(fd);
-  });
-})();
+function submitLPA(){const t=document.getElementById('terms-check');if(!t.checked){alert('Please confirm the declaration to proceed.');return;}const inputs=document.querySelectorAll('input, select, textarea');const fd=new FormData();inputs.forEach(el=>{if(el.name||el.id)fd.append(el.name||el.id,el.value);});submitLPALead(fd);}
+function submitLPALead(formData){const payload={_subject:'New Clear Legacy lead: LPA',service:'LPA'};formData.forEach((val,key)=>{payload[key]=val;});fetch('https://formspree.io/f/xvgozwak',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)}).finally(()=>{window.location.href='https://buy.stripe.com/5kQ8wIaQ88If931fdD5ZC06';});}
 </script>
 
 <script src="../cl-chat.js"></script>
