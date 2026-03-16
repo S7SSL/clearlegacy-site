@@ -52,4 +52,9 @@
   <url><loc>https://www.clearlegacy.co.uk/</loc><changefreq>weekly</changefreq><priority>1.0</priority><lastmod>2026-03-15</lastmod></url>
   <url><loc>https://www.clearlegacy.co.uk/tcs-acceptance.html</loc><changefreq>monthly</changefreq><priority>0.6</priority><lastmod>2026-03-15</lastmod></url>
   <url><loc>https://www.clearlegacy.co.uk/terms.html</loc><changefreq>monthly</changefreq><priority>0.6</priority><lastmod>2026-03-15</lastmod></url>
+  <url>
+    <loc>https://www.clearlegacy.co.uk/tools/probate-calculator.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
