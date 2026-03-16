@@ -59,154 +59,35 @@ nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 footer{background:var(--soft-bg);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey)}
 footer a{color:var(--blue);text-decoration:none}
 footer a:hover{text-decoration:underline}
-@media(max-width:600px){
-  .field-row{grid-template-columns:1fr}
-  .radio-group.h{flex-direction:column}
-  .btn-next{max-width:none}
+@media(max-width:600px){ .field-row{grid-template-columns:1fr} .radio-group.h{flex-direction:column} .btn-next{max-width:none}
 }
 </style>
 </head>
 <body>
-<nav>
-  <a href="/index.html" class="logo">Clear <span>Legacy</span></a>
+<nav>  <a href="/index.html" class="logo">Clear <span>Legacy</span></a>
 </nav>
-<div class="progress-wrap">
-  <div class="progress-bar">
-    <div class="steps-label"><span id="step-label">Step 1 of 5 — The Deceased</span><span id="step-pct">20%</span></div>
-    <div class="bar-track"><div class="bar-fill" id="bar" style="width:20%"></div></div>
-  </div>
+<div class="progress-wrap">  <div class="progress-bar">  <div class="steps-label"><span id="step-label">Step 1 of 5 — The Deceased</span><span id="step-pct">20%</span></div>  <div class="bar-track"><div class="bar-fill" id="bar" style="width:20%"></div></div>  </div>
 </div>
 <div class="form-wrap">
 
 <!-- STEP 1: THE DECEASED -->
-<div class="step active" id="step-1">
-  <div class="step-num">Step 1 of 5</div>
-  <h1 class="step-title">About the Person Who Has Died</h1>
-  <p class="step-sub">We are sorry for your loss. Please provide details about the deceased so we can begin reviewing the estate.</p>
-  <div class="field-row">
-    <div class="field"><label>Full Legal Name</label><input type="text" placeholder="As it appears on their death certificate" required></div>
-    <div class="field"><label>Date of Death</label><input type="date" required></div>
-  </div>
-  <div class="field"><label>Last Known Address</label><input type="text" placeholder="Full address including postcode" required></div>
-  <div class="field"><label>Marital Status at Time of Death</label>
-    <select>
-      <option value="">Select...</option>
-      <option>Single</option><option>Married</option><option>Civil Partner</option>
-      <option>Divorced</option><option>Widowed</option>
-    </select>
-  </div>
-  <div class="field"><label>Did the deceased leave a valid Will?</label>
-    <div class="radio-group h">
-      <label class="radio-opt"><input type="radio" name="has-will" value="yes"> Yes — I have a copy</label>
-      <label class="radio-opt"><input type="radio" name="has-will" value="no"> No — they died intestate</label>
-      <label class="radio-opt"><input type="radio" name="has-will" value="unsure"> Not sure</label>
-    </div>
-    <div class="hint">If no Will exists, the estate is distributed under the Intestacy Rules. You will still need to apply for Letters of Administration rather than a Grant of Probate.</div>
-  </div>
-  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
+<div class="step active" id="step-1">  <div class="step-num">Step 1 of 5</div>  <h1 class="step-title">About the Person Who Has Died</h1>  <p class="step-sub">We are sorry for your loss. Please provide details about the deceased so we can begin reviewing the estate.</p>  <div class="field-row">  <div class="field"><label>Full Legal Name</label><input type="text" placeholder="As it appears on their death certificate" required></div>  <div class="field"><label>Date of Death</label><input type="date" required></div>  </div>  <div class="field"><label>Last Known Address</label><input type="text" placeholder="Full address including postcode" required></div>  <div class="field"><label>Marital Status at Time of Death</label>  <select>  <option value="">Select...</option>  <option>Single</option><option>Married</option><option>Civil Partner</option>  <option>Divorced</option><option>Widowed</option>  </select>  </div>  <div class="field"><label>Did the deceased leave a valid Will?</label>  <div class="radio-group h">  <label class="radio-opt"><input type="radio" name="has-will" value="yes"> Yes — I have a copy</label>  <label class="radio-opt"><input type="radio" name="has-will" value="no"> No — they died intestate</label>  <label class="radio-opt"><input type="radio" name="has-will" value="unsure"> Not sure</label>  </div>  <div class="hint">If no Will exists, the estate is distributed under the Intestacy Rules. You will still need to apply for Letters of Administration rather than a Grant of Probate.</div>  </div>  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
 </div>
 
 <!-- STEP 2: YOUR DETAILS -->
-<div class="step" id="step-2">
-  <div class="step-num">Step 2 of 5</div>
-  <h1 class="step-title">Your Details</h1>
-  <p class="step-sub">We need your details as the person applying for probate (the executor or administrator).</p>
-  <div class="field-row">
-    <div class="field"><label>Your Full Name</label><input type="text" required></div>
-    <div class="field"><label>Your Relationship to the Deceased</label><input type="text" placeholder="e.g. Son, Daughter, Executor named in Will"></div>
-  </div>
-  <div class="field"><label>Your Address</label><input type="text" placeholder="Full address including postcode" required></div>
-  <div class="field"><label>Your Email</label><input type="email" required></div>
-  <div class="field"><label>Your Phone</label><input type="tel" required></div>
-  <div class="info-box">If you are the named executor in the Will, you have the authority to apply for probate. If there is no Will, the nearest next of kin (typically a spouse, then children) may apply for Letters of Administration.</div>
-  <div class="form-nav"><button class="btn-back" onclick="prevStep(2)">← Back</button><button class="btn-next" onclick="nextStep(2)">Continue →</button></div>
+<div class="step" id="step-2">  <div class="step-num">Step 2 of 5</div>  <h1 class="step-title">Your Details</h1>  <p class="step-sub">We need your details as the person applying for probate (the executor or administrator).</p>  <div class="field-row">  <div class="field"><label>Your Full Name</label><input type="text" required></div>  <div class="field"><label>Your Relationship to the Deceased</label><input type="text" placeholder="e.g. Son, Daughter, Executor named in Will"></div>  </div>  <div class="field"><label>Your Address</label><input type="text" placeholder="Full address including postcode" required></div>  <div class="field"><label>Your Email</label><input type="email" required></div>  <div class="field"><label>Your Phone</label><input type="tel" required></div>  <div class="info-box">If you are the named executor in the Will, you have the authority to apply for probate. If there is no Will, the nearest next of kin (typically a spouse, then children) may apply for Letters of Administration.</div>  <div class="form-nav"><button class="btn-back" onclick="prevStep(2)">← Back</button><button class="btn-next" onclick="nextStep(2)">Continue →</button></div>
 </div>
 
 <!-- STEP 3: THE ESTATE -->
-<div class="step" id="step-3">
-  <div class="step-num">Step 3 of 5</div>
-  <h1 class="step-title">The Estate</h1>
-  <p class="step-sub">We need an overview of the estate's assets and liabilities to determine the correct process and HMRC forms required.</p>
-  <div class="field"><label>Did the deceased own property?</label>
-    <div class="radio-group h">
-      <label class="radio-opt"><input type="radio" name="estate-property" value="yes-sole"> Yes — in their sole name</label>
-      <label class="radio-opt"><input type="radio" name="estate-property" value="yes-joint"> Yes — jointly with another person</label>
-      <label class="radio-opt"><input type="radio" name="estate-property" value="no"> No property</label>
-    </div>
-  </div>
-  <div class="field"><label>Estimated Gross Estate Value</label>
-    <select>
-      <option value="">Select approximate total value...</option>
-      <option value="under-5k">Under £5,000 (probate unlikely required)</option>
-      <option value="5k-100k">£5,000 – £100,000</option>
-      <option value="100k-325k">£100,001 – £325,000</option>
-      <option value="325k-500k">£325,001 – £500,000 (may be IHT)</option>
-      <option value="500k-1m">£500,001 – £1,000,000 (IHT likely)</option>
-      <option value="over-1m">Over £1,000,000</option>
-    </select>
-    <div class="hint">Include all assets: property, cash, investments, vehicles, business interests, life insurance (if no named beneficiary).</div>
-  </div>
-  <div class="field"><label>Known debts and liabilities (approximate)</label>
-    <input type="text" placeholder="e.g. Mortgage £150,000, Credit cards £2,000, or 'None known'">
-  </div>
-  <div class="field"><label>Are there any known complications?</label>
-    <div class="radio-group">
-      <label class="radio-opt"><input type="radio" name="complex" value="none"> No complications</label>
-      <label class="radio-opt"><input type="radio" name="complex" value="disputes"> Potential disputes between beneficiaries</label>
-      <label class="radio-opt"><input type="radio" name="complex" value="overseas"> Overseas assets</label>
-      <label class="radio-opt"><input type="radio" name="complex" value="business"> Business interests</label>
-      <label class="radio-opt"><input type="radio" name="complex" value="trust"> Assets held in trust</label>
-      <label class="radio-opt"><input type="radio" name="complex" value="contested"> Will being contested</label>
-    </div>
-  </div>
-  <div class="warn-box">If the estate is complex (disputes, overseas assets, contested Will), we will contact you to discuss the appropriate service level and fee before proceeding.</div>
-  <div class="form-nav"><button class="btn-back" onclick="prevStep(3)">← Back</button><button class="btn-next" onclick="nextStep(3)">Continue →</button></div>
+<div class="step" id="step-3">  <div class="step-num">Step 3 of 5</div>  <h1 class="step-title">The Estate</h1>  <p class="step-sub">We need an overview of the estate's assets and liabilities to determine the correct process and HMRC forms required.</p>  <div class="field"><label>Did the deceased own property?</label>  <div class="radio-group h">  <label class="radio-opt"><input type="radio" name="estate-property" value="yes-sole"> Yes — in their sole name</label>  <label class="radio-opt"><input type="radio" name="estate-property" value="yes-joint"> Yes — jointly with another person</label>  <label class="radio-opt"><input type="radio" name="estate-property" value="no"> No property</label>  </div>  </div>  <div class="field"><label>Estimated Gross Estate Value</label>  <select>  <option value="">Select approximate total value...</option>  <option value="under-5k">Under £5,000 (probate unlikely required)</option>  <option value="5k-100k">£5,000 – £100,000</option>  <option value="100k-325k">£100,001 – £325,000</option>  <option value="325k-500k">£325,001 – £500,000 (may be IHT)</option>  <option value="500k-1m">£500,001 – £1,000,000 (IHT likely)</option>  <option value="over-1m">Over £1,000,000</option>  </select>  <div class="hint">Include all assets: property, cash, investments, vehicles, business interests, life insurance (if no named beneficiary).</div>  </div>  <div class="field"><label>Known debts and liabilities (approximate)</label>  <input type="text" placeholder="e.g. Mortgage £150,000, Credit cards £2,000, or 'None known'">  </div>  <div class="field"><label>Are there any known complications?</label>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="complex" value="none"> No complications</label>  <label class="radio-opt"><input type="radio" name="complex" value="disputes"> Potential disputes between beneficiaries</label>  <label class="radio-opt"><input type="radio" name="complex" value="overseas"> Overseas assets</label>  <label class="radio-opt"><input type="radio" name="complex" value="business"> Business interests</label>  <label class="radio-opt"><input type="radio" name="complex" value="trust"> Assets held in trust</label>  <label class="radio-opt"><input type="radio" name="complex" value="contested"> Will being contested</label>  </div>  </div>  <div class="warn-box">If the estate is complex (disputes, overseas assets, contested Will), we will contact you to discuss the appropriate service level and fee before proceeding.</div>  <div class="form-nav"><button class="btn-back" onclick="prevStep(3)">← Back</button><button class="btn-next" onclick="nextStep(3)">Continue →</button></div>
 </div>
 
 <!-- STEP 4: BENEFICIARIES -->
-<div class="step" id="step-4">
-  <div class="step-num">Step 4 of 5</div>
-  <h1 class="step-title">Beneficiaries</h1>
-  <p class="step-sub">Please list the main beneficiaries of the estate — those who will receive a share of the assets.</p>
-  <div id="bene-list">
-    <div class="person-block">
-      <div class="block-title">Beneficiary 1</div>
-      <div class="field-row">
-        <div class="field"><label>Full Name</label><input type="text"></div>
-        <div class="field"><label>Relationship to Deceased</label><input type="text" placeholder="e.g. Son, Daughter, Spouse"></div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Share of Estate</label><input type="text" placeholder="e.g. 50%, £10,000, or 'Residuary'"></div>
-        <div class="field"><label>Contact Email</label><input type="email"></div>
-      </div>
-    </div>
-  </div>
-  <button class="add-btn" style="width:100%;margin-top:4px" onclick="addBene()">+ Add Another Beneficiary</button>
-  <div class="field" style="margin-top:22px"><label>Any charitable gifts?</label>
-    <div class="radio-group h">
-      <label class="radio-opt"><input type="radio" name="charity" value="yes"> Yes</label>
-      <label class="radio-opt"><input type="radio" name="charity" value="no"> No</label>
-    </div>
-    <div class="hint">Leaving 10% or more to charity reduces IHT from 40% to 36% on the taxable estate.</div>
-  </div>
-  <div class="form-nav"><button class="btn-back" onclick="prevStep(4)">← Back</button><button class="btn-next" onclick="nextStep(4)">Continue →</button></div>
+<div class="step" id="step-4">  <div class="step-num">Step 4 of 5</div>  <h1 class="step-title">Beneficiaries</h1>  <p class="step-sub">Please list the main beneficiaries of the estate — those who will receive a share of the assets.</p>  <div id="bene-list">  <div class="person-block">  <div class="block-title">Beneficiary 1</div>  <div class="field-row">  <div class="field"><label>Full Name</label><input type="text"></div>  <div class="field"><label>Relationship to Deceased</label><input type="text" placeholder="e.g. Son, Daughter, Spouse"></div>  </div>  <div class="field-row">  <div class="field"><label>Share of Estate</label><input type="text" placeholder="e.g. 50%, £10,000, or 'Residuary'"></div>  <div class="field"><label>Contact Email</label><input type="email"></div>  </div>  </div>  </div>  <button class="add-btn" style="width:100%;margin-top:4px" onclick="addBene()">+ Add Another Beneficiary</button>  <div class="field" style="margin-top:22px"><label>Any charitable gifts?</label>  <div class="radio-group h">  <label class="radio-opt"><input type="radio" name="charity" value="yes"> Yes</label>  <label class="radio-opt"><input type="radio" name="charity" value="no"> No</label>  </div>  <div class="hint">Leaving 10% or more to charity reduces IHT from 40% to 36% on the taxable estate.</div>  </div>  <div class="form-nav"><button class="btn-back" onclick="prevStep(4)">← Back</button><button class="btn-next" onclick="nextStep(4)">Continue →</button></div>
 </div>
 
 <!-- STEP 5: REVIEW & SUBMIT -->
-<div class="step" id="step-5">
-  <div class="step-num">Step 5 of 5</div>
-  <h1 class="step-title">Review &amp; Submit</h1>
-  <p class="step-sub">One of our estate planners will review your submission and contact you within 1 business day to confirm the fixed fee and next steps.</p>
-  <div class="price-box">
-    <div class="price">From £195</div>
-    <p>Fixed Fee · No percentage of estate · Court fee (£300) separate · Free initial review</p>
-  </div>
-  <div class="info-box">For simple estates, our fixed fee is £195. For more complex matters, we will confirm the fee before you commit to proceeding. There is no obligation at this stage.</div>
-  <div class="field">
-    <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm the information provided is accurate to the best of my knowledge</label>
-  </div>
-  <button class="btn-submit" onclick="submitProbate()">Submit — Free Review →</button>
-  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+<div class="step" id="step-5">  <div class="step-num">Step 5 of 5</div>  <h1 class="step-title">Review &amp; Submit</h1>  <p class="step-sub">One of our estate planners will review your submission and contact you within 1 business day to confirm the fixed fee and next steps.</p>  <div class="price-box">  <div class="price">From £195</div>  <p>Fixed Fee · No percentage of estate · Court fee (£300) separate · Free initial review</p>  </div>  <div class="info-box">For simple estates, our fixed fee is £195. For more complex matters, we will confirm the fee before you commit to proceeding. There is no obligation at this stage.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm the information provided is accurate to the best of my knowledge</label>  </div>  <button class="btn-submit" onclick="submitProbate()">Submit — Free Review →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 </div>
@@ -230,9 +111,7 @@ function submitProbiteLead(formData){const payload={_subject:'New Clear Legacy l
 
 <script src="../cl-chat.js"></script>
 <!-- Cookie Consent -->
-<div id="cl-cookie" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;color:#e2e8f0;padding:14px 24px;z-index:9999;align-items:center;justify-content:space-between;gap:16px;font-family:Inter,sans-serif;font-size:14px;border-top:1px solid #334155;">
-  <span>We use cookies to improve your experience. <a href="/terms.html" style="color:#60a5fa;text-decoration:none;">Learn more</a></span>
-  <button onclick="document.getElementById('cl-cookie').style.display='none';localStorage.setItem('cl_ok','1')" style="background:#2563eb;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;">Accept</button>
+<div id="cl-cookie" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;color:#e2e8f0;padding:14px 24px;z-index:9999;align-items:center;justify-content:space-between;gap:16px;font-family:Inter,sans-serif;font-size:14px;border-top:1px solid #334155;">  <span>We use cookies to improve your experience. <a href="/terms.html" style="color:#60a5fa;text-decoration:none;">Learn more</a></span>  <button onclick="document.getElementById('cl-cookie').style.display='none';localStorage.setItem('cl_ok','1')" style="background:#2563eb;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;">Accept</button>
 </div>
 <script>if(!localStorage.getItem('cl_ok'))document.getElementById('cl-cookie').style.display='flex';</script>
 </body>
