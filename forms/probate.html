@@ -41,7 +41,7 @@ nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 .radio-group.h{flex-direction:row;flex-wrap:wrap;gap:12px}
 .radio-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;border-radius:6px}
 .radio-opt:hover{border-color:var(--blue);background:var(--light-blue)}
-.radio-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0}
+.radio-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0;pointer-events:none}
 .radio-opt.selected{border-color:var(--blue);background:var(--light-blue)}
 .person-block{background:var(--soft-bg);border:1px solid var(--border);padding:20px;margin-bottom:16px;border-radius:8px}
 .block-title{font-size:12px;font-weight:600;color:var(--dark);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
@@ -120,7 +120,7 @@ function updateProgress(s){const p=Math.round((s/totalSteps)*100);document.getEl
 function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step-'+n).classList.add('active');updateProgress(n);window.scrollTo(0,0);}
 function nextStep(n){showStep(++currentStep);}
 function prevStep(n){showStep(--currentStep);}
-document.querySelectorAll('.radio-opt input').forEach(r=>{r.addEventListener('change',function(){const name=this.name;document.querySelectorAll('.radio-opt input[name="'+name+'"]').forEach(x=>{x.closest('.radio-opt').classList.toggle('selected',x===this);});});});
+document.querySelectorAll('.radio-opt').forEach(card=>{card.addEventListener('click',function(){const input=this.querySelector('input');if(!input)return;if(input.type==='radio'){const name=input.name;document.querySelectorAll('.radio-opt input[name="'+name+'"]').forEach(x=>{x.checked=false;x.closest('.radio-opt').classList.remove('selected');});input.checked=true;this.classList.add('selected');}else if(input.type==='checkbox'){input.checked=!input.checked;this.classList.toggle('selected',input.checked);}});});
 let bCount=1;function addBene(){bCount++;const d=document.createElement('div');d.className='person-block';d.innerHTML=`<div class="block-title">Beneficiary ${bCount}</div><div class="field-row"><div class="field"><label>Full Name</label><input type="text"></div><div class="field"><label>Relationship</label><input type="text"></div></div><div class="field-row"><div class="field"><label>Share</label><input type="text"></div><div class="field"><label>Email</label><input type="email"></div></div>`;document.getElementById('bene-list').appendChild(d);}
 function submitProbate(){const t=document.getElementById('terms-check');if(!t.checked){alert('Please confirm the declaration.');return;}const inputs=document.querySelectorAll('input, select, textarea');const fd=new FormData();inputs.forEach(el=>{if(el.name||el.id)fd.append(el.name||el.id,el.value);});submitProbiteLead(fd);}
 function submitProbiteLead(formData){const payload={_subject:'New Clear Legacy lead: Probate',service:'Probate'};formData.forEach((val,key)=>{payload[key]=val;});fetch('https://formspree.io/f/xvgozwak',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)}).finally(()=>{window.location.href='https://buy.stripe.com/14AeV68I0f6Dcfde9z5ZC07';});}
