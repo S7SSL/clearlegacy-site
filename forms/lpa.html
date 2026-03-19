@@ -41,7 +41,7 @@ nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 .radio-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:12px}
 .radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px}
 .radio-opt:hover,.check-opt:hover{border-color:var(--blue);background:var(--light-blue)}
-.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0}
+.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0;pointer-events:none}
 .radio-opt.selected,.check-opt.selected{border-color:var(--blue);background:var(--light-blue)}
 .person-block{background:var(--soft-bg);border:1px solid var(--border);padding:20px;margin-bottom:16px;border-radius:8px;position:relative}
 .person-block .block-title{font-size:12px;font-weight:600;color:var(--dark);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
@@ -130,7 +130,7 @@ function updateProgress(s){const p=Math.round((s/totalSteps)*100);document.getEl
 function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));const el=document.getElementById('step-'+n);if(el)el.classList.add('active');updateProgress(parseInt(n));window.scrollTo(0,0);}
 function nextStep(n){currentStep=n+1;showStep(currentStep);}
 function prevStep(n){currentStep=n-1;showStep(currentStep);}
-document.querySelectorAll('.radio-opt input').forEach(r=>{r.addEventListener('change',function(){const name=this.name;document.querySelectorAll('.radio-opt input[name="'+name+'"]').forEach(x=>{x.closest('.radio-opt').classList.toggle('selected',x===this);});});});
+document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{card.addEventListener('click',function(){const input=this.querySelector('input');if(!input)return;if(input.type==='radio'){const name=input.name;document.querySelectorAll('.radio-opt input[name="'+name+'"],.check-opt input[name="'+name+'"]').forEach(x=>{x.checked=false;x.closest('.radio-opt')||x.closest('.check-opt');var p=x.parentElement;while(p&&!p.classList.contains('radio-opt')&&!p.classList.contains('check-opt'))p=p.parentElement;if(p)p.classList.remove('selected');});input.checked=true;this.classList.add('selected');}else if(input.type==='checkbox'){input.checked=!input.checked;this.classList.toggle('selected',input.checked);}});});
 function selectLPA(el,type){document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
 let attCount=1;
 function addAttorney(){attCount++;const d=document.createElement('div');d.className='person-block';d.id='att-'+attCount;d.innerHTML=`<div class="block-title">Attorney ${attCount} (Replacement)<button class="remove-btn" onclick="this.closest('.person-block').remove()">✕</button></div><div class="field-row"><div class="field"><label>First Name(s)</label><input type="text"></div><div class="field"><label>Last Name</label><input type="text"></div></div><div class="field-row"><div class="field"><label>Email</label><input type="email"></div><div class="field"><label>Relationship</label><input type="text"></div></div>`;document.getElementById('attorney-list').appendChild(d);}
