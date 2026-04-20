@@ -135,7 +135,7 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- STEP 7: REVIEW & PAY -->
-<div class="step" id="step-7">  <div class="step-header">  <div class="step-num">Step 7 of 7</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub">Your Will questionnaire is complete. Please confirm the details below and complete payment.</p>  </div>  <div class="price-box">  <div class="price" id="final-price">£69</div>  <p id="price-label">Single Will — Fixed Fee · Reviewed by a qualified estate planner · Returned within 24 hours</p>  </div>  <div class="field"><label>Will Type</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="will-type" value="single" onchange="setPrice('single')"> Single Will — £69</label>  <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>  </div>  </div>  <div class="info-box">Once you submit your questionnaire, our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email for review before signing.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge</label>  </div>  <button class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+<div class="step" id="step-7">  <div class="step-header">  <div class="step-num">Step 7 of 7</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub">Your Will questionnaire is complete. Please confirm the details below and complete payment.</p>  </div>  <div class="price-box">  <div class="price" id="final-price">£69</div>  <p id="price-label">Single Will — Fixed Fee · Reviewed by a qualified estate planner · Returned within 24 hours</p>  </div>  <div class="field"><label>Will Type</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="will-type" value="single" onchange="setPrice('single')"> Single Will — £69</label>  <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>  </div>  </div>  <div class="info-box">Once you submit your questionnaire, our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email for review before signing.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge</label>  </div>  <button type="button" class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 <!-- CONFIRMATION -->
@@ -151,22 +151,184 @@ gtag('config', 'AW-17990502106');
 <script>
 let currentStep = 1;
 const totalSteps = 7;
-const stepLabels = ['About You','Your Partner','Children & Dependants','Your Executors','Your Estate & Gifts','Funeral & Wishes','Review & Complete']; function updateProgress(step){ const pct = Math.round((step/totalSteps)*100); document.getElementById('bar').style.width = pct+'%'; document.getElementById('step-label').textContent = 'Step '+step+' of '+totalSteps+' — '+stepLabels[step-1]; document.getElementById('step-pct').textContent = pct+'%';
-} function showStep(n){ document.querySelectorAll('.step').forEach(s=>s.classList.remove('active')); const el = document.getElementById('step-'+n); if(el) el.classList.add('active'); if(n!=='confirm') updateProgress(parseInt(n)); window.scrollTo(0,0);
-} function nextStep(n){ currentStep = n+1; showStep(currentStep); }
-function prevStep(n){ currentStep = n-1; showStep(currentStep); } function toggleSection(id, val){ document.getElementById(id).style.display = val==='yes'?'block':'none';
-} document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{ card.addEventListener('click',function(){ const input = this.querySelector('input'); if(!input) return; if(input.type==='radio'){ const name=input.name; document.querySelectorAll('.radio-opt input[name="'+name+'"],.check-opt input[name="'+name+'"]').forEach(x=>{ x.checked=false; x.closest('.radio-opt,.check-opt') && x.closest('[class*="-opt"]').classList.remove('selected'); }); input.checked=true; this.classList.add('selected'); } else if(input.type==='checkbox'){ input.checked=!input.checked; this.classList.toggle('selected',input.checked); } });
-}); document.querySelectorAll('input[name="residuary"]').forEach(r=>{ r.addEventListener('change',function(){ document.getElementById('residuary-detail').style.display = (this.value==='named'||this.value==='other')?'block':'none'; });
-}); let childCount = 0;
-function addChild(){ childCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'child-'+childCount; d.innerHTML = `<div class="block-title">Child ${childCount}<button class="remove-btn" onclick="removeBlock('child-${childCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name</label><input type="text" placeholder="Child's first name"></div>  <div class="field"><label>Last Name</label><input type="text" placeholder="Child's last name"></div>  </div>  <div class="field-row">  <div class="field"><label>Date of Birth</label><input type="date"></div>  <div class="field"><label>Relationship</label>  <select><option>Biological child</option><option>Adopted child</option><option>Step-child</option><option>Grandchild</option></select>  </div>  </div>`; document.getElementById('children-list').appendChild(d);
-} let execCount = 2;
-function addExecutor(){ execCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'exec-'+execCount; d.innerHTML = `<div class="block-title">Executor ${execCount}<button class="remove-btn" onclick="removeBlock('exec-${execCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text"></div>  <div class="field"><label>Last Name</label><input type="text"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship</label><input type="text"></div>  <div class="field"><label>Email</label><input type="email"></div>  </div>`; document.getElementById('executor-list').appendChild(d);
-} let giftCount = 0;
-function addGift(){ giftCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'gift-'+giftCount; d.innerHTML = `<div class="block-title">Gift ${giftCount}<button class="remove-btn" onclick="removeBlock('gift-${giftCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>Item or Amount</label><input type="text" placeholder="e.g. £10,000 cash / my gold watch / 5 Osidge Lane"></div>  <div class="field"><label>Recipient Name</label><input type="text" placeholder="Full name of recipient"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Daughter, Friend, Charity name"></div>`; document.getElementById('gifts-list').appendChild(d);
-} function removeBlock(id){ const el = document.getElementById(id); if(el) el.remove(); } function setPrice(type){ if(type==='single'){ document.getElementById('final-price').textContent='£69'; document.getElementById('price-label').textContent='Single Will — Fixed Fee · Reviewed by a qualified estate planner · 24 hours'; } else { document.getElementById('final-price').textContent='£99'; document.getElementById('price-label').textContent='Mirror Wills (Couple) — Fixed Fee · Both Wills reviewed · 24 hours'; }
-} function submitForm(){ const terms = document.getElementById('terms-check'); if(!terms.checked){ alert('Please confirm the declaration to proceed.'); return; } // Collect form data and POST to Formspree, then redirect to Stripe const inputs = document.querySelectorAll('input, select, textarea'); const fd = new FormData(); inputs.forEach(el => { if(el.name || el.id) fd.append(el.name || el.id, el.value); }); submitLead(fd);
-} function submitLead(formData) { const stripe_url = document.querySelector('input[name="will-type"]:checked')?.value === 'mirror' ? 'https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04' : 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03'; const payload = {_subject: 'New Clear Legacy lead: Will', service: 'Will'}; formData.forEach((val, key) => { payload[key] = val; }); fetch('https://formspree.io/f/xvgozwak', { method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, body: JSON.stringify(payload) }).finally(() => { if(typeof gtag==='function'){ gtag('event', 'conversion', {'send_to': 'AW-17990502106', 'value': 1.0, 'currency': 'GBP'});
-  } window.location.href = stripe_url; });
+const stepLabels = ['About You','Your Partner','Children & Dependants','Your Executors','Your Estate & Gifts','Funeral & Wishes','Review & Complete'];
+
+// Stripe Payment Link URLs
+const STRIPE_URLS = {
+  single: 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03',
+  mirror: 'https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04'
+  // 'full' maps to 'single' below — no dedicated Stripe link yet
+};
+
+// Lead-capture endpoints. Primary is Formspree. BACKUP is a secondary endpoint that
+// also emails the lead to sat@kaizengold.com so leads are never lost if primary fails.
+const LEAD_ENDPOINT_PRIMARY = 'https://formspree.io/f/xvgozwak';
+const LEAD_ENDPOINT_BACKUP = ''; // TODO(Sat): set to second Formspree URL (see fix doc)
+
+function updateProgress(step){
+  const pct = Math.round((step/totalSteps)*100);
+  document.getElementById('bar').style.width = pct+'%';
+  document.getElementById('step-label').textContent = 'Step '+step+' of '+totalSteps+' — '+stepLabels[step-1];
+  document.getElementById('step-pct').textContent = pct+'%';
+}
+function showStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('step-'+n);
+  if(el) el.classList.add('active');
+  if(n!=='confirm') updateProgress(parseInt(n));
+  window.scrollTo(0,0);
+}
+function nextStep(n){ currentStep = n+1; showStep(currentStep); }
+function prevStep(n){ currentStep = n-1; showStep(currentStep); }
+function toggleSection(id, val){ document.getElementById(id).style.display = val==='yes'?'block':'none'; }
+
+document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{
+  card.addEventListener('click',function(){
+    const input = this.querySelector('input');
+    if(!input) return;
+    if(input.type==='radio'){
+      const name=input.name;
+      document.querySelectorAll('.radio-opt input[name="'+name+'"],.check-opt input[name="'+name+'"]').forEach(x=>{
+        x.checked=false;
+        x.closest('.radio-opt,.check-opt') && x.closest('[class*="-opt"]').classList.remove('selected');
+      });
+      input.checked=true;
+      this.classList.add('selected');
+      // Fire change so inline onchange="setPrice(...)" / toggleSection(...) still run
+      input.dispatchEvent(new Event('change', {bubbles:true}));
+    } else if(input.type==='checkbox'){
+      input.checked=!input.checked;
+      this.classList.toggle('selected',input.checked);
+      input.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  });
+});
+
+document.querySelectorAll('input[name="residuary"]').forEach(r=>{
+  r.addEventListener('change',function(){
+    document.getElementById('residuary-detail').style.display = (this.value==='named'||this.value==='other')?'block':'none';
+  });
+});
+
+let childCount = 0;
+function addChild(){ childCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'child-'+childCount; d.innerHTML = `<div class="block-title">Child ${childCount}<button class="remove-btn" onclick="removeBlock('child-${childCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name</label><input type="text" placeholder="Child's first name"></div>  <div class="field"><label>Last Name</label><input type="text" placeholder="Child's last name"></div>  </div>  <div class="field-row">  <div class="field"><label>Date of Birth</label><input type="date"></div>  <div class="field"><label>Relationship</label>  <select><option>Biological child</option><option>Adopted child</option><option>Step-child</option><option>Grandchild</option></select>  </div>  </div>`; document.getElementById('children-list').appendChild(d); }
+let execCount = 2;
+function addExecutor(){ execCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'exec-'+execCount; d.innerHTML = `<div class="block-title">Executor ${execCount}<button class="remove-btn" onclick="removeBlock('exec-${execCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text"></div>  <div class="field"><label>Last Name</label><input type="text"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship</label><input type="text"></div>  <div class="field"><label>Email</label><input type="email"></div>  </div>`; document.getElementById('executor-list').appendChild(d); }
+let giftCount = 0;
+function addGift(){ giftCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'gift-'+giftCount; d.innerHTML = `<div class="block-title">Gift ${giftCount}<button class="remove-btn" onclick="removeBlock('gift-${giftCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>Item or Amount</label><input type="text" placeholder="e.g. £10,000 cash / my gold watch / 5 Osidge Lane"></div>  <div class="field"><label>Recipient Name</label><input type="text" placeholder="Full name of recipient"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Daughter, Friend, Charity name"></div>`; document.getElementById('gifts-list').appendChild(d); }
+function removeBlock(id){ const el = document.getElementById(id); if(el) el.remove(); }
+function setPrice(type){
+  if(type==='single'){
+    document.getElementById('final-price').textContent='£69';
+    document.getElementById('price-label').textContent='Single Will — Fixed Fee · Reviewed by a qualified estate planner · 24 hours';
+  } else if(type==='mirror'){
+    document.getElementById('final-price').textContent='£99';
+    document.getElementById('price-label').textContent='Mirror Wills (Couple) — Fixed Fee · Both Wills reviewed · 24 hours';
+  }
+}
+
+// ---- ?product= URL param preselection ----
+function getProductParam(){
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const p = (params.get('product') || '').toLowerCase();
+    if(p === 'mirror') return 'mirror';
+    if(p === 'single' || p === 'full') return 'single'; // 'full' bundles default to single-will flow
+    return null;
+  } catch(e) { return null; }
+}
+function applyStoredProduct(){
+  try {
+    const fromUrl = getProductParam();
+    if(fromUrl){ sessionStorage.setItem('cl_product', fromUrl); }
+    const selected = sessionStorage.getItem('cl_product') || 'single';
+    const radio = document.querySelector('input[name="will-type"][value="'+selected+'"]');
+    if(radio){
+      radio.checked = true;
+      document.querySelectorAll('input[name="will-type"]').forEach(r => {
+        const card = r.closest('.radio-opt');
+        if(card) card.classList.toggle('selected', r === radio);
+      });
+      setPrice(selected);
+    }
+  } catch(e) { /* ignore */ }
+}
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', applyStoredProduct);
+} else {
+  applyStoredProduct();
+}
+
+// ---- Bulletproof submit & Stripe redirect ----
+function stripeUrlForSelection(){
+  const checked = document.querySelector('input[name="will-type"]:checked');
+  const v = checked ? checked.value : (sessionStorage.getItem('cl_product') || 'single');
+  return STRIPE_URLS[v] || STRIPE_URLS.single;
+}
+
+let __redirectFired = false;
+function redirectToStripe(url){
+  if(__redirectFired) return;
+  __redirectFired = true;
+  try { window.location.href = url || stripeUrlForSelection(); }
+  catch(e) { window.location = url || stripeUrlForSelection(); }
+}
+
+function submitForm(){
+  try {
+    const terms = document.getElementById('terms-check');
+    if(!terms || !terms.checked){
+      alert('Please confirm the declaration to proceed.');
+      return;
+    }
+    // Resolve Stripe URL NOW, before doing anything that might fail
+    const stripe_url = stripeUrlForSelection();
+
+    // Collect payload — only checked radios/boxes, only non-empty inputs
+    const payload = {
+      _subject: 'New Clear Legacy lead: Will',
+      service: 'Will',
+      product: (document.querySelector('input[name="will-type"]:checked')?.value || sessionStorage.getItem('cl_product') || 'single')
+    };
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      const key = el.name || el.id;
+      if(!key) return;
+      if(el.type === 'radio' || el.type === 'checkbox'){
+        if(el.checked) payload[key] = el.value;
+      } else if(el.value != null && el.value !== ''){
+        payload[key] = el.value;
+      }
+    });
+
+    // Fire Google Ads conversion (best-effort)
+    try {
+      if(typeof gtag === 'function'){
+        gtag('event', 'conversion', {'send_to': 'AW-17990502106', 'value': 1.0, 'currency': 'GBP'});
+      }
+    } catch(e) { /* ignore */ }
+
+    submitLead(payload, stripe_url);
+  } catch(err) {
+    // Never trap the user — always redirect even if the above fails
+    redirectToStripe();
+  }
+}
+
+function submitLead(payload, stripe_url){
+  const opts = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify(payload),
+    keepalive: true // lets the POST finish even as the page unloads
+  };
+  try { fetch(LEAD_ENDPOINT_PRIMARY, opts).catch(function(){}); } catch(e) {}
+  if(LEAD_ENDPOINT_BACKUP){
+    try { fetch(LEAD_ENDPOINT_BACKUP, opts).catch(function(){}); } catch(e) {}
+  }
+  // Redirect immediately — don't wait for the fetch (keepalive:true keeps it alive).
+  redirectToStripe(stripe_url);
+  // Safety net in case something blocks navigation
+  setTimeout(function(){ redirectToStripe(stripe_url); }, 2000);
 }
 </script>
 
