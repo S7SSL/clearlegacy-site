@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Thank You — Clear Legacy</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;font-family:'Inter',sans-serif;color:#0a0a0a;line-height:1.6}
+  :root{--blue:#2563eb;--light-blue:#eff6ff;--border:#e5e7eb;--grey:#6b7280;--soft:#f9fafb;--err:#dc2626;--ok:#059669}
+  nav{background:#fff;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+  .logo{font-size:18px;font-weight:600;color:#0a0a0a;text-decoration:none;letter-spacing:-0.5px}
+  .logo span{color:var(--blue)}
+  .wrap{max-width:680px;margin:60px auto;padding:0 4%}
+  .icon{font-size:48px;text-align:center;margin-bottom:16px}
+  h1{font-size:28px;text-align:center;font-weight:600;margin-bottom:12px}
+  .sub{text-align:center;color:var(--grey);margin-bottom:32px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:20px}
+  .status-row{display:flex;align-items:center;gap:14px;padding:10px 0}
+  .status-row + .status-row{border-top:1px solid var(--border)}
+  .dot{width:10px;height:10px;border-radius:50%;background:#d1d5db;flex-shrink:0}
+  .dot.active{background:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,0.15);animation:pulse 1.4s ease-in-out infinite}
+  .dot.done{background:var(--ok)}
+  .dot.err{background:var(--err)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+  .status-text{flex:1}
+  .status-text .t{font-weight:600;font-size:14px}
+  .status-text .s{font-size:13px;color:var(--grey)}
+  .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin 0.9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .download-btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:14px 28px;font-weight:600;border-radius:8px;margin-top:8px;transition:background .2s}
+  .download-btn:hover{background:#1d4ed8}
+  .download-btn[disabled]{background:#9ca3af;cursor:not-allowed;pointer-events:none}
+  .next-steps{background:var(--light-blue);border-left:3px solid var(--blue);padding:16px 18px;border-radius:6px;margin-top:20px}
+  .next-steps h3{font-size:15px;margin-bottom:8px}
+  .next-steps ol{padding-left:20px;font-size:14px;color:#1e3a8a}
+  .next-steps li{margin-bottom:6px}
+  .err-box{background:#fef2f2;border-left:3px solid var(--err);padding:16px 18px;border-radius:6px;color:#7f1d1d;font-size:14px;margin-top:12px}
+  footer{background:var(--soft);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey);margin-top:60px}
+  footer a{color:var(--blue);text-decoration:none}
+  .ref{font-family:monospace;font-size:12px;color:var(--grey);text-align:center;margin-top:16px;word-break:break-all}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/index.html" class="logo">Clear <span>Legacy</span></a>
+</nav>
+
+<div class="wrap">
+  <div class="icon" id="icon">⚖️</div>
+  <h1 id="heading">Thank you — your Will is being prepared</h1>
+  <p class="sub" id="sub">This usually takes about 30 seconds. Please keep this page open.</p>
+
+  <div class="card" id="status-card">
+    <div class="status-row">
+      <div class="dot done" id="dot-paid"></div>
+      <div class="status-text"><div class="t">Payment received</div><div class="s" id="s-paid">Confirming with Stripe…</div></div>
+    </div>
+    <div class="status-row">
+      <div class="dot active" id="dot-gen"></div>
+      <div class="status-text"><div class="t">Generating your Will</div><div class="s" id="s-gen">Rendering the document…</div></div>
+    </div>
+    <div class="status-row">
+      <div class="dot" id="dot-ready"></div>
+      <div class="status-text"><div class="t">Ready to download</div><div class="s" id="s-ready">Waiting…</div></div>
+    </div>
+  </div>
+
+  <div style="text-align:center">
+    <a href="#" id="download-btn" class="download-btn" disabled>Preparing download…</a>
+  </div>
+
+  <div class="next-steps" id="next-steps" style="display:none">
+    <h3>Next steps — signing your Will</h3>
+    <ol>
+      <li>Print the PDF.</li>
+      <li>Ask two witnesses to be with you at the same time. They must be 18+, of sound mind, and must <strong>not</strong> be named as beneficiaries (nor married to anyone who is).</li>
+      <li>Sign and date the Will on the last page in the presence of both witnesses.</li>
+      <li>Each witness signs and prints their details in your presence and in the presence of each other.</li>
+      <li>Store the signed original somewhere safe and tell your executor(s) where it is.</li>
+    </ol>
+    <p style="margin-top:10px;font-size:13px">We've also emailed you a copy of the PDF. If it hasn't arrived in a few minutes, check your spam folder.</p>
+  </div>
+
+  <div class="err-box" id="err-box" style="display:none"></div>
+
+  <p class="ref" id="ref-display"></p>
+</div>
+
+<footer>
+  © 2026 Clear Legacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd
+</footer>
+
+<script>
+  (function(){
+    // Look up reference: URL ?ref=... takes priority, else sessionStorage (set when form submitted)
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref') || sessionStorage.getItem('cl_ref') || '';
+
+    var refDisplay = document.getElementById('ref-display');
+    var headingEl = document.getElementById('heading');
+    var subEl = document.getElementById('sub');
+    var statusCard = document.getElementById('status-card');
+    var dotPaid = document.getElementById('dot-paid');
+    var dotGen = document.getElementById('dot-gen');
+    var dotReady = document.getElementById('dot-ready');
+    var sPaid = document.getElementById('s-paid');
+    var sGen = document.getElementById('s-gen');
+    var sReady = document.getElementById('s-ready');
+    var btn = document.getElementById('download-btn');
+    var nextSteps = document.getElementById('next-steps');
+    var errBox = document.getElementById('err-box');
+
+    if(ref){
+      refDisplay.textContent = 'Reference: ' + ref;
+    } else {
+      headingEl.textContent = 'We couldn\u2019t find your order';
+      subEl.textContent = 'Please check the link in your confirmation email, or contact us if the issue persists.';
+      statusCard.style.display = 'none';
+      btn.style.display = 'none';
+      errBox.style.display = 'block';
+      errBox.textContent = 'Missing order reference. If you just paid, you should receive an email with a download link shortly.';
+      return;
+    }
+
+    var attempts = 0;
+    var MAX_ATTEMPTS = 120; // 2s * 120 = 4 min max polling
+    var pollTimer = null;
+
+    function setGenState(state, msg){
+      dotGen.classList.remove('active','done','err');
+      if(state==='active') dotGen.classList.add('active');
+      else if(state==='done') dotGen.classList.add('done');
+      else if(state==='err') dotGen.classList.add('err');
+      if(msg) sGen.textContent = msg;
+    }
+    function setReadyState(state, msg){
+      dotReady.classList.remove('active','done','err');
+      if(state==='active') dotReady.classList.add('active');
+      else if(state==='done') dotReady.classList.add('done');
+      else if(state==='err') dotReady.classList.add('err');
+      if(msg) sReady.textContent = msg;
+    }
+
+    function showError(msg){
+      errBox.style.display = 'block';
+      errBox.textContent = msg;
+    }
+
+    function onReady(downloadUrl){
+      if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+      setGenState('done', 'Done');
+      setReadyState('done', 'Ready');
+      headingEl.textContent = 'Your Will is ready';
+      subEl.textContent = 'We\u2019ve emailed you a copy too. Tap below to download.';
+      btn.href = downloadUrl;
+      btn.removeAttribute('disabled');
+      btn.textContent = 'Download your Will (PDF)';
+      btn.setAttribute('target', '_blank');
+      btn.setAttribute('rel', 'noopener');
+      nextSteps.style.display = 'block';
+    }
+
+    // Worker endpoint (same origin as in will.html; could be proxied via custom domain)
+    var WORKER_STATUS = 'https://api.clearlegacy.co.uk/api/status';
+
+    function poll(){
+      attempts++;
+      if(attempts > MAX_ATTEMPTS){
+        if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+        setGenState('err', 'Taking longer than expected');
+        showError('Your PDF is taking longer than usual to generate. We\u2019ll email you as soon as it\u2019s ready. You can also check back here later with your reference: ' + ref);
+        return;
+      }
+      fetch(WORKER_STATUS + '?ref=' + encodeURIComponent(ref), { method: 'GET', cache: 'no-store' })
+        .then(function(r){
+          if(!r.ok){ throw new Error('status ' + r.status); }
+          return r.json();
+        })
+        .then(function(data){
+          if(data.paid){
+            dotPaid.classList.remove('active');
+            dotPaid.classList.add('done');
+            sPaid.textContent = 'Confirmed';
+          }
+          if(data.pdfStatus === 'ready' && data.downloadUrl){
+            onReady(data.downloadUrl);
+          } else if(data.pdfStatus === 'failed'){
+            if(pollTimer){ clearInterval(pollTimer); pollTimer = null; }
+            setGenState('err', 'Generation failed');
+            showError('Something went wrong preparing your Will. Our team has been notified and will contact you shortly. Reference: ' + ref);
+          } else if(data.pdfStatus === 'generating'){
+            setGenState('active', 'Rendering the document…');
+          } else if(data.pdfStatus === 'pending'){
+            sGen.textContent = data.paid ? 'Starting now…' : 'Waiting for payment confirmation…';
+          }
+        })
+        .catch(function(err){
+          // Don't show errors for transient network blips — keep polling
+          console.warn('status poll error:', err);
+        });
+    }
+
+    poll(); // immediate
+    pollTimer = setInterval(poll, 2000);
+  })();
+</script>
+
+</body>
+</html>

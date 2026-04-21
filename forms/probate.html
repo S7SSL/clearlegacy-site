@@ -104,7 +104,7 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- STEP 5: REVIEW & SUBMIT -->
-<div class="step" id="step-5">  <div class="step-num">Step 5 of 5</div>  <h1 class="step-title">Review &amp; Submit</h1>  <p class="step-sub">One of our estate planners will review your submission and contact you within 1 business day to confirm the fixed fee and next steps.</p>  <div class="price-box">  <div class="price">From £195</div>  <p>Fixed Fee · No percentage of estate · Court fee (£300) separate · Free initial review</p>  </div>  <div class="info-box">For simple estates, our fixed fee is £195. For more complex matters, we will confirm the fee before you commit to proceeding. There is no obligation at this stage.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm the information provided is accurate to the best of my knowledge</label>  </div>  <button class="btn-submit" onclick="submitProbate()">Submit — Free Review →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+<div class="step" id="step-5">  <div class="step-num">Step 5 of 5</div>  <h1 class="step-title">Review &amp; Submit</h1>  <p class="step-sub">One of our estate planners will review your submission and contact you within 1 business day to confirm the fixed fee and next steps.</p>  <div class="price-box">  <div class="price">From £195</div>  <p>Fixed Fee · No percentage of estate · Court fee (£300) separate · Free initial review</p>  </div>  <div class="info-box">For simple estates, our fixed fee is £195. For more complex matters, we will confirm the fee before you commit to proceeding. There is no obligation at this stage.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm the information provided is accurate to the best of my knowledge</label>  </div>  <button type="button" class="btn-submit" onclick="submitProbate()">Submit — Free Review →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 </div>
@@ -122,8 +122,53 @@ function nextStep(n){showStep(++currentStep);}
 function prevStep(n){showStep(--currentStep);}
 document.querySelectorAll('.radio-opt').forEach(card=>{card.addEventListener('click',function(){const input=this.querySelector('input');if(!input)return;if(input.type==='radio'){const name=input.name;document.querySelectorAll('.radio-opt input[name="'+name+'"]').forEach(x=>{x.checked=false;x.closest('.radio-opt').classList.remove('selected');});input.checked=true;this.classList.add('selected');}else if(input.type==='checkbox'){input.checked=!input.checked;this.classList.toggle('selected',input.checked);}});});
 let bCount=1;function addBene(){bCount++;const d=document.createElement('div');d.className='person-block';d.innerHTML=`<div class="block-title">Beneficiary ${bCount}</div><div class="field-row"><div class="field"><label>Full Name</label><input type="text"></div><div class="field"><label>Relationship</label><input type="text"></div></div><div class="field-row"><div class="field"><label>Share</label><input type="text"></div><div class="field"><label>Email</label><input type="email"></div></div>`;document.getElementById('bene-list').appendChild(d);}
-function submitProbate(){const t=document.getElementById('terms-check');if(!t.checked){alert('Please confirm the declaration.');return;}const inputs=document.querySelectorAll('input, select, textarea');const fd=new FormData();inputs.forEach(el=>{if(el.name||el.id)fd.append(el.name||el.id,el.value);});submitProbiteLead(fd);}
-function submitProbiteLead(formData){const payload={_subject:'New Clear Legacy lead: Probate',service:'Probate'};formData.forEach((val,key)=>{payload[key]=val;});fetch('https://formspree.io/f/xvgozwak',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)}).finally(()=>{window.location.href='https://buy.stripe.com/14AeV68I0f6Dcfde9z5ZC07';});}
+// Stripe Payment Link for Probate
+const PROBATE_STRIPE_URL = 'https://buy.stripe.com/14AeV68I0f6Dcfde9z5ZC07';
+const LEAD_ENDPOINT = 'https://formspree.io/f/xvgozwak';
+
+let __probateRedirectFired = false;
+function redirectToStripe(){
+  if(__probateRedirectFired) return;
+  __probateRedirectFired = true;
+  try { window.location.href = PROBATE_STRIPE_URL; }
+  catch(e) { window.location = PROBATE_STRIPE_URL; }
+}
+
+function submitProbate(){
+  try {
+    const t = document.getElementById('terms-check');
+    if(!t || !t.checked){
+      alert('Please confirm the declaration.');
+      return;
+    }
+    const btn = document.querySelector('.btn-submit');
+    if(btn){ btn.disabled = true; btn.textContent = 'Processing…'; }
+
+    try { if(typeof gtag === 'function'){ gtag('event','conversion',{'send_to':'AW-17990502106','value':1.0,'currency':'GBP'}); } } catch(e) {}
+
+    const payload = { _subject: 'New Clear Legacy lead: Probate', service: 'Probate' };
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      const key = el.name || el.id;
+      if(!key) return;
+      if(el.type === 'radio' || el.type === 'checkbox'){ if(el.checked) payload[key] = el.value; }
+      else if(el.value != null && el.value !== ''){ payload[key] = el.value; }
+    });
+
+    try {
+      fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function(){});
+    } catch(e) {}
+
+    redirectToStripe();
+    setTimeout(redirectToStripe, 2000);
+  } catch(err) {
+    redirectToStripe();
+  }
+}
 </script>
 
 <script src="../cl-chat.js"></script>

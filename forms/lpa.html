@@ -114,7 +114,7 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- STEP 5: REVIEW & PAY -->
-<div class="step" id="step-5">  <div class="step-num">Step 5 of 5</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub">Your LPA questionnaire is complete. Please confirm and proceed to payment.</p>  <div class="price-box">  <div class="price">£89</div>  <p>LPA Preparation Fee — Fixed · Registered with the OPG · OPG fee (£82/LPA) payable separately</p>  </div>  <div class="info-box">Once we receive your questionnaire and payment, we will prepare your LPA documents within 3 business days and send them to you for review before submission to the OPG.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm I am over 18, have mental capacity, and the information provided is accurate</label>  </div>  <button class="btn-submit" onclick="submitLPA()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+<div class="step" id="step-5">  <div class="step-num">Step 5 of 5</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub">Your LPA questionnaire is complete. Please confirm and proceed to payment.</p>  <div class="price-box">  <div class="price">£89</div>  <p>LPA Preparation Fee — Fixed · Registered with the OPG · OPG fee (£82/LPA) payable separately</p>  </div>  <div class="info-box">Once we receive your questionnaire and payment, we will prepare your LPA documents within 3 business days and send them to you for review before submission to the OPG.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm I am over 18, have mental capacity, and the information provided is accurate</label>  </div>  <button type="button" class="btn-submit" onclick="submitLPA()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(5)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 </div>
@@ -134,8 +134,59 @@ document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{card.addEventL
 function selectLPA(el,type){document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');}
 let attCount=1;
 function addAttorney(){attCount++;const d=document.createElement('div');d.className='person-block';d.id='att-'+attCount;d.innerHTML=`<div class="block-title">Attorney ${attCount} (Replacement)<button class="remove-btn" onclick="this.closest('.person-block').remove()">✕</button></div><div class="field-row"><div class="field"><label>First Name(s)</label><input type="text"></div><div class="field"><label>Last Name</label><input type="text"></div></div><div class="field-row"><div class="field"><label>Email</label><input type="email"></div><div class="field"><label>Relationship</label><input type="text"></div></div>`;document.getElementById('attorney-list').appendChild(d);}
-function submitLPA(){const t=document.getElementById('terms-check');if(!t.checked){alert('Please confirm the declaration to proceed.');return;}const inputs=document.querySelectorAll('input, select, textarea');const fd=new FormData();inputs.forEach(el=>{if(el.name||el.id)fd.append(el.name||el.id,el.value);});submitLPALead(fd);}
-function submitLPALead(formData){const payload={_subject:'New Clear Legacy lead: LPA',service:'LPA'};formData.forEach((val,key)=>{payload[key]=val;});fetch('https://formspree.io/f/xvgozwak',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)}).finally(()=>{window.location.href='https://buy.stripe.com/5kQ8wIaQ88If931fdD5ZC06';});}
+// Stripe Payment Link for LPA
+const LPA_STRIPE_URL = 'https://buy.stripe.com/5kQ8wIaQ88If931fdD5ZC06';
+const LEAD_ENDPOINT = 'https://formspree.io/f/xvgozwak';
+
+let __lpaRedirectFired = false;
+function redirectToStripe(){
+  if(__lpaRedirectFired) return;
+  __lpaRedirectFired = true;
+  try { window.location.href = LPA_STRIPE_URL; }
+  catch(e) { window.location = LPA_STRIPE_URL; }
+}
+
+function submitLPA(){
+  try {
+    const t = document.getElementById('terms-check');
+    if(!t || !t.checked){
+      alert('Please confirm the declaration to proceed.');
+      return;
+    }
+    const btn = document.querySelector('.btn-submit');
+    if(btn){ btn.disabled = true; btn.textContent = 'Processing…'; }
+
+    // Fire Google Ads conversion (best-effort)
+    try { if(typeof gtag === 'function'){ gtag('event','conversion',{'send_to':'AW-17990502106','value':1.0,'currency':'GBP'}); } } catch(e) {}
+
+    // Collect payload
+    const payload = { _subject: 'New Clear Legacy lead: LPA', service: 'LPA' };
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      const key = el.name || el.id;
+      if(!key) return;
+      if(el.type === 'radio' || el.type === 'checkbox'){ if(el.checked) payload[key] = el.value; }
+      else if(el.value != null && el.value !== ''){ payload[key] = el.value; }
+    });
+
+    // POST with keepalive so the request survives page unload
+    try {
+      fetch(LEAD_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function(){});
+    } catch(e) {}
+
+    // Redirect IMMEDIATELY — don't wait for the fetch to resolve
+    redirectToStripe();
+    // Safety net in case something blocks navigation
+    setTimeout(redirectToStripe, 2000);
+  } catch(err) {
+    // Never trap the user
+    redirectToStripe();
+  }
+}
 </script>
 
 <script src="../cl-chat.js"></script>

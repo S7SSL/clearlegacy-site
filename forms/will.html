@@ -153,15 +153,19 @@ let currentStep = 1;
 const totalSteps = 7;
 const stepLabels = ['About You','Your Partner','Children & Dependants','Your Executors','Your Estate & Gifts','Funeral & Wishes','Review & Complete'];
 
-// Stripe Payment Link URLs
+// Stripe Payment Link URLs (fallback — Worker normally returns a URL with client_reference_id)
 const STRIPE_URLS = {
   single: 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03',
   mirror: 'https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04'
   // 'full' maps to 'single' below — no dedicated Stripe link yet
 };
 
-// Lead-capture endpoints. Primary is Formspree. BACKUP is a secondary endpoint that
-// also emails the lead to sat@kaizengold.com so leads are never lost if primary fails.
+// Clear Legacy Worker (intake + PDF pipeline). Set to the deployed URL.
+// For launch: replace with custom domain once DNS is configured (e.g. https://api.clearlegacy.co.uk)
+const WORKER_ENDPOINT = 'https://api.clearlegacy.co.uk/api/lead';
+
+// Lead-capture endpoints (silent failsafe — runs in parallel to the Worker during rollout so
+// leads are never lost if the Worker has an issue on day one).
 const LEAD_ENDPOINT_PRIMARY = 'https://formspree.io/f/xvgozwak';
 const LEAD_ENDPOINT_BACKUP = ''; // TODO(Sat): set to second Formspree URL (see fix doc)
 
@@ -274,6 +278,173 @@ function redirectToStripe(url){
   catch(e) { window.location = url || stripeUrlForSelection(); }
 }
 
+// ---- Build structured Worker payload from the DOM ----
+function getVal(id){ const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; }
+function getRadio(name){ const r = document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : ''; }
+
+function buildTestatorAddress(){
+  const line1 = getVal('f-addr1');
+  const line2 = getVal('f-addr2');
+  const city = getVal('f-city');
+  const post = getVal('f-post');
+  return [line1, line2, city, post].filter(Boolean).join(', ');
+}
+
+function scrapePersonBlocks(containerId){
+  const c = document.getElementById(containerId);
+  if(!c) return [];
+  const blocks = c.querySelectorAll('.person-block');
+  const out = [];
+  blocks.forEach(block => {
+    const texts = Array.from(block.querySelectorAll('input[type="text"]')).map(i => (i.value||'').trim());
+    const emails = Array.from(block.querySelectorAll('input[type="email"]')).map(i => (i.value||'').trim());
+    out.push({ texts, emails });
+  });
+  return out;
+}
+
+function buildExecutors(){
+  // Each block has inputs in order: [first, last, relationship, email]
+  return scrapePersonBlocks('executor-list')
+    .map(b => {
+      const first = b.texts[0] || '';
+      const last = b.texts[1] || '';
+      const rel = b.texts[2] || '';
+      return {
+        name: (first + ' ' + last).trim(),
+        relationship: rel,
+        address: '' // not collected per-executor in current form
+      };
+    })
+    .filter(e => e.name);
+}
+
+function buildGuardians(){
+  // guardian-section isn't an id container — it wraps a single .person-block
+  const sec = document.getElementById('guardian-section');
+  if(!sec || sec.style.display === 'none') return [];
+  const block = sec.querySelector('.person-block');
+  if(!block) return [];
+  const texts = Array.from(block.querySelectorAll('input[type="text"]')).map(i => (i.value||'').trim());
+  const first = texts[0] || '';
+  const last = texts[1] || '';
+  const rel = texts[2] || '';
+  const name = (first + ' ' + last).trim();
+  return name ? [{ name, relationship: rel, address: '' }] : [];
+}
+
+function buildSpecificGifts(){
+  // Each #gifts-list block: [item/amount, recipient name, relationship]
+  return scrapePersonBlocks('gifts-list')
+    .map(b => ({
+      gift: b.texts[0] || '',
+      name: b.texts[1] || '',
+      relationship: b.texts[2] || ''
+    }))
+    .filter(g => g.name && g.gift);
+}
+
+function buildChildren(){
+  return scrapePersonBlocks('children-list')
+    .map(b => {
+      const first = b.texts[0] || '';
+      const last = b.texts[1] || '';
+      return { name: (first + ' ' + last).trim(), relationship: 'Child' };
+    })
+    .filter(c => c.name);
+}
+
+function buildResiduary(children){
+  const choice = getRadio('residuary');
+  const partnerName = (getVal('p-first') + ' ' + getVal('p-last')).trim();
+  // Free-text box only present if "named" or "other"
+  const detailBox = document.querySelector('#residuary-detail textarea');
+  const detailText = detailBox ? (detailBox.value||'').trim() : '';
+
+  if(choice === 'partner-children'){
+    if(partnerName){
+      return [{ name: partnerName, relationship: 'Spouse/Civil Partner', share: 'Residuary estate (or to children equally if partner predeceases)' }];
+    }
+    // fall through if no partner name
+  }
+  if(choice === 'children-only' || (choice === 'partner-children' && !partnerName)){
+    if(children.length > 0){
+      return children.map(c => ({ name: c.name, relationship: c.relationship, share: 'Equal share of residuary estate' }));
+    }
+  }
+  if(choice === 'named' || choice === 'other' || choice === 'charity'){
+    if(detailText){
+      return [{ name: 'See detailed instructions (notes)', relationship: choice, share: 'Residuary estate' }];
+    }
+  }
+  // Last resort: partner if specified, else empty (will fail validation → user sees message)
+  if(partnerName) return [{ name: partnerName, relationship: 'Spouse/Civil Partner', share: 'Residuary estate' }];
+  return [];
+}
+
+function buildNotes(residuaryDetail){
+  const parts = [];
+  const funeralWishes = document.querySelector('#step-6 textarea');
+  const additional = document.querySelectorAll('#step-6 textarea')[1];
+
+  if(residuaryDetail){
+    parts.push('RESIDUARY DETAIL: ' + residuaryDetail);
+  }
+  const funeralPref = getRadio('funeral');
+  if(funeralPref) parts.push('Funeral preference: ' + funeralPref);
+
+  const needsTrust = getRadio('needs-trust');
+  if(needsTrust && needsTrust !== 'no') parts.push('Trust advice requested: ' + needsTrust);
+
+  const marital = getRadio('marital');
+  if(marital) parts.push('Marital status: ' + marital);
+
+  return parts.length ? parts.join('\n\n') : '';
+}
+
+function buildWorkerPayload(){
+  const product = (document.querySelector('input[name="will-type"]:checked')?.value || sessionStorage.getItem('cl_product') || 'single');
+  const children = buildChildren();
+  const residDetail = (document.querySelector('#residuary-detail textarea')?.value || '').trim();
+
+  // Additional wishes = the second textarea on step 6
+  const step6Textareas = document.querySelectorAll('#step-6 textarea');
+  const funeralWishes = step6Textareas[0] ? (step6Textareas[0].value||'').trim() : '';
+  const additional = step6Textareas[1] ? (step6Textareas[1].value||'').trim() : '';
+
+  const payload = {
+    product: product === 'mirror' ? 'mirror' : 'single',
+    testator: {
+      fullName: (getVal('f-first') + ' ' + getVal('f-last')).trim(),
+      address: buildTestatorAddress(),
+      dob: getVal('f-dob'),
+      email: getVal('f-email'),
+      phone: getVal('f-phone')
+    },
+    executors: buildExecutors(),
+    guardians: buildGuardians(),
+    specificGifts: buildSpecificGifts(),
+    residuary: buildResiduary(children),
+    funeralWishes: funeralWishes,
+    notes: [buildNotes(residDetail), additional].filter(Boolean).join('\n\n'),
+    marketingOptIn: false
+  };
+
+  // Mirror wills: include partner
+  if(payload.product === 'mirror'){
+    const partnerFull = (getVal('p-first') + ' ' + getVal('p-last')).trim();
+    if(partnerFull){
+      payload.partner = {
+        fullName: partnerFull,
+        address: buildTestatorAddress(), // assume shared address
+        dob: getVal('p-dob')
+      };
+    }
+  }
+
+  return payload;
+}
+
 function submitForm(){
   try {
     const terms = document.getElementById('terms-check');
@@ -281,11 +452,33 @@ function submitForm(){
       alert('Please confirm the declaration to proceed.');
       return;
     }
-    // Resolve Stripe URL NOW, before doing anything that might fail
-    const stripe_url = stripeUrlForSelection();
+    const submitBtn = document.querySelector('.btn-submit');
+    if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Processing…'; }
 
-    // Collect payload — only checked radios/boxes, only non-empty inputs
-    const payload = {
+    // Fire Google Ads conversion (best-effort)
+    try {
+      if(typeof gtag === 'function'){
+        gtag('event', 'conversion', {'send_to': 'AW-17990502106', 'value': 1.0, 'currency': 'GBP'});
+      }
+    } catch(e) {}
+
+    // Silent failsafe: also send the legacy flat payload to Formspree so leads aren't
+    // lost if the Worker is temporarily unavailable on day 1.
+    fireLegacyBackup();
+
+    // Primary path: Worker → structured checkoutUrl with client_reference_id
+    const workerPayload = buildWorkerPayload();
+    submitToWorker(workerPayload);
+  } catch(err) {
+    console.error('submitForm error:', err);
+    // Never trap the user — always redirect somewhere sensible
+    redirectToStripe();
+  }
+}
+
+function fireLegacyBackup(){
+  try {
+    const legacy = {
       _subject: 'New Clear Legacy lead: Will',
       service: 'Will',
       product: (document.querySelector('input[name="will-type"]:checked')?.value || sessionStorage.getItem('cl_product') || 'single')
@@ -293,42 +486,57 @@ function submitForm(){
     document.querySelectorAll('input, select, textarea').forEach(el => {
       const key = el.name || el.id;
       if(!key) return;
-      if(el.type === 'radio' || el.type === 'checkbox'){
-        if(el.checked) payload[key] = el.value;
-      } else if(el.value != null && el.value !== ''){
-        payload[key] = el.value;
-      }
+      if(el.type === 'radio' || el.type === 'checkbox'){ if(el.checked) legacy[key] = el.value; }
+      else if(el.value != null && el.value !== ''){ legacy[key] = el.value; }
     });
-
-    // Fire Google Ads conversion (best-effort)
-    try {
-      if(typeof gtag === 'function'){
-        gtag('event', 'conversion', {'send_to': 'AW-17990502106', 'value': 1.0, 'currency': 'GBP'});
-      }
-    } catch(e) { /* ignore */ }
-
-    submitLead(payload, stripe_url);
-  } catch(err) {
-    // Never trap the user — always redirect even if the above fails
-    redirectToStripe();
-  }
+    const opts = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify(legacy),
+      keepalive: true
+    };
+    try { fetch(LEAD_ENDPOINT_PRIMARY, opts).catch(function(){}); } catch(e) {}
+    if(LEAD_ENDPOINT_BACKUP){
+      try { fetch(LEAD_ENDPOINT_BACKUP, opts).catch(function(){}); } catch(e) {}
+    }
+  } catch(e) {}
 }
 
-function submitLead(payload, stripe_url){
-  const opts = {
+function submitToWorker(payload){
+  const fallbackUrl = stripeUrlForSelection();
+  // If Worker endpoint isn't set (e.g. preview), fall back immediately
+  if(!WORKER_ENDPOINT || WORKER_ENDPOINT.indexOf('<') !== -1){
+    redirectToStripe(fallbackUrl);
+    return;
+  }
+
+  // Timeout: if Worker takes >6s, fall back to static Stripe URL so the user isn't stuck
+  const timeoutId = setTimeout(function(){
+    console.warn('Worker timeout — using static Stripe URL');
+    redirectToStripe(fallbackUrl);
+  }, 6000);
+
+  fetch(WORKER_ENDPOINT, {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-    body: JSON.stringify(payload),
-    keepalive: true // lets the POST finish even as the page unloads
-  };
-  try { fetch(LEAD_ENDPOINT_PRIMARY, opts).catch(function(){}); } catch(e) {}
-  if(LEAD_ENDPOINT_BACKUP){
-    try { fetch(LEAD_ENDPOINT_BACKUP, opts).catch(function(){}); } catch(e) {}
-  }
-  // Redirect immediately — don't wait for the fetch (keepalive:true keeps it alive).
-  redirectToStripe(stripe_url);
-  // Safety net in case something blocks navigation
-  setTimeout(function(){ redirectToStripe(stripe_url); }, 2000);
+    body: JSON.stringify(payload)
+  }).then(function(res){
+    if(!res.ok){ throw new Error('Worker returned ' + res.status); }
+    return res.json();
+  }).then(function(data){
+    clearTimeout(timeoutId);
+    if(data && data.checkoutUrl){
+      // Persist ref so thank-you page can poll even if redirect strips the URL
+      try { sessionStorage.setItem('cl_ref', data.ref); } catch(e) {}
+      redirectToStripe(data.checkoutUrl);
+    } else {
+      redirectToStripe(fallbackUrl);
+    }
+  }).catch(function(err){
+    clearTimeout(timeoutId);
+    console.error('Worker request failed:', err);
+    redirectToStripe(fallbackUrl);
+  });
 }
 </script>
 

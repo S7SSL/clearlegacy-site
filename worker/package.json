@@ -1,0 +1,19 @@
+{
+  "name": "clearlegacy-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Worker — questionnaire intake, Stripe webhook, Will PDF generation and delivery.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloudflare/puppeteer": "^0.0.14"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250920.0",
+    "typescript": "^5.6.3",
+    "wrangler": "^4.84.0"
+  }
+}

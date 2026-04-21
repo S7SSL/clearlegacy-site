@@ -1,0 +1,23 @@
+# Cloudflare Workers
+.wrangler/
+worker/.wrangler/
+
+# Node
+node_modules/
+worker/node_modules/
+
+# Root-level npm scaffolding (wrangler lives in worker/ — this is redundant)
+/package.json
+/package-lock.json
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Secrets (belt-and-braces — secrets should live in Cloudflare via `wrangler secret put`, never in the repo)
+.env
+.env.*
+.dev.vars
+worker/.dev.vars
