@@ -3,16 +3,18 @@
  *
  * Called by forms/will.html when the client completes the questionnaire.
  * Body: JSON matching QuestionnaireData (minus `ref`/`createdAt` — we set those).
+ *       Optionally includes `ref` — if present AND already paid for, this is the
+ *       pay-first path: we merge the questionnaire into the existing paid lead
+ *       and trigger PDF generation directly (no Stripe redirect needed).
  *
- * Response: { ref, checkoutUrl }
- * The form then sets window.location.href = checkoutUrl. The checkoutUrl is the
- * existing Stripe Payment Link with `?client_reference_id={ref}` appended so that the
- * webhook can correlate the paid session back to this questionnaire.
+ * Response (new lead, questionnaire-first):   { ref, checkoutUrl, product }
+ * Response (pay-first, ref pre-existing):     { ref, status: 'generating', product }
  */
 
 import type { Env } from '../index';
 import type { LeadRecord, Product, QuestionnaireData } from '../types';
-import { putLead } from '../kv';
+import { getLead, putLead, updateLead } from '../kv';
+import { regenerateForRef } from './webhook';
 
 const MAX_BODY_BYTES = 32 * 1024; // 32KB — questionnaires shouldn't be bigger
 
@@ -113,7 +115,15 @@ function appendClientRef(url: string, ref: string): string {
   return u.toString();
 }
 
-export async function handleLead(request: Request, env: Env): Promise<Response> {
+function isValidRef(v: unknown): v is string {
+  return typeof v === 'string' && /^[a-zA-Z0-9-]{8,64}$/.test(v);
+}
+
+export async function handleLead(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<Response> {
   // Length check first
   const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
   if (contentLength > MAX_BODY_BYTES) {
@@ -130,9 +140,50 @@ export async function handleLead(request: Request, env: Env): Promise<Response> 
   const v = validate(body);
   if (!v.ok) return jsonError(400, 'validation_failed', v.error);
 
-  // Generate reference (client_reference_id — Stripe allows up to 200 chars, alphanumeric + underscore + hyphen)
-  const ref = crypto.randomUUID();
+  // Pay-first path: caller passed a ref that already exists as a paid lead.
+  // In that case we merge the questionnaire into the existing record and kick
+  // PDF generation, without issuing another Stripe Payment Link redirect.
+  const providedRef = isValidRef(body?.ref) ? (body.ref as string) : undefined;
+  if (providedRef) {
+    const existing = await getLead(env, providedRef);
+    if (!existing) {
+      return jsonError(404, 'ref_not_found', 'The order reference was not recognised.');
+    }
+    if (!existing.paidAt) {
+      // Should not happen in normal use — the onboarding email is only sent
+      // after payment — but guard against customers sharing/reusing URLs.
+      return jsonError(402, 'not_paid', 'No payment has been recorded for this order.');
+    }
+    if (existing.pdfStatus === 'generating' || existing.pdfStatus === 'ready') {
+      // Idempotent: double-submitting the questionnaire shouldn't re-render.
+      return new Response(
+        JSON.stringify({ ref: providedRef, status: existing.pdfStatus, product: v.data.product }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
 
+    const questionnaire: QuestionnaireData = {
+      ref: providedRef,
+      createdAt: new Date().toISOString(),
+      ...v.data,
+    };
+    await updateLead(env, providedRef, {
+      questionnaire,
+      pdfStatus: 'pending',
+      pdfError: undefined,
+    });
+
+    // Kick PDF generation in the background and ack quickly.
+    ctx.waitUntil(regenerateForRef(env, providedRef));
+
+    return new Response(
+      JSON.stringify({ ref: providedRef, status: 'generating', product: v.data.product }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  }
+
+  // Legacy / questionnaire-first path: mint a new ref and send the customer to Stripe.
+  const ref = crypto.randomUUID();
   const record: LeadRecord = {
     questionnaire: {
       ref,
@@ -140,6 +191,7 @@ export async function handleLead(request: Request, env: Env): Promise<Response> 
       ...v.data,
     },
     pdfStatus: 'pending',
+    product: v.data.product,
   };
   await putLead(env, ref, record);
 

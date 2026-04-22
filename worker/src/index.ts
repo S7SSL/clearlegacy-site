@@ -72,7 +72,7 @@ export default {
     try {
       let response: Response;
       if (url.pathname === '/api/lead' && request.method === 'POST') {
-        response = await handleLead(request, env);
+        response = await handleLead(request, env, ctx);
       } else if (url.pathname === '/api/stripe-webhook' && request.method === 'POST') {
         response = await handleStripeWebhook(request, env, ctx);
       } else if (url.pathname === '/api/status' && request.method === 'GET') {

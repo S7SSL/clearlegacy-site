@@ -26,7 +26,7 @@ export async function handlePdfDownload(request: Request, env: Env): Promise<Res
   const obj = await env.CLEARLEGACY_PDFS.get(lead.pdfKey);
   if (!obj) return textErr(404, 'pdf_object_missing');
 
-  const customerName = lead.questionnaire.testator.fullName || 'will';
+  const customerName = lead.questionnaire?.testator?.fullName || 'will';
   const filename = `${customerName.replace(/[^\w -]/g, '_')}-will.pdf`;
 
   const headers = new Headers();

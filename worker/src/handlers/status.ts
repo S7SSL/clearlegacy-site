@@ -33,7 +33,7 @@ export async function handleStatus(request: Request, env: Env): Promise<Response
   if (lead.pdfStatus === 'ready') {
     const ttlSeconds = parseInt(env.PDF_RETENTION_DAYS || '90', 10) * 24 * 60 * 60;
     const token = await mintDownloadToken(env.DOWNLOAD_TOKEN_SECRET, ref, ttlSeconds);
-    const origin = env.SITE_ORIGIN.replace(/\/$/, '');
+    const origin = (env.API_ORIGIN || env.SITE_ORIGIN).replace(/\/$/, '');
     body.downloadUrl = `${origin}/api/pdf/${token}`;
     body.emailedAt = lead.emailedAt;
   } else if (lead.pdfStatus === 'failed') {

@@ -13,9 +13,10 @@
  */
 
 import type { Env } from '../index';
-import type { LeadRecord } from '../types';
-import { getLead, listLeadRefs, updateLead } from '../kv';
+import type { LeadRecord, Product } from '../types';
+import { getLead, listLeadRefs, putLead, updateLead } from '../kv';
 import { regenerateForRef } from './webhook';
+import { sendOnboardingEmail } from '../email';
 
 function unauthorized(): Response {
   return new Response('Authentication required', {
@@ -73,13 +74,15 @@ function escapeHtml(v: string): string {
 function statusBadge(lead: LeadRecord): string {
   const s = lead.pdfStatus;
   const palette: Record<string, string> = {
+    awaiting_questionnaire: '#3b82f6',
     pending: '#9ca3af',
     generating: '#f59e0b',
     ready: '#10b981',
     failed: '#ef4444',
   };
   const color = palette[s] || '#6b7280';
-  return `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:${color};color:#fff;font-size:12px;font-weight:600">${escapeHtml(s)}</span>`;
+  const label = s === 'awaiting_questionnaire' ? 'awaiting q' : s;
+  return `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:${color};color:#fff;font-size:12px;font-weight:600">${escapeHtml(label)}</span>`;
 }
 
 function formatMoney(amountMinor?: number, currency?: string): string {
@@ -107,6 +110,10 @@ function renderDashboard(rows: Array<{ ref: string; lead: LeadRecord | null }>, 
       const regenBtn = canRegen
         ? `<form method="POST" action="/admin/regenerate?ref=${encodeURIComponent(ref)}" style="margin:0" onsubmit="return confirm('Regenerate PDF and re-send email for ${escapeHtml(name)}?')"><button type="submit" style="padding:4px 10px;font-size:12px;border:1px solid #d1d5db;background:#fff;border-radius:4px;cursor:pointer">Regenerate</button></form>`
         : '';
+      const canResendOnboarding = lead.pdfStatus === 'awaiting_questionnaire';
+      const resendBtn = canResendOnboarding
+        ? `<form method="POST" action="/admin/resend-onboarding?ref=${encodeURIComponent(ref)}" style="margin:0" onsubmit="return confirm('Re-send questionnaire email to ${escapeHtml(email)}?')"><button type="submit" style="padding:4px 10px;font-size:12px;border:1px solid #d1d5db;background:#fff;border-radius:4px;cursor:pointer">Resend email</button></form>`
+        : '';
       return `
         <tr>
           <td><code style="font-size:11px">${escapeHtml(ref.slice(0, 8))}…</code></td>
@@ -119,6 +126,7 @@ function renderDashboard(rows: Array<{ ref: string; lead: LeadRecord | null }>, 
           <td style="display:flex;gap:6px;align-items:center">
             <a href="/admin/lead?ref=${encodeURIComponent(ref)}" style="font-size:12px">details</a>
             ${regenBtn}
+            ${resendBtn}
           </td>
         </tr>
       `;
@@ -163,6 +171,24 @@ function renderDashboard(rows: Array<{ ref: string; lead: LeadRecord | null }>, 
     <tbody>${tbody || '<tr><td colspan="8" style="color:#9ca3af">No leads yet.</td></tr>'}</tbody>
   </table>
   <div style="margin-top:16px">${nextLink}</div>
+
+  <h1 style="margin-top:40px">Bootstrap a lead (pre-paid customer)</h1>
+  <div class="meta">Use this for customers who paid via a bare Payment Link before the webhook-bootstrap flow was live (e.g. Samara, woodstocksdream). Creates a lead with status "awaiting_questionnaire" and sends the onboarding email.</div>
+  <form method="POST" action="/admin/create-lead" style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:720px">
+    <label>Email<br><input name="email" type="email" required style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px"></label>
+    <label>Name<br><input name="name" type="text" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px"></label>
+    <label>Product<br>
+      <select name="product" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px">
+        <option value="single">Single</option>
+        <option value="mirror">Mirror</option>
+      </select>
+    </label>
+    <label>Amount (pence)<br><input name="amountMinor" type="number" min="0" placeholder="e.g. 9900" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px"></label>
+    <label>Stripe PI id (optional)<br><input name="stripePaymentIntentId" type="text" placeholder="pi_..." style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px"></label>
+    <label>Paid at (optional, ISO)<br><input name="paidAt" type="text" placeholder="2026-04-20T14:00:00Z" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px"></label>
+    <label style="grid-column:span 2;display:flex;gap:6px;align-items:center"><input name="skipEmail" type="checkbox" value="1"> Just create the record — don't send the onboarding email</label>
+    <div style="grid-column:span 2"><button type="submit" style="padding:8px 16px;background:#111;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:600">Create lead & send questionnaire link</button></div>
+  </form>
 </body>
 </html>`;
 }
@@ -209,6 +235,144 @@ async function handleLeadDetail(request: Request, env: Env): Promise<Response> {
   });
 }
 
+/**
+ * POST /admin/create-lead
+ *
+ * Bootstrap a lead record for a customer who paid directly via a Stripe
+ * Payment Link before the webhook-driven pay-first flow was in place.
+ * Creates a LeadRecord with pdfStatus='awaiting_questionnaire', sends them
+ * the onboarding email with a link to ?ref=NEWREF on the questionnaire page.
+ *
+ * Accepts form-urlencoded or JSON body with:
+ *   email        (required)
+ *   name         (optional; used in email greeting)
+ *   product      (optional; 'single' | 'mirror'; default 'single')
+ *   amountMinor  (optional; Stripe amount_total for the admin's own records)
+ *   currency     (optional; default 'gbp')
+ *   stripePaymentIntentId (optional)
+ *   stripeSessionId       (optional)
+ *   paidAt       (optional ISO; default now)
+ *   skipEmail    (optional; if "1", create record only, don't email)
+ */
+async function handleCreateLead(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<Response> {
+  let params: Record<string, string> = {};
+  const contentType = request.headers.get('Content-Type') || '';
+  try {
+    if (contentType.includes('application/json')) {
+      const body = await request.json() as Record<string, any>;
+      for (const [k, v] of Object.entries(body)) {
+        if (v != null) params[k] = String(v);
+      }
+    } else {
+      const form = await request.formData();
+      form.forEach((v, k) => { params[k] = String(v); });
+    }
+  } catch {
+    return new Response('Could not parse body', { status: 400 });
+  }
+
+  const email = (params.email || '').trim();
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    return new Response('Valid email is required', { status: 400 });
+  }
+  const product: Product = params.product === 'mirror' ? 'mirror' : 'single';
+  const name = (params.name || '').trim() || undefined;
+  const amountMinor = parseInt(params.amountMinor || '', 10);
+  const currency = (params.currency || 'gbp').toLowerCase();
+  const paidAt = params.paidAt && !Number.isNaN(Date.parse(params.paidAt))
+    ? new Date(params.paidAt).toISOString()
+    : new Date().toISOString();
+
+  const ref = crypto.randomUUID();
+  const record: LeadRecord = {
+    pdfStatus: 'awaiting_questionnaire',
+    paidAt,
+    stripeSessionId: params.stripeSessionId || undefined,
+    stripePaymentIntentId: params.stripePaymentIntentId || undefined,
+    stripeAmount: Number.isFinite(amountMinor) && amountMinor > 0 ? amountMinor : undefined,
+    stripeCurrency: currency,
+    stripeCustomerEmail: email,
+    product,
+  };
+  await putLead(env, ref, record);
+
+  const origin = (env.SITE_ORIGIN || '').replace(/\/$/, '');
+  const questionnaireUrl = `${origin}/forms/will.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(product)}`;
+
+  if (params.skipEmail !== '1') {
+    try {
+      await sendOnboardingEmail({
+        apiKey: env.RESEND_API_KEY,
+        from: env.EMAIL_FROM,
+        to: email,
+        bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+        customerName: name,
+        questionnaireUrl,
+        product,
+        ref,
+      });
+      await updateLead(env, ref, { onboardingEmailSentAt: new Date().toISOString() });
+    } catch (err: any) {
+      await updateLead(env, ref, { onboardingEmailError: err?.message || String(err) });
+      return new Response(
+        JSON.stringify({ ref, created: true, emailSent: false, error: err?.message || String(err), questionnaireUrl }, null, 2),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+  }
+
+  return new Response(
+    JSON.stringify({ ref, created: true, emailSent: params.skipEmail !== '1', questionnaireUrl }, null, 2),
+    { status: 200, headers: { 'Content-Type': 'application/json' } },
+  );
+}
+
+/**
+ * POST /admin/resend-onboarding?ref=UUID
+ * Re-send the "complete your questionnaire" email for an existing lead that
+ * is still awaiting_questionnaire. Useful if the original email bounced or
+ * got lost.
+ */
+async function handleResendOnboarding(
+  request: Request,
+  env: Env,
+): Promise<Response> {
+  const ref = new URL(request.url).searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+  if (!lead.stripeCustomerEmail) return new Response('No customer email on record', { status: 400 });
+
+  const product: Product = (lead.product || lead.questionnaire?.product || 'single') as Product;
+  const origin = (env.SITE_ORIGIN || '').replace(/\/$/, '');
+  const questionnaireUrl = `${origin}/forms/will.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(product)}`;
+
+  try {
+    await sendOnboardingEmail({
+      apiKey: env.RESEND_API_KEY,
+      from: env.EMAIL_FROM,
+      to: lead.stripeCustomerEmail,
+      bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+      customerName: lead.questionnaire?.testator?.fullName,
+      questionnaireUrl,
+      product,
+      ref,
+    });
+    await updateLead(env, ref, {
+      onboardingEmailSentAt: new Date().toISOString(),
+      onboardingEmailError: undefined,
+    });
+  } catch (err: any) {
+    await updateLead(env, ref, { onboardingEmailError: err?.message || String(err) });
+    return new Response(`Email failed: ${err?.message || err}`, { status: 500 });
+  }
+  return new Response(null, { status: 303, headers: { Location: '/admin' } });
+}
+
 async function handleRegenerate(
   request: Request,
   env: Env,
@@ -251,6 +415,12 @@ export async function handleAdmin(
   }
   if (path === '/admin/regenerate' && request.method === 'POST') {
     return handleRegenerate(request, env, ctx);
+  }
+  if (path === '/admin/create-lead' && request.method === 'POST') {
+    return handleCreateLead(request, env, ctx);
+  }
+  if (path === '/admin/resend-onboarding' && request.method === 'POST') {
+    return handleResendOnboarding(request, env);
   }
   return new Response('Not found', { status: 404 });
 }

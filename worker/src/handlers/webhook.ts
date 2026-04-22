@@ -13,11 +13,12 @@
  */
 
 import type { Env } from '../index';
+import type { LeadRecord, Product } from '../types';
 import { verifyStripeSignature } from '../stripe';
-import { getLead, updateLead, markEventProcessed } from '../kv';
+import { getLead, putLead, updateLead, markEventProcessed } from '../kv';
 import { render } from '../template';
 import { renderPdf } from '../pdf';
-import { sendEmail, bytesToBase64 } from '../email';
+import { sendEmail, sendOnboardingEmail, bytesToBase64 } from '../email';
 import { mintDownloadToken } from '../tokens';
 // Template is bundled at build time via wrangler's text module support.
 // @ts-ignore — wrangler rule handles .html as text
@@ -61,6 +62,88 @@ export async function regenerateForRef(env: Env, ref: string): Promise<void> {
   return generateAndDeliver(env, ref);
 }
 
+/**
+ * Best-effort guess of which product was purchased, based on the Stripe
+ * checkout session. We prefer the Payment Link URL comparison (STRIPE_URL_SINGLE
+ * vs STRIPE_URL_MIRROR both set as env vars), falling back to amount heuristics.
+ * This is only used to pick the right copy in the onboarding email and to
+ * pre-select the product on the questionnaire form.
+ */
+function inferProductFromSession(session: any, env: Env): Product {
+  // Payment Link id is exposed on the session at `session.payment_link`
+  // (string id). We can't reverse-lookup the URL without a Stripe API call,
+  // so we compare amounts as a simple heuristic: mirror wills are priced
+  // higher than single wills.
+  const amount = Number(session?.amount_total || 0);
+  // Conservative default: single. If amount >= 150.00 GBP we treat it as mirror.
+  // (Real config lives in Stripe; this is only for picking email copy.)
+  if (amount >= 15000) return 'mirror';
+  return 'single';
+}
+
+/**
+ * Build the URL the customer follows from the onboarding email to fill in
+ * their questionnaire. The form must read ?ref= from the URL and pass it back
+ * in its POST to /api/lead so we match this payment to their answers. We also
+ * pass the product so the form pre-selects the right radio (single vs mirror).
+ */
+function questionnaireUrlFor(ref: string, product: Product, env: Env): string {
+  const origin = (env.SITE_ORIGIN || '').replace(/\/$/, '');
+  return `${origin}/forms/will.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(product)}`;
+}
+
+/**
+ * Pay-first bootstrap: a Stripe payment arrived with NO client_reference_id
+ * attached (i.e. customer paid via a bare Payment Link straight from the
+ * website). We create a fresh lead keyed on a new UUID, stash the payment
+ * details, and email the customer a link to the questionnaire.
+ *
+ * Returns the newly-minted ref so the caller can include it in the webhook
+ * response payload (useful for debugging in the Stripe dashboard).
+ */
+async function bootstrapLeadFromSession(env: Env, session: any): Promise<string | null> {
+  const customerEmail: string | undefined =
+    session?.customer_details?.email || session?.customer_email || undefined;
+  if (!customerEmail) {
+    console.warn('Webhook bootstrap: session has no customer email — cannot send onboarding link');
+    return null;
+  }
+
+  const ref = crypto.randomUUID();
+  const product = inferProductFromSession(session, env);
+  const customerName: string | undefined = session?.customer_details?.name || undefined;
+
+  const record: LeadRecord = {
+    pdfStatus: 'awaiting_questionnaire',
+    paidAt: new Date().toISOString(),
+    stripeSessionId: session.id,
+    stripePaymentIntentId: session.payment_intent,
+    stripeAmount: session.amount_total,
+    stripeCurrency: session.currency,
+    stripeCustomerEmail: customerEmail,
+    product,
+  };
+  await putLead(env, ref, record);
+
+  try {
+    await sendOnboardingEmail({
+      apiKey: env.RESEND_API_KEY,
+      from: env.EMAIL_FROM,
+      to: customerEmail,
+      bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+      customerName,
+      questionnaireUrl: questionnaireUrlFor(ref, product, env),
+      product,
+      ref,
+    });
+    await updateLead(env, ref, { onboardingEmailSentAt: new Date().toISOString() });
+  } catch (err: any) {
+    console.error(`Webhook bootstrap: onboarding email failed for ref=${ref}:`, err);
+    await updateLead(env, ref, { onboardingEmailError: err?.message || String(err) });
+  }
+  return ref;
+}
+
 async function generateAndDeliver(env: Env, ref: string): Promise<void> {
   try {
     const lead = await getLead(env, ref);
@@ -70,6 +153,10 @@ async function generateAndDeliver(env: Env, ref: string): Promise<void> {
     }
     if (lead.pdfStatus === 'ready') {
       console.log(`Webhook: pdf already ready for ref=${ref}, skipping`);
+      return;
+    }
+    if (!lead.questionnaire) {
+      console.log(`Webhook: lead ${ref} has no questionnaire yet — skipping generation`);
       return;
     }
     await updateLead(env, ref, { pdfStatus: 'generating' });
@@ -98,7 +185,7 @@ async function generateAndDeliver(env: Env, ref: string): Promise<void> {
     const toEmail = lead.stripeCustomerEmail || lead.questionnaire.testator.email;
     if (toEmail) {
       const customerName = lead.questionnaire.testator.fullName;
-      const product = lead.questionnaire.product === 'mirror' ? 'Mirror Wills' : 'Will';
+      const product = (lead.questionnaire.product || lead.product) === 'mirror' ? 'Mirror Wills' : 'Will';
       const subject = `Your ${product} from Clear Legacy — ready to sign`;
 
       const plainHtml = `
@@ -200,7 +287,24 @@ export async function handleStripeWebhook(
   const { ref, session } = extractRef(event);
 
   if (!ref) {
-    // Nothing for us to do (e.g. subscription events, refunds, etc.)
+    // No client_reference_id — this is the pay-first path: the customer paid
+    // via a bare Payment Link (no questionnaire submitted yet). Bootstrap a
+    // lead record keyed on a fresh UUID and email them the questionnaire link.
+    if (event.type === 'checkout.session.completed' && session) {
+      const newRef = await bootstrapLeadFromSession(env, session);
+      if (newRef) {
+        return new Response(
+          JSON.stringify({ received: true, bootstrapped: true, ref: newRef }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+      // No customer email — nothing we can do; ack so Stripe doesn't retry.
+      return new Response(
+        JSON.stringify({ received: true, ignored: 'no_customer_email' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    // Non-checkout events with no ref (subscription events, refunds, etc.)
     return new Response(JSON.stringify({ received: true, ignored: event.type }), { status: 200 });
   }
 

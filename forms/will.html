@@ -402,6 +402,18 @@ function buildNotes(residuaryDetail){
   return parts.length ? parts.join('\n\n') : '';
 }
 
+// Pay-first flow: if the page was opened from the onboarding email, the URL
+// contains ?ref=UUID pointing at an already-paid lead. In that case we skip
+// the Stripe redirect after submission and just show the confirmation page.
+function getPaidRefFromUrl(){
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref') || '';
+    if(/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return ref;
+  } catch(e) { /* ignore */ }
+  return '';
+}
+
 function buildWorkerPayload(){
   const product = (document.querySelector('input[name="will-type"]:checked')?.value || sessionStorage.getItem('cl_product') || 'single');
   const children = buildChildren();
@@ -441,6 +453,12 @@ function buildWorkerPayload(){
       };
     }
   }
+
+  // Pay-first: if the page was opened from the onboarding email, forward the
+  // pre-paid ref so the Worker merges this questionnaire into the existing
+  // paid lead instead of creating a new one.
+  const paidRef = getPaidRefFromUrl();
+  if(paidRef){ payload.ref = paidRef; }
 
   return payload;
 }
@@ -516,6 +534,10 @@ function submitToWorker(payload){
     redirectToStripe(fallbackUrl);
   }, 6000);
 
+  // In the pay-first flow we've ALREADY been paid, so never fall back to
+  // Stripe — that would charge the customer a second time.
+  const isPayFirst = !!payload.ref;
+
   fetch(WORKER_ENDPOINT, {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
@@ -525,9 +547,15 @@ function submitToWorker(payload){
     return res.json();
   }).then(function(data){
     clearTimeout(timeoutId);
+    try { if(data && data.ref){ sessionStorage.setItem('cl_ref', data.ref); } } catch(e) {}
+
+    if(isPayFirst){
+      // Pay-first: Worker has started PDF generation. Show the confirmation
+      // step, which already reads as "thank you, we have your answers".
+      showStep('confirm');
+      return;
+    }
     if(data && data.checkoutUrl){
-      // Persist ref so thank-you page can poll even if redirect strips the URL
-      try { sessionStorage.setItem('cl_ref', data.ref); } catch(e) {}
       redirectToStripe(data.checkoutUrl);
     } else {
       redirectToStripe(fallbackUrl);
@@ -535,6 +563,14 @@ function submitToWorker(payload){
   }).catch(function(err){
     clearTimeout(timeoutId);
     console.error('Worker request failed:', err);
+    if(isPayFirst){
+      // No fallback: customer has already paid. Show an inline error rather
+      // than sending them back to Stripe.
+      alert('Sorry — we could not save your answers just now. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      const submitBtn = document.querySelector('.btn-submit');
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit & generate my Will'; }
+      return;
+    }
     redirectToStripe(fallbackUrl);
   });
 }
