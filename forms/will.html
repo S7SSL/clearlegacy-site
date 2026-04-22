@@ -86,8 +86,28 @@ body.pay-first .hide-on-paid{display:none !important}
 footer{background:var(--soft-bg);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey)}
 footer a{color:var(--blue);text-decoration:none}
 footer a:hover{text-decoration:underline}
+/* REVIEW SUMMARY (step 7) */
+.review-wrap{background:var(--soft-bg);border:1px solid var(--border);border-radius:8px;padding:0;margin-bottom:28px;overflow:hidden}
+.review-wrap h3{background:var(--white);font-size:13px;color:var(--dark);padding:14px 18px;border-bottom:1px solid var(--border);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;margin:0}
+.review-section{border-bottom:1px solid var(--border);padding:16px 18px;background:var(--white)}
+.review-section:last-child{border-bottom:none}
+.review-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:12px}
+.review-section-title{font-size:12px;color:var(--grey);letter-spacing:0.5px;text-transform:uppercase;font-weight:600}
+.review-section .edit-btn{background:none;border:1px solid var(--border);color:var(--blue);padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;border-radius:4px;transition:all .2s;white-space:nowrap}
+.review-section .edit-btn:hover{background:var(--light-blue);border-color:var(--blue)}
+.review-body{font-size:14px;color:var(--dark);line-height:1.6}
+.review-body .empty{color:var(--grey);font-style:italic;font-size:13px}
+.review-body dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin:0}
+.review-body dt{color:var(--grey);font-size:12px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;padding-top:2px}
+.review-body dd{color:var(--dark);font-size:14px;word-break:break-word}
+.review-body ul{list-style:none;padding:0;margin:0}
+.review-body li{padding:6px 0;border-bottom:1px dashed var(--border)}
+.review-body li:last-child{border-bottom:none}
+/* INLINE ERROR */
+.form-error{background:#fef2f2;border-left:3px solid var(--err);padding:14px 16px;margin-bottom:16px;color:var(--err);border-radius:6px;font-size:14px;line-height:1.5;display:none}
+.form-error.visible{display:block}
 /* MOBILE */
-@media(max-width:600px){ .field-row{grid-template-columns:1fr} .radio-group.horizontal{flex-direction:column} .form-nav{flex-wrap:wrap} .btn-back{width:100%;max-width:none;order:2} .btn-next{max-width:none;order:1} .step-title{font-size:22px}
+@media(max-width:600px){ .field-row{grid-template-columns:1fr} .radio-group.horizontal{flex-direction:column} .form-nav{flex-wrap:wrap} .btn-back{width:100%;max-width:none;order:2} .btn-next{max-width:none;order:1} .step-title{font-size:22px} .review-body dl{grid-template-columns:1fr;gap:2px} .review-body dt{padding-top:8px}
 }
 </style>
 <!-- Google Analytics -->
@@ -141,7 +161,42 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- STEP 7: REVIEW & PAY -->
-<div class="step" id="step-7">  <div class="step-header">  <div class="step-num">Step 7 of 7</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub" id="step7-sub">Your Will questionnaire is complete. Please confirm the details below and complete payment.</p>  </div>  <div class="price-box hide-on-paid">  <div class="price" id="final-price">£69</div>  <p id="price-label">Single Will — Fixed Fee · Reviewed by a qualified estate planner · Returned within 24 hours</p>  </div>  <div class="field hide-on-paid"><label>Will Type</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="will-type" value="single" onchange="setPrice('single')"> Single Will — £69</label>  <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>  </div>  </div>  <div class="info-box">Once you submit your questionnaire, our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email for review before signing.</div>  <div class="field">  <label class="terms-label" for="terms-check"><input type="checkbox" id="terms-check"><span>I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge</span></label>  </div>  <button type="button" id="btn-submit" class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+<div class="step" id="step-7">
+  <div class="step-header">
+    <div class="step-num">Step 7 of 7</div>
+    <h1 class="step-title">Review &amp; Complete</h1>
+    <p class="step-sub" id="step7-sub">Please review every section below. Click <em>Edit</em> next to any section to amend your answers, then return here to submit.</p>
+  </div>
+
+  <!-- REVIEW SUMMARY (populated by renderReviewSummary() when step 7 shown) -->
+  <div class="review-wrap" id="review-summary">
+    <h3>Your Answers</h3>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">About You</span><button type="button" class="edit-btn" onclick="editStep(1)">Edit</button></div><div class="review-body" id="sum-1"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Partner</span><button type="button" class="edit-btn" onclick="editStep(2)">Edit</button></div><div class="review-body" id="sum-2"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Children &amp; Dependants</span><button type="button" class="edit-btn" onclick="editStep(3)">Edit</button></div><div class="review-body" id="sum-3"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Executors</span><button type="button" class="edit-btn" onclick="editStep(4)">Edit</button></div><div class="review-body" id="sum-4"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Estate &amp; Gifts</span><button type="button" class="edit-btn" onclick="editStep(5)">Edit</button></div><div class="review-body" id="sum-5"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Funeral &amp; Additional Wishes</span><button type="button" class="edit-btn" onclick="editStep(6)">Edit</button></div><div class="review-body" id="sum-6"></div></div>
+  </div>
+
+  <div class="price-box hide-on-paid">
+    <div class="price" id="final-price">£69</div>
+    <p id="price-label">Single Will — Fixed Fee · Reviewed by a qualified estate planner · Returned within 24 hours</p>
+  </div>
+  <div class="field hide-on-paid">
+    <label>Will Type</label>
+    <div class="radio-group horizontal">
+      <label class="radio-opt"><input type="radio" name="will-type" value="single" onchange="setPrice('single')"> Single Will — £69</label>
+      <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>
+    </div>
+  </div>
+  <div class="info-box">Once you submit your questionnaire, our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email for review before signing.</div>
+  <div class="field">
+    <label class="terms-label" for="terms-check"><input type="checkbox" id="terms-check"><span>I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge</span></label>
+  </div>
+  <div id="form-error" class="form-error" role="alert" aria-live="polite"></div>
+  <button type="button" id="btn-submit" class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>
+  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 <!-- CONFIRMATION -->
@@ -186,11 +241,181 @@ function showStep(n){
   const el = document.getElementById('step-'+n);
   if(el) el.classList.add('active');
   if(n!=='confirm') updateProgress(parseInt(n));
+  // Render the review summary when landing on step 7 so answers are always current.
+  if(String(n) === '7'){ try { renderReviewSummary(); } catch(e){ console.error('renderReviewSummary failed', e); } hideFormError(); }
   window.scrollTo(0,0);
 }
 function nextStep(n){ currentStep = n+1; showStep(currentStep); }
 function prevStep(n){ currentStep = n-1; showStep(currentStep); }
-function toggleSection(id, val){ document.getElementById(id).style.display = val==='yes'?'block':'none'; }
+function toggleSection(id, val){ document.getElementById(id).style.display = val==='yes'?'block':'none'; updateResiduaryVisibility(); }
+// "Edit" button on the review page jumps back to the chosen step. When the
+// customer then clicks Continue they'll step forward again and eventually land
+// back on step 7, which re-renders the summary from the latest DOM values.
+function editStep(n){ currentStep = n; showStep(n); }
+
+// ---- Residuary visibility — hide options that no longer make sense given answers ----
+// Samara-style failure mode: user answers "no children" then still sees (and can
+// pick) "Equally between my children" on the residuary radio. Keep the radio
+// choices in sync with earlier answers.
+function updateResiduaryVisibility(){
+  const hasChildren = getRadio('has-children') === 'yes';
+  const hasPartner = getRadio('has-partner') === 'yes';
+  document.querySelectorAll('input[name="residuary"]').forEach(function(r){
+    const opt = r.closest('.radio-opt');
+    if(!opt) return;
+    let hide = false;
+    if(r.value === 'children-only' && !hasChildren) hide = true;
+    if(r.value === 'partner-children' && !hasPartner) hide = true;
+    opt.style.display = hide ? 'none' : '';
+    if(hide && r.checked){ r.checked = false; opt.classList.remove('selected'); }
+  });
+}
+
+// ---- Inline form error (replaces alert() for submit-time problems) ----
+function showFormError(msg){
+  const box = document.getElementById('form-error');
+  if(!box){ alert(msg); return; }
+  box.textContent = msg;
+  box.classList.add('visible');
+  try { box.scrollIntoView({behavior: 'smooth', block: 'center'}); } catch(e){}
+}
+function hideFormError(){
+  const box = document.getElementById('form-error');
+  if(box){ box.classList.remove('visible'); box.textContent = ''; }
+}
+
+// ---- Review summary renderer — reads the DOM and paints step 7 ----
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function kv(label, value){ return value ? ('<dt>' + esc(label) + '</dt><dd>' + esc(value) + '</dd>') : ''; }
+function emptyMsg(msg){ return '<p class="empty">' + esc(msg) + '</p>'; }
+
+function renderReviewSummary(){
+  // Step 1 — About You
+  const s1 = document.getElementById('sum-1');
+  if(s1){
+    const name = (getVal('f-first') + ' ' + getVal('f-last')).trim();
+    const addrParts = [getVal('f-addr1'), getVal('f-addr2'), getVal('f-city'), getVal('f-post')].filter(Boolean);
+    const dob = getVal('f-dob');
+    const marital = getRadio('marital');
+    const items = ''
+      + kv('Name', name)
+      + kv('DOB', dob)
+      + kv('Address', addrParts.join(', '))
+      + kv('Email', getVal('f-email'))
+      + kv('Phone', getVal('f-phone'))
+      + kv('Marital', marital);
+    s1.innerHTML = items ? ('<dl>' + items + '</dl>') : emptyMsg('No details entered yet.');
+  }
+
+  // Step 2 — Partner
+  const s2 = document.getElementById('sum-2');
+  if(s2){
+    const hasPartner = getRadio('has-partner');
+    if(hasPartner === 'no'){ s2.innerHTML = '<p>No spouse or civil partner.</p>'; }
+    else if(hasPartner === 'yes'){
+      const pn = (getVal('p-first') + ' ' + getVal('p-last')).trim();
+      const items = ''
+        + kv('Name', pn)
+        + kv('DOB', getVal('p-dob'))
+        + kv('Everything to partner first?', getRadio('partner-primary') || '—');
+      s2.innerHTML = items ? ('<dl>' + items + '</dl>') : emptyMsg('Partner details not entered.');
+    } else { s2.innerHTML = emptyMsg('Not answered.'); }
+  }
+
+  // Step 3 — Children & Dependants
+  const s3 = document.getElementById('sum-3');
+  if(s3){
+    const hasChildren = getRadio('has-children');
+    const hasGuardian = getRadio('has-guardian');
+    if(hasChildren === 'no' && hasGuardian === 'no'){
+      s3.innerHTML = '<p>No children and no guardian nominated.</p>';
+    } else {
+      let html = '';
+      if(hasChildren === 'yes'){
+        const kids = buildChildren();
+        html += '<dl>' + kv('Has children', 'Yes') + kv('Inheritance age', getVal('child-age')) + '</dl>';
+        if(kids.length){
+          html += '<ul>' + kids.map(function(k){ return '<li>' + esc(k.name) + '</li>'; }).join('') + '</ul>';
+        } else {
+          html += emptyMsg('No children entered yet.');
+        }
+      } else if(hasChildren === 'no'){
+        html += '<p>No children.</p>';
+      }
+      if(hasGuardian === 'yes'){
+        const g = buildGuardians();
+        html += '<dl>' + kv('Guardian', g[0] ? (g[0].name + (g[0].relationship ? ' (' + g[0].relationship + ')' : '')) : '(not entered)') + '</dl>';
+      }
+      s3.innerHTML = html || emptyMsg('Not answered.');
+    }
+  }
+
+  // Step 4 — Executors
+  const s4 = document.getElementById('sum-4');
+  if(s4){
+    const execs = buildExecutors();
+    if(!execs.length){ s4.innerHTML = emptyMsg('No executors entered. You need at least one.'); }
+    else {
+      s4.innerHTML = '<ul>' + execs.map(function(e, i){
+        const label = i === 0 ? 'Primary' : (i === 1 ? 'Substitute' : 'Executor ' + (i+1));
+        return '<li><strong>' + esc(label) + ':</strong> ' + esc(e.name) + (e.relationship ? ' <span style="color:var(--grey)">(' + esc(e.relationship) + ')</span>' : '') + '</li>';
+      }).join('') + '</ul>';
+    }
+  }
+
+  // Step 5 — Estate & Gifts
+  const s5 = document.getElementById('sum-5');
+  if(s5){
+    const hasProp = getRadio('has-property');
+    const propSection = document.getElementById('property-section');
+    const propAddr = propSection ? (propSection.querySelector('input[type="text"]')?.value || '').trim() : '';
+    const propOwn = propSection ? (propSection.querySelector('select')?.value || '').trim() : '';
+    const gifts = buildSpecificGifts();
+    const residChoice = getRadio('residuary');
+    const residText = (document.querySelector('#residuary-detail textarea')?.value || '').trim();
+
+    const residMap = {
+      'partner-children': 'My partner, then equally between my children',
+      'children-only': 'Equally between my children',
+      'named': 'Named individuals (see detail)',
+      'charity': 'Charity',
+      'other': 'Other arrangement (see detail)'
+    };
+    let html = '';
+    html += '<dl>';
+    html += kv('Owns property', hasProp === 'yes' ? 'Yes' : (hasProp === 'no' ? 'No' : '—'));
+    if(hasProp === 'yes'){
+      html += kv('Property address', propAddr);
+      html += kv('Ownership', propOwn);
+    }
+    html += kv('Residuary', residMap[residChoice] || residChoice || '—');
+    if(residText){ html += kv('Residuary detail', residText); }
+    html += '</dl>';
+    if(gifts.length){
+      html += '<p style="margin-top:10px"><strong>Specific gifts</strong></p>';
+      html += '<ul>' + gifts.map(function(g){ return '<li>' + esc(g.gift) + ' — <strong>' + esc(g.name) + '</strong>' + (g.relationship ? ' (' + esc(g.relationship) + ')' : '') + '</li>'; }).join('') + '</ul>';
+    }
+    s5.innerHTML = html;
+  }
+
+  // Step 6 — Funeral & Additional
+  const s6 = document.getElementById('sum-6');
+  if(s6){
+    const funeral = getRadio('funeral');
+    const textareas = document.querySelectorAll('#step-6 textarea');
+    const wishes = textareas[0] ? (textareas[0].value||'').trim() : '';
+    const extra = textareas[1] ? (textareas[1].value||'').trim() : '';
+    const trust = getRadio('needs-trust');
+    let html = '<dl>';
+    html += kv('Funeral preference', funeral);
+    html += kv('Funeral wishes', wishes);
+    html += kv('Additional instructions', extra);
+    html += kv('Trust advice', trust);
+    html += '</dl>';
+    if(!funeral && !wishes && !extra && !trust){ html = emptyMsg('No funeral wishes entered.'); }
+    s6.innerHTML = html;
+  }
+}
 
 document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{
   card.addEventListener('click',function(){
@@ -277,7 +502,7 @@ function applyPayFirstMode(){
     if(btn){ btn.textContent = 'Submit Questionnaire →'; }
   } catch(e) { /* ignore */ }
 }
-function bootstrapForm(){ applyStoredProduct(); applyPayFirstMode(); }
+function bootstrapForm(){ applyStoredProduct(); applyPayFirstMode(); updateResiduaryVisibility(); }
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', bootstrapForm);
 } else {
@@ -485,11 +710,12 @@ function buildWorkerPayload(){
 }
 
 function submitForm(){
+  hideFormError();
   const isPayFirst = !!getPaidRefFromUrl();
   try {
     const terms = document.getElementById('terms-check');
     if(!terms || !terms.checked){
-      alert('Please confirm the declaration to proceed.');
+      showFormError('Please tick the declaration to confirm your details are accurate.');
       return;
     }
     const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
@@ -513,7 +739,7 @@ function submitForm(){
     console.error('submitForm error:', err);
     if(isPayFirst){
       // NEVER redirect a paid customer to Stripe — they've already paid.
-      alert('Sorry — something went wrong submitting your answers. Please try again, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      showFormError('Sorry — something went wrong submitting your answers. Please try again, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
       const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
       return;
@@ -558,7 +784,7 @@ function submitToWorker(payload){
   // If Worker endpoint isn't set (e.g. preview), fall back immediately
   if(!WORKER_ENDPOINT || WORKER_ENDPOINT.indexOf('<') !== -1){
     if(isPayFirst){
-      alert('Sorry — our intake service is not reachable. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      showFormError('Sorry — our intake service is not reachable. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
       const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
       return;
@@ -572,7 +798,7 @@ function submitToWorker(payload){
   const timeoutId = setTimeout(function(){
     console.warn('Worker timeout');
     if(isPayFirst){
-      alert('Sorry — saving your answers is taking longer than expected. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      showFormError('Sorry — saving your answers is taking longer than expected. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
       const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
       return;
@@ -608,7 +834,7 @@ function submitToWorker(payload){
     if(isPayFirst){
       // No fallback: customer has already paid. Show an inline error rather
       // than sending them back to Stripe.
-      alert('Sorry — we could not save your answers just now. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      showFormError('Sorry — we could not save your answers just now. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
       const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
       return;

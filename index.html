@@ -30,7 +30,49 @@
 <meta name="twitter:description" content="The UK's most affordable estate planning. Fixed fees. Expert reviewed. Start your Will in minutes.">
 <!-- Schema -->
 <script type="application/ld+json">
-{ "@context": "https://schema.org", "@graph": [ { "@type": "LegalService", "@id": "https://www.clearlegacy.co.uk/#organization", "name": "Clear Legacy", "description": "Online will writing, lasting power of attorney, probate and estate planning. Fixed fees. Expert reviewed.", "url": "https://www.clearlegacy.co.uk", "logo": "https://www.clearlegacy.co.uk/assets/logo.png", "priceRange": "£69–£599", "areaServed": { "@type": "Country", "name": "United Kingdom" }, "hasOfferCatalog": { "@type": "OfferCatalog", "name": "Estate Planning Services", "itemListElement": [ {"@type": "Offer", "name": "Single Will", "price": "69", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "Mirror Wills", "price": "99", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "Lasting Power of Attorney", "price": "89", "priceCurrency": "GBP"}, {"@type": "Offer", "name": "Probate", "price": "195", "priceCurrency": "GBP"} ] }, "parentOrganization": { "@type": "Organization", "name": "Kaizen Finance Ltd" } }, { "@type": "FAQPage", "mainEntity": [ { "@type": "Question", "name": "Is an online Will legally valid in the UK?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Provided it is signed and witnessed correctly under the Wills Act 1837, an online Will is legally identical to one drafted by a solicitor."} }, { "@type": "Question", "name": "How much does a Will cost with Clear Legacy?", "acceptedAnswer": {"@type": "Answer", "text": "A single Will costs £69. Mirror Wills for couples cost £99. All fees are fixed with no hidden charges."} }, { "@type": "Question", "name": "How quickly will my Will be ready?", "acceptedAnswer": {"@type": "Answer", "text": "Most Wills are drafted and returned within 24 hours of submitting your questionnaire."} }, { "@type": "Question", "name": "Do I need an LPA as well as a Will?", "acceptedAnswer": {"@type": "Answer", "text": "A Will only takes effect on death. An LPA protects you during your lifetime if you lose mental capacity. Without one, your family must apply to the Court of Protection — a lengthy and costly process."} } ] } ]
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.clearlegacy.co.uk/#organization",
+      "name": "ClearLegacy",
+      "legalName": "Kaizen Finance Ltd",
+      "url": "https://www.clearlegacy.co.uk/",
+      "logo": "https://www.clearlegacy.co.uk/favicon.png",
+      "sameAs": []
+    },
+    {
+      "@type": "LegalService",
+      "@id": "https://www.clearlegacy.co.uk/#legalservice",
+      "name": "ClearLegacy — Wills, LPAs & Probate",
+      "description": "UK online will writing, Lasting Power of Attorney and fixed-fee probate service. Expert-reviewed, legally valid in England & Wales.",
+      "url": "https://www.clearlegacy.co.uk/",
+      "image": "https://www.clearlegacy.co.uk/images/og-image.png",
+      "priceRange": "££",
+      "areaServed": { "@type": "Country", "name": "United Kingdom" },
+      "serviceType": ["Will writing","Lasting Power of Attorney","Probate","Trusts"],
+      "provider": { "@id": "https://www.clearlegacy.co.uk/#organization" },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "ClearLegacy Services",
+        "itemListElement": [
+          {"@type":"Offer","name":"Single Will","price":"69","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/"},
+          {"@type":"Offer","name":"Mirror Wills","price":"99","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/guides/mirror-wills.html"},
+          {"@type":"Offer","name":"Lasting Power of Attorney","price":"89","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/blog/what-is-a-lasting-power-of-attorney/"},
+          {"@type":"Offer","name":"Probate","price":"195","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/guides/probate-guide.html"},
+          {"@type":"Offer","name":"Trusts","price":"149","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/guides/what-is-a-trust.html"}
+        ]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.clearlegacy.co.uk/#website",
+      "url": "https://www.clearlegacy.co.uk/",
+      "name": "ClearLegacy",
+      "publisher": { "@id": "https://www.clearlegacy.co.uk/#organization" }
+    }
+  ]
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
