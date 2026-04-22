@@ -485,13 +485,14 @@ function buildWorkerPayload(){
 }
 
 function submitForm(){
+  const isPayFirst = !!getPaidRefFromUrl();
   try {
     const terms = document.getElementById('terms-check');
     if(!terms || !terms.checked){
       alert('Please confirm the declaration to proceed.');
       return;
     }
-    const submitBtn = document.querySelector('.btn-submit');
+    const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
     if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Processing…'; }
 
     // Fire Google Ads conversion (best-effort)
@@ -510,7 +511,14 @@ function submitForm(){
     submitToWorker(workerPayload);
   } catch(err) {
     console.error('submitForm error:', err);
-    // Never trap the user — always redirect somewhere sensible
+    if(isPayFirst){
+      // NEVER redirect a paid customer to Stripe — they've already paid.
+      alert('Sorry — something went wrong submitting your answers. Please try again, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
+      return;
+    }
+    // Questionnaire-first: safe to fall back to Stripe
     redirectToStripe();
   }
 }
@@ -542,22 +550,35 @@ function fireLegacyBackup(){
 }
 
 function submitToWorker(payload){
+  // In the pay-first flow we've ALREADY been paid, so never fall back to
+  // Stripe — that would charge the customer a second time.
+  const isPayFirst = !!payload.ref;
   const fallbackUrl = stripeUrlForSelection();
+
   // If Worker endpoint isn't set (e.g. preview), fall back immediately
   if(!WORKER_ENDPOINT || WORKER_ENDPOINT.indexOf('<') !== -1){
+    if(isPayFirst){
+      alert('Sorry — our intake service is not reachable. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
+      return;
+    }
     redirectToStripe(fallbackUrl);
     return;
   }
 
-  // Timeout: if Worker takes >6s, fall back to static Stripe URL so the user isn't stuck
+  // Timeout: if Worker takes >6s, fall back to static Stripe URL so the user isn't stuck.
+  // Pay-first customers NEVER go to Stripe — show an inline error instead.
   const timeoutId = setTimeout(function(){
-    console.warn('Worker timeout — using static Stripe URL');
+    console.warn('Worker timeout');
+    if(isPayFirst){
+      alert('Sorry — saving your answers is taking longer than expected. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
+      const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
+      return;
+    }
     redirectToStripe(fallbackUrl);
   }, 6000);
-
-  // In the pay-first flow we've ALREADY been paid, so never fall back to
-  // Stripe — that would charge the customer a second time.
-  const isPayFirst = !!payload.ref;
 
   fetch(WORKER_ENDPOINT, {
     method: 'POST',
@@ -588,8 +609,8 @@ function submitToWorker(payload){
       // No fallback: customer has already paid. Show an inline error rather
       // than sending them back to Stripe.
       alert('Sorry — we could not save your answers just now. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
-      const submitBtn = document.querySelector('.btn-submit');
-      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit & generate my Will'; }
+      const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
+      if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
       return;
     }
     redirectToStripe(fallbackUrl);
