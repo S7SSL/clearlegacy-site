@@ -38,6 +38,12 @@ nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--dark);letter-spacing:0.3px;margin-bottom:8px;text-transform:uppercase}
 .field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--white);padding:12px 14px;font-size:15px;font-family:'Inter',sans-serif;color:var(--dark);transition:border .2s;outline:none;appearance:none;-webkit-appearance:none}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+/* Checkbox/radio: restore native rendering so the tick/dot is visible on iOS */
+.field input[type="checkbox"],.field input[type="radio"]{width:auto;height:auto;padding:0;border:none;background:transparent;appearance:auto;-webkit-appearance:auto;accent-color:var(--blue);box-shadow:none}
+.terms-label{display:flex;align-items:flex-start;gap:12px;text-transform:none;font-weight:500;font-size:14px;cursor:pointer;color:var(--dark);letter-spacing:0;line-height:1.5;padding:14px;border:1px solid var(--border);border-radius:6px;background:var(--white);transition:all .2s}
+.terms-label:hover{border-color:var(--blue);background:var(--light-blue)}
+.terms-label input{width:22px;height:22px;flex-shrink:0;margin-top:0}
+body.pay-first .hide-on-paid{display:none !important}
 .field textarea{min-height:100px;resize:vertical}
 .field .hint{font-size:13px;color:var(--grey);margin-top:6px;font-style:italic}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -135,7 +141,7 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- STEP 7: REVIEW & PAY -->
-<div class="step" id="step-7">  <div class="step-header">  <div class="step-num">Step 7 of 7</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub">Your Will questionnaire is complete. Please confirm the details below and complete payment.</p>  </div>  <div class="price-box">  <div class="price" id="final-price">£69</div>  <p id="price-label">Single Will — Fixed Fee · Reviewed by a qualified estate planner · Returned within 24 hours</p>  </div>  <div class="field"><label>Will Type</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="will-type" value="single" onchange="setPrice('single')"> Single Will — £69</label>  <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>  </div>  </div>  <div class="info-box">Once you submit your questionnaire, our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email for review before signing.</div>  <div class="field">  <label><input type="checkbox" id="terms-check" style="width:auto;margin-right:8px"> I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge</label>  </div>  <button type="button" class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+<div class="step" id="step-7">  <div class="step-header">  <div class="step-num">Step 7 of 7</div>  <h1 class="step-title">Review &amp; Complete</h1>  <p class="step-sub" id="step7-sub">Your Will questionnaire is complete. Please confirm the details below and complete payment.</p>  </div>  <div class="price-box hide-on-paid">  <div class="price" id="final-price">£69</div>  <p id="price-label">Single Will — Fixed Fee · Reviewed by a qualified estate planner · Returned within 24 hours</p>  </div>  <div class="field hide-on-paid"><label>Will Type</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="will-type" value="single" onchange="setPrice('single')"> Single Will — £69</label>  <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>  </div>  </div>  <div class="info-box">Once you submit your questionnaire, our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email for review before signing.</div>  <div class="field">  <label class="terms-label" for="terms-check"><input type="checkbox" id="terms-check"><span>I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge</span></label>  </div>  <button type="button" id="btn-submit" class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 <!-- CONFIRMATION -->
@@ -257,10 +263,25 @@ function applyStoredProduct(){
     }
   } catch(e) { /* ignore */ }
 }
+// Pay-first UI: if the URL has ?ref=..., the customer has already paid.
+// Hide the price/product selector and reword the final CTA so they don't
+// think there's a second payment step.
+function applyPayFirstMode(){
+  try {
+    const paidRef = getPaidRefFromUrl();
+    if(!paidRef) return;
+    document.body.classList.add('pay-first');
+    const sub = document.getElementById('step7-sub');
+    if(sub){ sub.textContent = 'Your questionnaire is complete. Payment has already been received — please confirm the declaration below to submit.'; }
+    const btn = document.getElementById('btn-submit');
+    if(btn){ btn.textContent = 'Submit Questionnaire →'; }
+  } catch(e) { /* ignore */ }
+}
+function bootstrapForm(){ applyStoredProduct(); applyPayFirstMode(); }
 if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', applyStoredProduct);
+  document.addEventListener('DOMContentLoaded', bootstrapForm);
 } else {
-  applyStoredProduct();
+  bootstrapForm();
 }
 
 // ---- Bulletproof submit & Stripe redirect ----
