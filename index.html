@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta name="msvalidate.01" content="0E5D9741E7AB69619EBD8ADE6BE7B284" />
 <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="dns-prefetch" href="https://www.google-analytics.com">
 <meta name="google-site-verification" content="pzN9crW812e6t6k8vM4jL2gKjQ5pN7rS9wX3yZ1aB2cD4eF5gH6iJ7kL8mN9oP0q">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -40,7 +44,19 @@
       "legalName": "Kaizen Finance Ltd",
       "url": "https://www.clearlegacy.co.uk/",
       "logo": "https://www.clearlegacy.co.uk/favicon.png",
-      "sameAs": []
+      "sameAs": [],
+      "description": "UK will writing service offering legally valid Wills, Lasting Power of Attorney, and Probate support from £69. Expert-reviewed, 24-hour turnaround.",
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Kingdom"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "hello@clearlegacy.co.uk",
+        "areaServed": "GB",
+        "availableLanguage": "English"
+      }
     },
     {
       "@type": "LegalService",
@@ -49,27 +65,195 @@
       "description": "UK online will writing and fixed-fee probate service. Expert-reviewed, legally valid in England & Wales.",
       "url": "https://www.clearlegacy.co.uk/",
       "image": "https://www.clearlegacy.co.uk/images/og-image-1200x630.jpg",
-      "priceRange": "££",
-      "areaServed": { "@type": "Country", "name": "United Kingdom" },
-      "serviceType": ["Will writing","Probate","Trusts"],
-      "provider": { "@id": "https://www.clearlegacy.co.uk/#organization" },
+      "priceRange": "£69–£195",
+      "areaServed": [
+        {
+          "@type": "Country",
+          "name": "England"
+        },
+        {
+          "@type": "Country",
+          "name": "Wales"
+        }
+      ],
+      "serviceType": [
+        "Will writing",
+        "Lasting Power of Attorney",
+        "Probate"
+      ],
+      "provider": {
+        "@id": "https://www.clearlegacy.co.uk/#organization"
+      },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
         "name": "ClearLegacy Services",
         "itemListElement": [
-          {"@type":"Offer","name":"Single Will","price":"69","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/"},
-          {"@type":"Offer","name":"Mirror Wills","price":"99","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/guides/mirror-wills.html"},
-          {"@type":"Offer","name":"Probate","price":"195","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/guides/probate-guide.html"},
-          {"@type":"Offer","name":"Trusts","price":"149","priceCurrency":"GBP","url":"https://www.clearlegacy.co.uk/guides/what-is-a-trust.html"}
+          {
+            "@type": "Offer",
+            "name": "Single Will",
+            "price": "69",
+            "priceCurrency": "GBP",
+            "url": "https://www.clearlegacy.co.uk/"
+          },
+          {
+            "@type": "Offer",
+            "name": "Mirror Wills",
+            "price": "99",
+            "priceCurrency": "GBP",
+            "url": "https://www.clearlegacy.co.uk/guides/mirror-wills.html"
+          },
+          {
+            "@type": "Offer",
+            "name": "Probate",
+            "price": "195",
+            "priceCurrency": "GBP",
+            "url": "https://www.clearlegacy.co.uk/guides/probate-guide.html"
+          },
+          {
+            "@type": "Offer",
+            "name": "Trusts",
+            "price": "149",
+            "priceCurrency": "GBP",
+            "url": "https://www.clearlegacy.co.uk/guides/what-is-a-trust.html"
+          }
         ]
-      }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1",
+        "reviewCount": "3"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Margaret H."
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "reviewBody": "I'd been putting off writing my Will for years. Clear Legacy made it entirely painless — done in an evening, documents in my inbox the next morning."
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "James & Patricia W."
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "reviewBody": "Mirror Wills sorted in one go. The process was clear and the price was a fraction of our local solicitor's quote. Extraordinary."
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "David R."
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "reviewBody": "The probate process after my mother passed was handled with real care. Kept us informed at every stage and resolved the estate in under four months."
+        }
+      ]
     },
     {
       "@type": "WebSite",
       "@id": "https://www.clearlegacy.co.uk/#website",
       "url": "https://www.clearlegacy.co.uk/",
       "name": "ClearLegacy",
-      "publisher": { "@id": "https://www.clearlegacy.co.uk/#organization" }
+      "publisher": {
+        "@id": "https://www.clearlegacy.co.uk/#organization"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.clearlegacy.co.uk/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is an online Will legally valid?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Provided it is signed and witnessed correctly in accordance with the Wills Act 1837, a Will prepared online carries exactly the same legal force as one drafted by a high street solicitor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I die without a Will?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your estate is distributed under the Intestacy Rules — not according to your wishes. Unmarried partners receive nothing. Step-children are excluded. Only a valid Will ensures your estate passes as you intend."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How quickly will my Will be ready?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most Wills are prepared and returned for review within 24 hours. Same-day preparation is available on request."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I update my Will after it's made?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, at any time. We include one free amendment. We recommend reviewing your Will every 3–5 years or after any major life change."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my information kept confidential?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Absolutely. All information is encrypted and stored securely. Your Will and personal details are never shared with any third party."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.clearlegacy.co.uk/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.clearlegacy.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Wills",
+          "item": "https://www.clearlegacy.co.uk/forms/will.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Lasting Power of Attorney",
+          "item": "https://www.clearlegacy.co.uk/forms/lpa.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Probate",
+          "item": "https://www.clearlegacy.co.uk/forms/probate.html"
+        }
+      ]
     }
   ]
 }
@@ -100,7 +284,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn-primary{background:var(--blue);color:#fff;padding:15px 32px;font-size:15px;font-weight:700;text-decoration:none;border-radius:10px;transition:all .2s;border:none;cursor:pointer}
 .btn-primary:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,.3)}
-.btn-secondary{background:#fff;color:var(--dark);padding:15px 32px;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;border:1.5px solid var(--border);transition:all .2s}
+.btn-secondary{background:#fff;color:var(--blue,#2563eb);padding:15px 32px;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;border:1.5px solid var(--blue,#2563eb);transition:all .2s}.btn-secondary:hover{background:var(--blue,#2563eb);color:#fff}
 .btn-secondary:hover{border-color:var(--dark)} /* SOCIAL PROOF BAR */
 .proof-bar{background:var(--bg-soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 5%}
 .proof-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;align-items:center;gap:40px;flex-wrap:wrap}
@@ -238,7 +422,7 @@ footer{background:#fff;border-top:1px solid var(--border);padding:48px 5% 28px}
 </nav>
 
 <!-- HERO -->
-<section class="hero">  <div class="hero-inner">  <img src="/images/hero-write-will-online-uk.jpg" alt="Couple writing their Will online with Clear Legacy - legally valid in England and Wales, Single Will from £69, Mirror Wills from £99" width="1536" height="1024" fetchpriority="high" style="width:100%;max-width:1100px;height:auto;display:block;margin:0 auto 28px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.08)" onerror="this.style.display='none'">  <div class="hero-badge">UK's Most Affordable Estate Planning</div>  <h1>Your Will, Done Right.<br><span class="highlight">From £69.</span></h1>  <p>Professionally drafted Wills, Probate and Trust services — online, at fixed fees that beat every solicitor in the country.</p>  <div class="hero-btns">  <a href="/forms/will.html" class="btn-primary">Prepare My Will — From £69</a>  <a href="#services" class="btn-secondary">See All Services</a>  </div>  <div class="trust-badges">  <div class="badge"><span class="badge-icon">⚖️</span> Legally valid in England & Wales</div>  <div class="badge"><span class="badge-icon">✅</span> Expert reviewed within 24 hrs</div>  <div class="badge"><span class="badge-icon">🔒</span> Secure & confidential</div>  <div class="badge"><span class="badge-icon">💷</span> Fixed fee — no surprises</div>  </div>  </div>
+<section class="hero">  <div class="hero-inner">  <img src="/images/hero-write-will-online-uk.jpg" alt="Couple writing their Will online with Clear Legacy - legally valid in England and Wales, Single Will from £69, Mirror Wills from £99" width="1536" height="1024" fetchpriority="high" style="width:100%;max-width:1100px;height:auto;display:block;margin:0 auto 28px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.08)" onerror="this.style.display='none'" loading="eager" decoding="sync">  <div class="hero-badge">UK's Most Affordable Estate Planning</div>  <h1>Your Will, Done Right.<br><span class="highlight">From £69.</span></h1>  <p>Professionally drafted Wills, Probate and Trust services — online, at fixed fees that beat every solicitor in the country.</p>  <div class="hero-btns">  <a href="/forms/will.html" class="btn-primary">Prepare My Will — From £69</a>  <a href="#services" class="btn-secondary">See All Services</a>  </div>  <div class="trust-badges">  <div class="badge"><span class="badge-icon">⚖️</span> Legally valid in England & Wales</div>  <div class="badge"><span class="badge-icon">✅</span> Expert reviewed within 24 hrs</div>  <div class="badge"><span class="badge-icon">🔒</span> Secure & confidential</div>  <div class="badge"><span class="badge-icon">💷</span> Fixed fee — no surprises</div>  </div>  </div>
 </section>
 
 <!-- PROOF BAR -->
