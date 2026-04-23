@@ -194,5 +194,49 @@ function submitLPA(){
 <div id="cl-cookie" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;color:#e2e8f0;padding:14px 24px;z-index:9999;align-items:center;justify-content:space-between;gap:16px;font-family:Inter,sans-serif;font-size:14px;border-top:1px solid #334155;">  <span>We use cookies to improve your experience. <a href="/terms.html" style="color:#60a5fa;text-decoration:none;">Learn more</a></span>  <button onclick="document.getElementById('cl-cookie').style.display='none';localStorage.setItem('cl_ok','1')" style="background:#2563eb;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;">Accept</button>
 </div>
 <script>if(!localStorage.getItem('cl_ok'))document.getElementById('cl-cookie').style.display='flex';</script>
+<!-- Attribution capture: UTMs, referrer, gclid/fbclid/ttclid/msclkid -> sessionStorage, auto-injected into lead POSTs -->
+<script>
+(function () {
+  try {
+    var p = new URLSearchParams(location.search);
+    var a = {
+      landingUrl: location.href,
+      referrer: document.referrer || "",
+      utmSource: p.get("utm_source") || "",
+      utmMedium: p.get("utm_medium") || "",
+      utmCampaign: p.get("utm_campaign") || "",
+      utmContent: p.get("utm_content") || "",
+      utmTerm: p.get("utm_term") || "",
+      gclid: p.get("gclid") || "",
+      fbclid: p.get("fbclid") || "",
+      ttclid: p.get("ttclid") || "",
+      msclkid: p.get("msclkid") || "",
+      capturedAt: new Date().toISOString(),
+      userAgent: (navigator.userAgent || "").slice(0, 200)
+    };
+    var e = null;
+    try { e = sessionStorage.getItem("cl_attribution"); } catch (x) {}
+    if (!e) { try { sessionStorage.setItem("cl_attribution", JSON.stringify(a)); } catch (x) {} }
+    var s = a;
+    if (e) { try { s = JSON.parse(e) || a; } catch (x) {} }
+    var o = window.fetch && window.fetch.bind(window);
+    if (!o) return;
+    window.fetch = function (input, init) {
+      try {
+        var u = typeof input === "string" ? input : (input && input.url) || "";
+        var m = init && init.method ? String(init.method).toUpperCase() : "";
+        if (m === "POST" && (/\/api\/lead\b/.test(u) || /formspree\.io/.test(u)) && init && typeof init.body === "string" && init.body.charAt(0) === "{") {
+          var j = JSON.parse(init.body);
+          if (j && typeof j === "object" && !j.attribution) {
+            j.attribution = s;
+            init = Object.assign({}, init, { body: JSON.stringify(j) });
+          }
+        }
+      } catch (x) {}
+      return o(input, init);
+    };
+  } catch (x) {}
+})();
+</script>
 </body>
 </html>
