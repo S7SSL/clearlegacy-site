@@ -1,0 +1,21 @@
+# 301 permanent redirects from legacy /forms/ URLs to new SEO pages
+/forms/will.html         /wills/                       301
+/forms/will              /wills/                       301
+/forms/lpa.html          /lasting-power-of-attorney/   301
+/forms/lpa               /lasting-power-of-attorney/   301
+/forms/probate.html      /probate/                     301
+/forms/probate           /probate/                     301
+
+# Friendly short URLs
+/will                    /wills/                       301
+/lpa                     /lasting-power-of-attorney/   301
+/mirror                  /mirror-wills/                301
+/guide                   /guides/                      301
+
+# Trailing-slash normalisation
+/wills                   /wills/                       301
+/mirror-wills            /mirror-wills/                301
+/lasting-power-of-attorney  /lasting-power-of-attorney/  301
+/probate                 /probate/                     301
+/pricing                 /pricing/                     301
+/guides                  /guides/                      301
