@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>📋</text></svg>">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>AI Will Writing Proposal — Clear Legacy</title>
+ <style>
+ *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+ :root {
+ --navy: #1a2332;
+ --amber: #f59e0b;
+ --amber-light: #fef3c7;
+ --text: #1f2937;
+ --muted: #6b7280;
+ --border: #e5e7eb;
+ --white: #ffffff;
+ }
+
+ body {
+ font-family: 'Georgia', serif;
+ font-size: 14px;
+ line-height: 1.7;
+ color: var(--text);
+ background: var(--white);
+ max-width: 820px;
+ margin: 0 auto;
+ padding: 0;
+ }
+
+ .page-header {
+ background: var(--navy);
+ color: var(--white);
+ padding: 36px 48px 32px;
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-end;
+ }
+ .logo-text {
+ font-family: 'Arial', sans-serif;
+ font-size: 22px;
+ font-weight: 700;
+ letter-spacing: 0.5px;
+ color: var(--white);
+ }
+ .logo-text span { color: var(--amber); }
+ .header-meta {
+ text-align: right;
+ font-family: 'Arial', sans-serif;
+ }
+ .header-meta .proposal-label {
+ font-size: 13px;
+ color: #94a3b8;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ }
+ .header-meta .client-name {
+ font-size: 19px;
+ font-weight: 700;
+ color: var(--white);
+ margin-top: 2px;
+ }
+ .header-meta .date {
+ font-size: 12px;
+ color: #94a3b8;
+ margin-top: 3px;
+ }
+
+ .amber-rule {
+ height: 4px;
+ background: var(--amber);
+ }
+
+ .page-body {
+ padding: 40px 48px 32px;
+ }
+
+ h2 {
+ font-family: 'Arial', sans-serif;
+ font-size: 11px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 2px;
+ color: var(--amber);
+ margin-bottom: 10px;
+ margin-top: 36px;
+ }
+ h2:first-child { margin-top: 0; }
+
+ h3 {
+ font-family: 'Arial', sans-serif;
+ font-size: 13px;
+ font-weight: 700;
+ color: var(--navy);
+ margin-bottom: 6px;
+ margin-top: 20px;
+ }
+
+ p { margin-bottom: 10px; color: var(--text); }
+
+ .section-divider {
+ border: none;
+ border-top: 1px solid var(--border);
+ margin: 32px 0 0;
+ }
+
+ .scope-list {
+ list-style: none;
+ padding: 0;
+ margin: 4px 0 0;
+ }
+ .scope-list li {
+ padding: 7px 0 7px 20px;
+ position: relative;
+ border-bottom: 1px solid var(--border);
+ font-size: 13.5px;
+ }
+ .scope-list li:last-child { border-bottom: none; }
+ .scope-list li::before {
+ content: '→';
+ position: absolute;
+ left: 0;
+ color: var(--amber);
+ font-weight: 700;
+ }
+
+ .terms-box {
+ background: var(--navy);
+ border-radius: 8px;
+ padding: 28px 32px;
+ margin-top: 12px;
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 24px;
+ }
+ .term-item .term-label {
+ font-family: 'Arial', sans-serif;
+ font-size: 13px;
+ color: #94a3b8;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ }
+ .term-item .term-value {
+ font-family: 'Arial', sans-serif;
+ font-size: 18px;
+ color: var(--amber);
+ font-weight: 700;
+ margin-top: 4px;
+ }
+
+ .highlight-box {
+ background: var(--amber-light);
+ border-left: 4px solid var(--amber);
+ border-radius: 4px;
+ padding: 20px;
+ margin: 16px 0;
+ font-size: 13.5px;
+ }
+ .highlight-box strong {
+ color: var(--navy);
+ }
+
+ .steps-list {
+ list-style: none;
+ padding: 0;
+ margin-top: 10px;
+ counter-reset: steps;
+ }
+ .steps-list li {
+ counter-increment: steps;
+ display: flex;
+ align-items: flex-start;
+ gap: 14px;
+ padding: 10px 0;
+ border-bottom: 1px solid var(--border);
+ font-size: 13.5px;
+ }
+ .steps-list li:last-child { border-bottom: none; }
+ .steps-list li::before {
+ content: counter(steps);
+ background: var(--amber);
+ color: var(--white);
+ font-family: 'Arial', sans-serif;
+ font-weight: 700;
+ font-size: 11px;
+ width: 22px;
+ height: 22px;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ flex-shrink: 0;
+ margin-top: 1px;
+ }
+
+ .cta-wrap {
+ text-align: center;
+ margin: 28px 0 8px;
+ }
+ .cta-button {
+ display: inline-block;
+ background: var(--amber);
+ color: var(--white);
+ font-family: 'Arial', sans-serif;
+ font-weight: 700;
+ font-size: 14px;
+ letter-spacing: 0.5px;
+ text-decoration: none;
+ padding: 13px 36px;
+ border-radius: 4px;
+ transition: all 0.3s ease;
+ cursor: pointer;
+ border: none;
+ }
+ .cta-button:hover {
+ background: #f97316;
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+ }
+
+ .signature-block {
+ margin-top: 32px;
+ padding-top: 24px;
+ border-top: 1px solid var(--border);
+ font-family: 'Arial', sans-serif;
+ }
+ .signature-block .sig-label {
+ font-size: 11px;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ color: var(--muted);
+ margin-bottom: 16px;
+ }
+
+ .signature-pad-container {
+ margin-bottom: 24px;
+ padding: 16px;
+ background: #f8fafc;
+ border-radius: 6px;
+ border: 1px solid var(--border);
+ }
+ .signature-pad-label {
+ font-size: 12px;
+ font-weight: 700;
+ color: var(--navy);
+ margin-bottom: 12px;
+ display: block;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+ #signaturePad {
+ border: 2px solid var(--border);
+ border-radius: 4px;
+ display: block;
+ background: white;
+ cursor: crosshair;
+ width: 100%;
+ max-width: 100%;
+ touch-action: none;
+ }
+ .sig-controls {
+ display: flex;
+ gap: 12px;
+ margin-top: 12px;
+ justify-content: flex-end;
+ }
+ .sig-button {
+ font-family: 'Arial', sans-serif;
+ font-size: 12px;
+ padding: 8px 16px;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ font-weight: 600;
+ transition: all 0.2s ease;
+ }
+ .sig-clear {
+ background: #e5e7eb;
+ color: var(--text);
+ }
+ .sig-clear:hover {
+ background: #d1d5db;
+ }
+ .sig-confirm {
+ background: var(--amber);
+ color: white;
+ }
+ .sig-confirm:hover {
+ background: #f97316;
+ }
+ #signedStatus {
+ font-size: 12px;
+ color: #059669;
+ margin-top: 8px;
+ display: none;
+ font-weight: 600;
+ }
+
+ .sig-row {
+ display: flex;
+ gap: 40px;
+ margin-top: 4px;
+ }
+ .sig-field {
+ flex: 1;
+ }
+ .sig-line {
+ border-bottom: 1px solid var(--text);
+ height: 40px;
+ margin-bottom: 6px;
+ background: white;
+ }
+ .sig-field input {
+ width: 100%;
+ border: none;
+ border-bottom: 1px solid var(--text);
+ padding: 8px 0;
+ font-family: 'Arial', sans-serif;
+ font-size: 14px;
+ }
+ .sig-field-label {
+ font-size: 11px;
+ color: var(--muted);
+ }
+
+ .page-footer {
+ background: var(--navy);
+ color: #94a3b8;
+ font-family: 'Arial', sans-serif;
+ font-size: 11px;
+ padding: 16px 48px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-top: 40px;
+ }
+ .page-footer a { color: var(--amber); text-decoration: none; font-weight: 600; }
+
+ @media (max-width: 600px) {
+ .page-header { flex-direction: column; gap: 16px; padding: 24px; }
+ .header-meta { text-align: left; }
+ .page-body { padding: 28px 24px; }
+ .terms-box { grid-template-columns: 1fr; }
+ .page-footer { flex-direction: column; gap: 6px; padding: 16px 24px; }
+ #signaturePad { height: 150px; }
+ }
+ </style>
+</head>
+<body>
+
+ <header class="page-header">
+ <div class="logo-text">Clear<span>Legacy</span></div>
+ <div class="header-meta">
+ <div class="proposal-label">Service Agreement</div>
+ <div class="client-name">AI Will Writing</div>
+ <div class="date">April 2026 · Confidential</div>
+ </div>
+ </header>
+ <div class="amber-rule"></div>
+
+ <main class="page-body">
+
+ <h2>What You're Getting</h2>
+ <p>A complete, legally-reviewed AI-drafted will tailored to your circumstances. Ready to sign and store securely within 72 hours of payment.</p>
+
+ <hr class="section-divider">
+
+ <h2>Service Details</h2>
+ <div class="terms-box">
+ <div class="term-item">
+ <div class="term-label">Service</div>
+ <div class="term-value">Single Will</div>
+ </div>
+ <div class="term-item">
+ <div class="term-label">Revisions</div>
+ <div class="term-value">3 Maximum</div>
+ </div>
+ <div class="term-item">
+ <div class="term-label">Price</div>
+ <div class="term-value">£69</div>
+ </div>
+ <div class="term-item">
+ <div class="term-label">Delivery</div>
+ <div class="term-value">Instant</div>
+ </div>
+ </div>
+
+ <hr class="section-divider">
+
+ <h2>What's Included</h2>
+ <ul class="scope-list">
+ <li><strong>AI-Drafted Will</strong> — Customized to your family situation, assets, and wishes</li>
+ <li><strong>Legal Review</strong> — Checked by our solicitor team for compliance with UK law</li>
+ <li><strong>Up to 3 Revisions</strong> — We'll make changes if you need adjustments</li>
+ <li><strong>Digital Copy</strong> — Delivered as PDF, ready to print and sign</li>
+ <li><strong>Execution Guide</strong> — Instructions on how to sign and witness your will</li>
+ </ul>
+
+ <hr class="section-divider">
+
+ <h2>The Process</h2>
+ <ol class="steps-list">
+ <li><strong>Payment</strong> — Complete your order and sign below</li>
+ <li><strong>Information</strong> — Answer our questionnaire about your family and wishes</li>
+ <li><strong>Draft</strong> — We create your AI-drafted will within 24 hours</li>
+ <li><strong>Review</strong> — You review and request revisions if needed (up to 3)</li>
+ <li><strong>Final</strong> — Receive your final will, ready to execute</li>
+ </ol>
+
+ <hr class="section-divider">
+
+ <h2>Important Notes</h2>
+ <div class="highlight-box">
+ <strong>This is not legal advice.</strong> While our will is legally compliant, you may wish to consult a solicitor for complex estates. We provide a template; execution must be done in line with UK law (2 witnesses, testator signature).
+ </div>
+
+ <div class="highlight-box">
+ <strong>72-Hour Delivery:</strong> Most wills are completed within 24 hours. Complex situations may take up to 72 hours.
+ </div>
+
+ <hr class="section-divider">
+
+ <div class="cta-wrap">
+ <button class="cta-button" onclick="submitAgreement()">I Agree & Pay £69</button>
+ </div>
+
+ <div class="signature-block">
+ <div class="sig-label">By signing below, you agree to these terms</div>
+ 
+ <div class="signature-pad-container">
+ <label class="signature-pad-label">✎ Draw your signature below</label>
+ <canvas id="signaturePad" width="400" height="140"></canvas>
+ <div class="sig-controls">
+ <button class="sig-button sig-clear" onclick="clearSignature()">Clear</button>
+ <button class="sig-button sig-confirm" onclick="confirmSignature()">Confirm Signature</button>
+ </div>
+ <div id="signedStatus">✓ Signature captured</div>
+ </div>
+ 
+ <div class="sig-row">
+ <div class="sig-field">
+ <div id="signatureDisplay"></div>
+ <div class="sig-field-label">Signature</div>
+ </div>
+ <div class="sig-field">
+ <input type="date" id="dateField">
+ <div class="sig-field-label">Date</div>
+ </div>
+ </div>
+ </div>
+
+ </main>
+
+ <footer class="page-footer">
+ <span><a href="mailto:hello@clearlegacy.co.uk">hello@clearlegacy.co.uk</a></span>
+ <span><a href="https://www.clearlegacy.co.uk">Clear Legacy</a> · Confidential</span>
+ </footer>
+
+<script>
+const canvas = document.getElementById('signaturePad');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+let signatureData = null;
+
+function resizeCanvas() {
+ const dpr = window.devicePixelRatio || 1;
+ const rect = canvas.getBoundingClientRect();
+ canvas.width = rect.width * dpr;
+ canvas.height = rect.height * dpr;
+ ctx.scale(dpr, dpr);
+ ctx.lineCap = 'round';
+ ctx.lineJoin = 'round';
+ ctx.lineWidth = 2.5;
+ ctx.strokeStyle = '#1a2332';
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mouseout', stopDrawing);
+
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
+canvas.addEventListener('touchend', stopDrawing);
+
+function handleTouch(e) {
+ e.preventDefault();
+ const touch = e.touches[0];
+ const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+ clientX: touch.clientX,
+ clientY: touch.clientY
+ });
+ canvas.dispatchEvent(mouseEvent);
+}
+
+function startDrawing(e) {
+ const rect = canvas.getBoundingClientRect();
+ const x = e.clientX - rect.left;
+ const y = e.clientY - rect.top;
+ isDrawing = true;
+ ctx.beginPath();
+ ctx.moveTo(x, y);
+}
+
+function draw(e) {
+ if (!isDrawing) return;
+ const rect = canvas.getBoundingClientRect();
+ const x = e.clientX - rect.left;
+ const y = e.clientY - rect.top;
+ ctx.lineTo(x, y);
+ ctx.stroke();
+}
+
+function stopDrawing() {
+ isDrawing = false;
+ ctx.closePath();
+}
+
+function clearSignature() {
+ ctx.clearRect(0, 0, canvas.width, canvas.height);
+ signatureData = null;
+ document.getElementById('signatureDisplay').innerHTML = '';
+ document.getElementById('signedStatus').style.display = 'none';
+}
+
+function confirmSignature() {
+ signatureData = canvas.toDataURL();
+ const signatureDisplay = document.getElementById('signatureDisplay');
+ const img = document.createElement('img');
+ img.src = signatureData;
+ img.style.maxHeight = '40px';
+ img.style.maxWidth = '100%';
+ signatureDisplay.innerHTML = '';
+ signatureDisplay.appendChild(img);
+ document.getElementById('signedStatus').style.display = 'block';
+}
+
+function submitAgreement() {
+ if (!signatureData) {
+ alert('Please sign the agreement first.');
+ return;
+ }
+ 
+ const dateField = document.getElementById('dateField').value;
+ if (!dateField) {
+ alert('Please select a date.');
+ return;
+ }
+ 
+ // For now, redirect to Stripe payment
+ // In production, this would submit to backend then redirect
+ window.location.href = 'https://buy.stripe.com/bJebIU4rK5w3frp1mN5ZC0i';
+}
+
+document.getElementById('dateField').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
