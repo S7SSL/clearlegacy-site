@@ -9,10 +9,10 @@
  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
  :root {
- --navy: #1a2332;
- --amber: #f59e0b;
- --amber-light: #fef3c7;
- --text: #1f2937;
+ --blue: #2563eb;
+ --blue-light: #eff6ff;
+ --dark: #0a0a0a;
+ --text: #0a0a0a;
  --muted: #6b7280;
  --border: #e5e7eb;
  --white: #ffffff;
@@ -30,7 +30,7 @@
  }
 
  .page-header {
- background: var(--navy);
+ background: var(--dark);
  color: var(--white);
  padding: 36px 48px 32px;
  display: flex;
@@ -44,7 +44,7 @@
  letter-spacing: 0.5px;
  color: var(--white);
  }
- .logo-text span { color: var(--amber); }
+ .logo-text span { color: var(--blue); }
  .header-meta {
  text-align: right;
  font-family: 'Arial', sans-serif;
@@ -82,7 +82,7 @@
  font-weight: 700;
  text-transform: uppercase;
  letter-spacing: 2px;
- color: var(--amber);
+ color: var(--blue);
  margin-bottom: 10px;
  margin-top: 36px;
  }
@@ -92,7 +92,7 @@
  font-family: 'Arial', sans-serif;
  font-size: 13px;
  font-weight: 700;
- color: var(--navy);
+ color: var(--dark);
  margin-bottom: 6px;
  margin-top: 20px;
  }
@@ -121,12 +121,12 @@
  content: '→';
  position: absolute;
  left: 0;
- color: var(--amber);
+ color: var(--blue);
  font-weight: 700;
  }
 
  .terms-box {
- background: var(--navy);
+ background: var(--dark);
  border-radius: 8px;
  padding: 28px 32px;
  margin-top: 12px;
@@ -144,21 +144,21 @@
  .term-item .term-value {
  font-family: 'Arial', sans-serif;
  font-size: 18px;
- color: var(--amber);
+ color: var(--blue);
  font-weight: 700;
  margin-top: 4px;
  }
 
  .highlight-box {
- background: var(--amber-light);
- border-left: 4px solid var(--amber);
+ background: var(--blue-light);
+ border-left: 4px solid var(--blue);
  border-radius: 4px;
  padding: 20px;
  margin: 16px 0;
  font-size: 13.5px;
  }
  .highlight-box strong {
- color: var(--navy);
+ color: var(--dark);
  }
 
  .steps-list {
@@ -200,7 +200,7 @@
  }
  .cta-button {
  display: inline-block;
- background: var(--amber);
+ background: var(--blue);
  color: var(--white);
  font-family: 'Arial', sans-serif;
  font-weight: 700;
@@ -214,9 +214,9 @@
  border: none;
  }
  .cta-button:hover {
- background: #f97316;
+ background: #1d4ed8;
  transform: translateY(-2px);
- box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+ box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
  }
 
  .signature-block {
@@ -243,7 +243,7 @@
  .signature-pad-label {
  font-size: 12px;
  font-weight: 700;
- color: var(--navy);
+ color: var(--dark);
  margin-bottom: 12px;
  display: block;
  text-transform: uppercase;
@@ -283,11 +283,11 @@
  background: #d1d5db;
  }
  .sig-confirm {
- background: var(--amber);
+ background: var(--blue);
  color: white;
  }
  .sig-confirm:hover {
- background: #f97316;
+ background: #1d4ed8;
  }
  #signedStatus {
  font-size: 12px;
@@ -325,7 +325,7 @@
  }
 
  .page-footer {
- background: var(--navy);
+ background: var(--dark);
  color: #94a3b8;
  font-family: 'Arial', sans-serif;
  font-size: 11px;
@@ -335,7 +335,7 @@
  align-items: center;
  margin-top: 40px;
  }
- .page-footer a { color: var(--amber); text-decoration: none; font-weight: 600; }
+ .page-footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
 
  @media (max-width: 600px) {
  .page-header { flex-direction: column; gap: 16px; padding: 24px; }
@@ -472,7 +472,7 @@ function resizeCanvas() {
  ctx.lineCap = 'round';
  ctx.lineJoin = 'round';
  ctx.lineWidth = 2.5;
- ctx.strokeStyle = '#1a2332';
+ ctx.strokeStyle = '#0a0a0a';
 }
 
 resizeCanvas();
