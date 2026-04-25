@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Your account — Clear Legacy</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<style>
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:#fafaf7;color:#1a1a1a;line-height:1.55}
+  a{color:#0b5fff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  header.brand{padding:18px 24px;border-bottom:1px solid #ececec;background:#fff;display:flex;align-items:center;justify-content:space-between}
+  header.brand .logo{font-weight:700;font-size:18px;letter-spacing:-.01em}
+  header.brand nav a{margin-left:18px;font-size:14px;color:#444}
+  main{max-width:920px;margin:0 auto;padding:36px 24px 60px}
+  h1{font-size:26px;margin:0 0 6px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:28px 0 12px;letter-spacing:-.01em}
+  p.lede{color:#555;margin:0 0 24px}
+  .card{background:#fff;border:1px solid #ececec;border-radius:8px;padding:22px;margin-bottom:18px;box-shadow:0 1px 2px rgba(0,0,0,.02)}
+  .card.tight{padding:14px 18px}
+  .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  label{display:block;font-size:13px;color:#444;margin-bottom:6px;font-weight:500}
+  input[type=email],input[type=text],input[type=tel]{width:100%;padding:10px 12px;border:1px solid #d0d0d0;border-radius:6px;font-size:15px;font-family:inherit}
+  input:focus{outline:none;border-color:#0b5fff;box-shadow:0 0 0 3px rgba(11,95,255,.12)}
+  button.btn{display:inline-block;padding:10px 18px;background:#111;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:15px;font-weight:600;font-family:inherit}
+  button.btn:hover{background:#000}
+  button.btn:disabled{background:#999;cursor:wait}
+  button.btn.secondary{background:#fff;color:#111;border:1px solid #d0d0d0}
+  button.btn.secondary:hover{background:#f4f4f4}
+  button.btn.small{padding:6px 12px;font-size:13px}
+  .muted{color:#777;font-size:13px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;background:#eee;color:#333;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .pill.green{background:#dcfce7;color:#166534}
+  .pill.amber{background:#fef3c7;color:#92400e}
+  .pill.blue{background:#dbeafe;color:#1e40af}
+  .pill.red{background:#fee2e2;color:#991b1b}
+  .pill.grey{background:#f3f4f6;color:#374151}
+  .grid{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+  @media (max-width:640px){.grid{grid-template-columns:1fr}}
+  .order{border:1px solid #ececec;border-radius:8px;padding:16px;margin-bottom:12px;background:#fff;display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+  .order .meta{font-size:13px;color:#666;margin-top:4px}
+  .timeline{margin:8px 0 0;padding:0;list-style:none;font-size:13px}
+  .timeline li{padding:3px 0;color:#555}
+  .timeline .when{color:#999;font-family:ui-monospace,Menlo,monospace;font-size:11px;margin-right:8px}
+  .banner{padding:12px 16px;border-radius:6px;margin-bottom:18px;font-size:14px}
+  .banner.info{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}
+  .banner.warn{background:#fef9c3;color:#713f12;border:1px solid #fde68a}
+  .banner.error{background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca}
+  .banner.success{background:#dcfce7;color:#14532d;border:1px solid #bbf7d0}
+  details{margin-top:8px}
+  summary{cursor:pointer;font-size:13px;color:#666}
+  .hidden{display:none !important}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid #ccc;border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  footer{text-align:center;font-size:12px;color:#888;padding:30px 24px}
+  footer a{color:#666}
+</style>
+</head>
+<body>
+
+<header class="brand">
+  <div class="logo">Clear Legacy</div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/wills/">Will</a>
+    <a href="/mirror-wills/">Mirror Wills</a>
+    <a href="/pricing/">Pricing</a>
+    <a id="logoutLink" href="#" class="hidden" style="margin-left:18px">Sign out</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- Loading -->
+<section id="loading" class="card">
+  <p><span class="spinner"></span> Loading your account…</p>
+</section>
+
+<!-- Error banner from magic-link verify failure -->
+<div id="errorBanner" class="banner error hidden"></div>
+
+<!-- Logged-out: email form -->
+<section id="loginCard" class="hidden">
+  <h1>Sign in to your account</h1>
+  <p class="lede">We'll email you a one-time sign-in link. No password to remember.</p>
+  <div class="card">
+    <form id="loginForm">
+      <label for="emailInput">Email address</label>
+      <input id="emailInput" type="email" autocomplete="email" required placeholder="you@example.com">
+      <div style="margin-top:14px"><button class="btn" type="submit" id="loginBtn">Email me a sign-in link</button></div>
+      <p class="muted" style="margin-top:14px">First time here? Use the same email you bought your will with — your existing orders will appear automatically.</p>
+    </form>
+  </div>
+</section>
+
+<!-- Logged-out: link sent state -->
+<section id="linkSentCard" class="hidden">
+  <h1>Check your email</h1>
+  <p class="lede">We've sent a sign-in link to <strong id="linkSentEmail"></strong>. The link is valid for 15 minutes.</p>
+  <div class="card">
+    <p>Open the email and click the link to sign in. You can close this tab.</p>
+    <p class="muted">Didn't get it? Check your spam folder, or <a href="#" id="tryAgainLink">try again</a>.</p>
+  </div>
+</section>
+
+<!-- Logged-in dashboard -->
+<section id="dashboard" class="hidden">
+  <h1>Welcome back<span id="welcomeName"></span></h1>
+  <p class="lede">Manage your wills, view your documents, and start a new order.</p>
+
+  <!-- Claimable banner -->
+  <div id="claimBanner" class="banner info hidden">
+    <strong>We found <span id="claimableCount"></span> existing order<span id="claimableS"></span> under your email.</strong>
+    Claim them to see status and download your will document.
+    <div style="margin-top:10px">
+      <button class="btn small" id="claimBtn">Claim my existing orders</button>
+    </div>
+  </div>
+
+  <!-- Orders list -->
+  <h2>Your wills</h2>
+  <div id="ordersList"></div>
+  <div id="noOrders" class="card tight hidden">
+    <p style="margin:0;color:#555">You don't have any wills yet.</p>
+  </div>
+
+  <!-- Start a new order -->
+  <h2>Start a new order</h2>
+  <div class="card">
+    <p style="margin-top:0;color:#555">Need another will, or a Mirror Wills set for you and a partner?</p>
+    <div class="row">
+      <button class="btn" id="orderSingleBtn">Order a Single Will</button>
+      <button class="btn secondary" id="orderMirrorBtn">Order Mirror Wills</button>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <h2>Your details</h2>
+  <div class="card">
+    <form id="profileForm" class="grid">
+      <div>
+        <label for="profileEmail">Email address</label>
+        <input id="profileEmail" type="email" disabled>
+        <p class="muted" style="margin-top:4px">To change your email, please contact support.</p>
+      </div>
+      <div>
+        <label for="profileName">Full name</label>
+        <input id="profileName" type="text" autocomplete="name">
+      </div>
+      <div>
+        <label for="profilePhone">Phone (optional)</label>
+        <input id="profilePhone" type="tel" autocomplete="tel">
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="display:flex;gap:8px;align-items:center;font-weight:400">
+          <input type="checkbox" id="profileMarketing"> Send me occasional updates and offers from Clear Legacy.
+        </label>
+      </div>
+      <div style="grid-column:1/-1"><button class="btn" type="submit">Save changes</button> <span id="profileSaved" class="muted hidden">Saved.</span></div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  &copy; <span id="yr"></span> Clear Legacy. Need help? <a href="mailto:hello@clearlegacy.co.uk">hello@clearlegacy.co.uk</a>
+</footer>
+
+<script>
+  const API = 'https://api.clearlegacy.co.uk';
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  const $ = (id) => document.getElementById(id);
+  const show = (id) => $(id).classList.remove('hidden');
+  const hide = (id) => $(id).classList.add('hidden');
+
+  function showError(msg){
+    const b = $('errorBanner');
+    b.textContent = msg;
+    b.classList.remove('hidden');
+  }
+
+  // Detect ?error=invalid_link from a stale magic-link click
+  const params = new URLSearchParams(location.search);
+  if (params.get('error') === 'invalid_link') {
+    showError('That sign-in link has expired or has already been used. Please request a new one below.');
+    history.replaceState(null, '', '/account/');
+  }
+
+  async function api(path, opts = {}) {
+    const res = await fetch(API + path, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) },
+      ...opts,
+    });
+    let body = null;
+    try { body = await res.json(); } catch {}
+    return { status: res.status, body };
+  }
+
+  // ---------------- Boot ----------------
+  async function boot() {
+    show('loading');
+    const me = await api('/api/auth/me');
+    hide('loading');
+    if (me.status === 200 && me.body && me.body.ok) {
+      await loadDashboard();
+    } else {
+      show('loginCard');
+    }
+  }
+
+  // ---------------- Login ----------------
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = $('emailInput').value.trim();
+    if (!email) return;
+    $('loginBtn').disabled = true;
+    $('loginBtn').textContent = 'Sending…';
+    await api('/api/auth/request', { method: 'POST', body: JSON.stringify({ email }) });
+    // Always succeed (server is intentionally non-revealing).
+    $('linkSentEmail').textContent = email;
+    hide('loginCard');
+    show('linkSentCard');
+  });
+
+  $('tryAgainLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    hide('linkSentCard');
+    show('loginCard');
+  });
+
+  // ---------------- Logout ----------------
+  $('logoutLink').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await api('/api/auth/logout', { method: 'POST' });
+    location.reload();
+  });
+
+  // ---------------- Dashboard ----------------
+  async function loadDashboard() {
+    show('dashboard');
+    show('logoutLink');
+
+    const r = await api('/api/account');
+    if (r.status !== 200 || !r.body || !r.body.ok) {
+      hide('dashboard');
+      hide('logoutLink');
+      show('loginCard');
+      return;
+    }
+    const { customer, orders, claimable } = r.body;
+
+    // Welcome
+    $('welcomeName').textContent = customer.fullName ? `, ${customer.fullName.split(' ')[0]}` : '';
+
+    // Profile fields
+    $('profileEmail').value = customer.email || '';
+    $('profileName').value = customer.fullName || '';
+    $('profilePhone').value = customer.phone || '';
+    $('profileMarketing').checked = !!customer.marketingOptIn;
+
+    // Claimable banner
+    if (claimable && claimable.length > 0) {
+      $('claimableCount').textContent = claimable.length;
+      $('claimableS').textContent = claimable.length === 1 ? '' : 's';
+      show('claimBanner');
+    } else {
+      hide('claimBanner');
+    }
+
+    // Orders list
+    renderOrders(orders);
+  }
+
+  function statusPill(status) {
+    const map = {
+      awaiting_questionnaire: ['Complete questionnaire', 'amber'],
+      pending: ['Preparing', 'grey'],
+      generating: ['Generating', 'blue'],
+      ready: ['Ready', 'green'],
+      failed: ['Issue — contact us', 'red'],
+    };
+    const [label, cls] = map[status] || [status, 'grey'];
+    return `<span class="pill ${cls}">${label}</span>`;
+  }
+
+  function renderOrders(orders) {
+    const root = $('ordersList');
+    root.innerHTML = '';
+    if (!orders || orders.length === 0) {
+      show('noOrders');
+      return;
+    }
+    hide('noOrders');
+    for (const o of orders) {
+      const div = document.createElement('div');
+      div.className = 'order';
+      const productLabel = o.product === 'mirror' ? 'Mirror Wills' : 'Single Will';
+      const paid = o.paidAt ? new Date(o.paidAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+      const tlHtml = (o.timeline || []).map(t =>
+        `<li><span class="when">${new Date(t.at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}</span>${t.label}</li>`
+      ).join('');
+      div.innerHTML = `
+        <div style="flex:1;min-width:240px">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <strong>${productLabel}</strong>
+            ${statusPill(o.pdfStatus)}
+          </div>
+          <div class="meta">Order ${o.ref.slice(0,8).toUpperCase()} · paid ${paid}</div>
+          <details><summary>Timeline</summary><ul class="timeline">${tlHtml || '<li class="muted">No events yet.</li>'}</ul></details>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          ${o.pdfStatus === 'awaiting_questionnaire' ? `<a class="btn small" href="/forms/will.html?ref=${encodeURIComponent(o.ref)}&product=${encodeURIComponent(o.product)}">Complete questionnaire</a>` : ''}
+          ${o.pdfStatus === 'ready' ? `<button class="btn small download-btn" data-ref="${o.ref}">Download PDF</button>` : ''}
+        </div>
+      `;
+      root.appendChild(div);
+    }
+    // Wire download buttons
+    root.querySelectorAll('.download-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        btn.textContent = 'Generating link…';
+        const r = await api(`/api/account/orders/${encodeURIComponent(btn.dataset.ref)}/pdf`, { method: 'POST' });
+        if (r.status === 200 && r.body && r.body.ok) {
+          window.open(r.body.url, '_blank', 'noopener');
+          btn.disabled = false;
+          btn.textContent = 'Download PDF';
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Try again';
+          alert('Could not generate download link. Please try again or contact support.');
+        }
+      });
+    });
+  }
+
+  // ---------------- Claim ----------------
+  $('claimBtn').addEventListener('click', async () => {
+    $('claimBtn').disabled = true;
+    $('claimBtn').textContent = 'Claiming…';
+    const r = await api('/api/account/claim', { method: 'POST' });
+    if (r.status === 200 && r.body && r.body.ok) {
+      await loadDashboard();
+    } else {
+      alert('Could not claim orders. Please refresh and try again.');
+      $('claimBtn').disabled = false;
+      $('claimBtn').textContent = 'Claim my existing orders';
+    }
+  });
+
+  // ---------------- Profile save ----------------
+  $('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const r = await api('/api/account/profile', {
+      method: 'POST',
+      body: JSON.stringify({
+        fullName: $('profileName').value.trim(),
+        phone: $('profilePhone').value.trim(),
+        marketingOptIn: $('profileMarketing').checked,
+      }),
+    });
+    if (r.status === 200 && r.body && r.body.ok) {
+      $('profileSaved').classList.remove('hidden');
+      setTimeout(() => $('profileSaved').classList.add('hidden'), 2500);
+    } else {
+      alert('Could not save changes. Please try again.');
+    }
+  });
+
+  // ---------------- Order ----------------
+  async function startOrder(product) {
+    const r = await api('/api/account/order', { method: 'POST', body: JSON.stringify({ product }) });
+    if (r.status === 200 && r.body && r.body.ok && r.body.url) {
+      location.href = r.body.url;
+    } else {
+      alert('Could not start the order. Please try again.');
+    }
+  }
+  $('orderSingleBtn').addEventListener('click', () => startOrder('single'));
+  $('orderMirrorBtn').addEventListener('click', () => startOrder('mirror'));
+
+  boot();
+</script>
+
+</body>
+</html>
