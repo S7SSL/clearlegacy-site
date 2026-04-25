@@ -1,14 +1,27 @@
 /**
- * Clear Legacy — questionnaire intake, Stripe webhook handler, Will PDF generation.
+ * Clear Legacy — questionnaire intake, Stripe webhook, Will PDF generation,
+ * customer portal (magic-link login), and admin dashboard.
  *
  * Endpoints:
- *   POST /api/lead            — receive questionnaire data; return Stripe redirect URL
- *   POST /api/stripe-webhook  — verify Stripe signature; generate PDF; email customer
- *   GET  /api/status?ref=...  — thank-you page polls this to know when PDF is ready
- *   GET  /api/pdf/:token      — signed download of generated PDF
- *   GET  /admin               — Basic-Auth dashboard listing leads + status
- *   GET  /admin/lead?ref=...  — JSON view of a single lead record
- *   POST /admin/regenerate    — re-run PDF generation for a ref (e.g. failed ones)
+ *   POST /api/lead                          questionnaire intake → Stripe URL
+ *   POST /api/stripe-webhook                Stripe → kicks PDF pipeline
+ *   GET  /api/status?ref=...                thank-you page polling
+ *   GET  /api/pdf/:token                    signed PDF download
+ *   GET  /api/healthz                       liveness
+ *
+ *   POST /api/auth/request                  send magic-link email
+ *   GET  /api/auth/verify?token=...         set cookie + redirect
+ *   POST /api/auth/logout                   clear cookie + KV session
+ *   GET  /api/auth/me                       current customer
+ *
+ *   GET  /api/account                       dashboard payload (orders + claimable)
+ *   POST /api/account/profile               update name / phone / marketing
+ *   POST /api/account/claim                 attach unclaimed leads matching email
+ *   GET  /api/account/orders/:ref           single order detail
+ *   POST /api/account/orders/:ref/pdf       fresh signed PDF URL
+ *   POST /api/account/order                 start a new will purchase (Stripe)
+ *
+ *   /admin and /admin/*                     Basic-Auth admin dashboard
  */
 
 import { handleLead } from './handlers/lead';
@@ -16,6 +29,8 @@ import { handleStripeWebhook } from './handlers/webhook';
 import { handleStatus } from './handlers/status';
 import { handlePdfDownload } from './handlers/download';
 import { handleAdmin } from './handlers/admin';
+import { handleAuth } from './handlers/auth';
+import { handleAccount } from './handlers/account';
 
 export interface Env {
   // Storage
@@ -32,8 +47,8 @@ export interface Env {
   ADMIN_PASSWORD: string;
 
   // Public vars
-  SITE_ORIGIN: string;
-  API_ORIGIN: string;
+  SITE_ORIGIN: string;       // https://www.clearlegacy.co.uk
+  API_ORIGIN: string;        // https://api.clearlegacy.co.uk
   STRIPE_URL_SINGLE: string;
   STRIPE_URL_MIRROR: string;
   THANK_YOU_URL: string;
@@ -42,8 +57,15 @@ export interface Env {
 }
 
 /**
- * CORS — only the Clear Legacy site is allowed to POST to /api/lead.
- * Stripe webhook does not need CORS (server-to-server). PDF download is idempotent GET, allow wide.
+ * CORS — only the static site is allowed cross-origin.
+ *
+ * Credentialed endpoints (/api/auth/*, /api/account/*) must:
+ *   - echo the origin precisely (cannot use '*' with credentials)
+ *   - set Access-Control-Allow-Credentials: true
+ * which is what we do here when origin === SITE_ORIGIN.
+ *
+ * Stripe webhook is server-to-server, no CORS needed.
+ * /api/pdf/:token is an idempotent GET, allow wide.
  */
 function corsHeaders(env: Env, origin: string | null): Record<string, string> {
   const allowed = env.SITE_ORIGIN;
@@ -52,6 +74,7 @@ function corsHeaders(env: Env, origin: string | null): Record<string, string> {
     'Access-Control-Allow-Origin': isAllowed ? allowed : '',
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Credentials': isAllowed ? 'true' : '',
     'Access-Control-Max-Age': '86400',
     'Vary': 'Origin',
   };
@@ -71,6 +94,7 @@ export default {
 
     try {
       let response: Response;
+
       if (url.pathname === '/api/lead' && request.method === 'POST') {
         response = await handleLead(request, env, ctx);
       } else if (url.pathname === '/api/stripe-webhook' && request.method === 'POST') {
@@ -81,13 +105,17 @@ export default {
         response = await handlePdfDownload(request, env);
       } else if (url.pathname === '/api/healthz' && request.method === 'GET') {
         response = new Response('ok', { status: 200 });
+      } else if (url.pathname.startsWith('/api/auth/')) {
+        response = await handleAuth(request, env, ctx);
+      } else if (url.pathname === '/api/account' || url.pathname.startsWith('/api/account/')) {
+        response = await handleAccount(request, env, ctx);
       } else if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
         response = await handleAdmin(request, env, ctx);
       } else {
         response = new Response('Not found', { status: 404 });
       }
 
-      // Attach CORS headers (webhook does not need them but it's harmless)
+      // Attach CORS headers (webhook and admin don't need them but it's harmless).
       const headers = new Headers(response.headers);
       for (const [k, v] of Object.entries(baseCors)) {
         if (v) headers.set(k, v);
