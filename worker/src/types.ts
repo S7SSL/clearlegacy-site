@@ -1,5 +1,6 @@
 /**
  * Shared types for the Clear Legacy Worker.
+ *
  * QuestionnaireData matches the fields in forms/will.html.
  * Any rename here requires updating the form and the will.html template.
  */
@@ -28,14 +29,14 @@ export interface Guardian {
 export interface Person {
   fullName: string;
   address: string;
-  dob?: string;           // YYYY-MM-DD
+  dob?: string; // YYYY-MM-DD
   email?: string;
   phone?: string;
 }
 
 /**
  * Single source of truth for what the form sends us.
- * The form must send exactly these fields (or fewer — missing ones become blanks in the Will).
+ * The form must send exactly these fields (or fewer â missing ones become blanks in the Will).
  */
 export interface QuestionnaireData {
   ref: string;            // UUID we assign
@@ -48,7 +49,7 @@ export interface QuestionnaireData {
   // For mirror wills only:
   partner?: Person;
 
-  // Executors (1–4 recommended)
+  // Executors (1â4 recommended)
   executors: Executor[];
 
   // Guardians for minor children, if any
@@ -70,6 +71,43 @@ export interface QuestionnaireData {
   marketingOptIn?: boolean;
 }
 
+// ---------- v2 additions for admin + customer portal ----------
+
+/**
+ * A single private admin note attached to a lead.
+ * No author tracking â for now this is just Sat.
+ */
+export interface LeadNote {
+  text: string;
+  createdAt: string;          // ISO
+}
+
+/**
+ * An entry in the lead's activity timeline. Append-only, oldest first.
+ */
+export type ActivityType =
+  | 'lead_created'
+  | 'paid'
+  | 'onboarding_email_sent'
+  | 'onboarding_email_failed'
+  | 'questionnaire_submitted'
+  | 'pdf_generating'
+  | 'pdf_ready'
+  | 'pdf_failed'
+  | 'email_sent'
+  | 'email_failed'
+  | 'regenerate_requested'
+  | 'note_added'
+  | 'customer_claimed'
+  | 'customer_login'
+  | 'admin_resent_pdf';
+
+export interface ActivityEvent {
+  type: ActivityType;
+  at: string;       // ISO
+  detail?: string;  // free-text descriptor
+}
+
 /**
  * What we store in KV against the questionnaire key.
  * Separate from QuestionnaireData so we can track pipeline state.
@@ -84,10 +122,10 @@ export interface LeadRecord {
   questionnaire?: QuestionnaireData;
 
   // Payment status
-  paidAt?: string;             // ISO
+  paidAt?: string; // ISO
   stripeSessionId?: string;
   stripePaymentIntentId?: string;
-  stripeAmount?: number;       // in minor units (pence)
+  stripeAmount?: number; // in minor units (pence)
   stripeCurrency?: string;
   stripeCustomerEmail?: string;
 
@@ -103,17 +141,73 @@ export interface LeadRecord {
   onboardingEmailError?: string;
 
   // PDF status
-  //   awaiting_questionnaire — paid, but the customer has not yet submitted the form
-  //   pending                — questionnaire submitted, PDF not yet started
-  //   generating             — PDF render in flight
-  //   ready                  — PDF stored in R2 and emailed
-  //   failed                 — last generation attempt failed (see pdfError)
+  // awaiting_questionnaire â paid, but the customer has not yet submitted the form
+  // pending                â questionnaire submitted, PDF not yet started
+  // generating             â PDF render in flight
+  // ready                  â PDF stored in R2 and emailed
+  // failed                 â last generation attempt failed (see pdfError)
   pdfStatus: 'awaiting_questionnaire' | 'pending' | 'generating' | 'ready' | 'failed';
-  pdfKey?: string;              // R2 object key
+  pdfKey?: string; // R2 object key
   pdfGeneratedAt?: string;
   pdfError?: string;
 
   // Email status
   emailedAt?: string;
   emailError?: string;
+
+  // ---------- v2 additions ----------
+
+  /** Private admin notes (visible in /admin only, never to the customer). */
+  notes?: LeadNote[];
+
+  /** Append-only timeline of pipeline events; rendered in admin detail view. */
+  activity?: ActivityEvent[];
+
+  /** Set when a customer signs in and claims this lead via /account. */
+  customerId?: string;
+  claimedAt?: string;
+}
+
+/**
+ * A registered customer. Created on first successful magic-link login.
+ * Keyed by customerId = first 16 hex chars of sha256(email_normalised).
+ */
+export interface CustomerRecord {
+  customerId: string;
+  email: string;             // normalised (lowercase, trimmed)
+  emailVerifiedAt: string;   // set on first magic-link verify
+  fullName?: string;
+  phone?: string;
+  createdAt: string;
+  lastLoginAt?: string;
+  marketingOptIn?: boolean;
+}
+
+/**
+ * Active session â created on magic-link verify, stored under session:{token}.
+ * Token is also the value of the `cl_session` HttpOnly cookie.
+ */
+export interface SessionRecord {
+  token: string;
+  customerId: string;
+  email: string;
+  createdAt: string;
+  expiresAt: string;
+  userAgent?: string;
+  ip?: string;
+}
+
+/**
+ * One-time magic link, stored under magic:{token} with 15-minute TTL.
+ * `purpose` lets us reuse the same plumbing for login, email-change-confirm, etc.
+ */
+export interface MagicLinkRecord {
+  token: string;
+  email: string;
+  purpose: 'login' | 'email_change';
+  /** purpose='email_change' uses this to carry the new email being confirmed. */
+  payload?: Record<string, string>;
+  createdAt: string;
+  expiresAt: string;
+  consumed?: boolean;
 }
