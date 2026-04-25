@@ -36,7 +36,7 @@ export interface Person {
 
 /**
  * Single source of truth for what the form sends us.
- * The form must send exactly these fields (or fewer â missing ones become blanks in the Will).
+ * The form must send exactly these fields (or fewer — missing ones become blanks in the Will).
  */
 export interface QuestionnaireData {
   ref: string;            // UUID we assign
@@ -49,7 +49,7 @@ export interface QuestionnaireData {
   // For mirror wills only:
   partner?: Person;
 
-  // Executors (1â4 recommended)
+  // Executors (1–4 recommended)
   executors: Executor[];
 
   // Guardians for minor children, if any
@@ -75,7 +75,7 @@ export interface QuestionnaireData {
 
 /**
  * A single private admin note attached to a lead.
- * No author tracking â for now this is just Sat.
+ * No author tracking — for now this is just Sat.
  */
 export interface LeadNote {
   text: string;
@@ -141,11 +141,11 @@ export interface LeadRecord {
   onboardingEmailError?: string;
 
   // PDF status
-  // awaiting_questionnaire â paid, but the customer has not yet submitted the form
-  // pending                â questionnaire submitted, PDF not yet started
-  // generating             â PDF render in flight
-  // ready                  â PDF stored in R2 and emailed
-  // failed                 â last generation attempt failed (see pdfError)
+  // awaiting_questionnaire — paid, but the customer has not yet submitted the form
+  // pending                — questionnaire submitted, PDF not yet started
+  // generating             — PDF render in flight
+  // ready                  — PDF stored in R2 and emailed
+  // failed                 — last generation attempt failed (see pdfError)
   pdfStatus: 'awaiting_questionnaire' | 'pending' | 'generating' | 'ready' | 'failed';
   pdfKey?: string; // R2 object key
   pdfGeneratedAt?: string;
@@ -184,7 +184,7 @@ export interface CustomerRecord {
 }
 
 /**
- * Active session â created on magic-link verify, stored under session:{token}.
+ * Active session — created on magic-link verify, stored under session:{token}.
  * Token is also the value of the `cl_session` HttpOnly cookie.
  */
 export interface SessionRecord {
