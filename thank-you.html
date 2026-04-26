@@ -212,5 +212,11 @@
   })();
 </script>
 
+<!-- Google Ads + GA4 purchase conversion tracking. Fires gtag('event','purchase',...)
+     with value derived from ?product= (mirror=£99, single=£69) and transaction_id
+     from ?session_id= (the Stripe checkout session). Loaded async so it never
+     blocks the page render or the status polling above. -->
+<script src="/cl-thankyou-tracking.js" async></script>
+
 </body>
 </html>
