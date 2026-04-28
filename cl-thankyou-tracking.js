@@ -2,9 +2,9 @@
  * Clear Legacy — Purchase conversion tracking for /thank-you.
  *
  * Self-contained: loads gtag.js, configures GA4 + Google Ads, fires the
- * GA4 `purchase` event AND the direct Google Ads `conversion` event with
- * the right value/currency/transaction_id derived from the Stripe redirect
- * URL parameters (?session_id=...&product=single|mirror).
+ * GA4 `purchase` event AND `ads_conversion_purchase` event AND the direct
+ * Google Ads `conversion` event with the right value/currency/transaction_id
+ * derived from the Stripe redirect URL parameters (?session_id=...&product=single|mirror).
  *
  * Drop-in install: add ONE line to /thank-you (right before </body>):
  *   <script src="/cl-thankyou-tracking.js" async></script>
@@ -18,7 +18,6 @@
  * so Google can still attribute conversions — the direct AW conversion is
  * just belt-and-braces against GA4 sampling/import latency.
  */
-
 (function () {
   // ===== CONFIG ============================================================
   var AW_ID = 'AW-17990502106';
@@ -64,11 +63,12 @@
       return {
         product: product,
         sessionId: p.get('session_id') || '',
+        ref: p.get('ref') || '',
         value: product === 'mirror' ? MIRROR_VALUE : SINGLE_VALUE,
         itemName: product === 'mirror' ? 'Mirror Wills' : 'Single Will'
       };
     } catch (e) {
-      return { product: 'single', sessionId: '', value: SINGLE_VALUE, itemName: 'Single Will' };
+      return { product: 'single', sessionId: '', ref: '', value: SINGLE_VALUE, itemName: 'Single Will' };
     }
   }
 
@@ -77,22 +77,32 @@
   function fireConversions() {
     var p = getParams();
 
+    // GUARD: only fire if we have a valid order context. Either a Stripe
+    // session_id (from redirect) or a ref (legitimate customer page-load).
+    // Bare /thank-you visits with no params (e.g. test loads, bookmarks)
+    // should NOT fire a conversion — that pollutes Google Ads with junk.
+    if (!p.sessionId && !p.ref) {
+      console.info('CL: no session_id or ref — not firing conversion (likely a test/error load).');
+      return;
+    }
+
     // De-dupe guard: if the page is reloaded with the same session_id,
     // don't double-count. We key off sessionStorage so it survives soft
     // navigations within the same tab session.
-    if (p.sessionId) {
+    var dedupeKey = p.sessionId || p.ref;
+    if (dedupeKey) {
       try {
-        var key = 'cl_purchase_fired_' + p.sessionId;
+        var key = 'cl_purchase_fired_' + dedupeKey;
         if (sessionStorage.getItem(key)) return;
         sessionStorage.setItem(key, '1');
       } catch (e) { /* sessionStorage blocked — fire anyway, better dup than miss */ }
     }
 
     // GA4 ecommerce purchase. Imports automatically into Google Ads via
-    // the GA4 → Google Ads link on property 528577470.
+    // the GA4 → Google Ads link.
     try {
       gtag('event', 'purchase', {
-        transaction_id: p.sessionId,
+        transaction_id: p.sessionId || p.ref,
         value: p.value,
         currency: 'GBP',
         items: [{
@@ -104,6 +114,21 @@
       });
     } catch (e) { console.warn('CL: GA4 purchase event failed', e); }
 
+    // === NEW: Fire ads_conversion_purchase event with proper value ===
+    // This is the named event that the Google Ads conversion action
+    // ('Clearlegacy (web) ads_conversion_purchase') is configured to import.
+    // Using value from this event means £69 or £99 flows through dynamically
+    // (rather than the fallback fixed value set in Google Ads).
+    try {
+      gtag('event', 'ads_conversion_purchase', {
+        transaction_id: p.sessionId || p.ref,
+        value: p.value,
+        currency: 'GBP',
+        product: p.product,
+        item_name: p.itemName
+      });
+    } catch (e) { console.warn('CL: ads_conversion_purchase event failed', e); }
+
     // Direct Google Ads conversion (only fires once the label is set).
     if (AW_PURCHASE_LABEL) {
       try {
@@ -111,7 +136,7 @@
           send_to: AW_ID + '/' + AW_PURCHASE_LABEL,
           value: p.value,
           currency: 'GBP',
-          transaction_id: p.sessionId
+          transaction_id: p.sessionId || p.ref
         });
       } catch (e) { console.warn('CL: AW conversion event failed', e); }
     } else {
