@@ -925,5 +925,96 @@ function submitToWorker(payload){
     } catch (x) {}
   })();
   </script>
+
+<script>
+/* Ideal Postcodes postcode lookup
+ * API key: client-side, domain-restricted in Ideal Postcodes dashboard.
+ * Pricing: £4 per 1,000 lookups, pay-as-you-go, no monthly minimum.
+ * Docs: https://ideal-postcodes.co.uk/documentation/postcodes
+ */
+(function(){
+  const API_KEY = 'ak_molx208w5rESga01CEh2GX4VFbRIx';
+  const ENDPOINT = 'https://api.ideal-postcodes.co.uk/v1/postcodes/';
+
+  window.clFindAddress = async function(postcodeId, addr1Id, addr2Id, cityId, statusId, resultsId){
+    const post = document.getElementById(postcodeId);
+    const status = document.getElementById(statusId);
+    const results = document.getElementById(resultsId);
+    if (!post || !post.value.trim()) {
+      status.textContent = 'Please enter a postcode first.';
+      status.classList.add('error');
+      return;
+    }
+    const postcode = post.value.trim().toUpperCase().replace(/\s+/g,' ');
+    status.classList.remove('error');
+    status.textContent = 'Searching…';
+    results.classList.remove('open');
+    results.innerHTML = '';
+
+    try {
+      const url = ENDPOINT + encodeURIComponent(postcode) + '?api_key=' + API_KEY;
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        const txt = await resp.text();
+        if (resp.status === 404) {
+          status.textContent = 'No addresses found for that postcode.';
+        } else if (resp.status === 401 || resp.status === 403) {
+          status.textContent = 'Address lookup unavailable. Please type the address manually.';
+        } else if (resp.status === 429) {
+          status.textContent = 'Lookup limit reached for today. Please type the address manually.';
+        } else {
+          status.textContent = 'Lookup failed (' + resp.status + '). Please type manually.';
+        }
+        status.classList.add('error');
+        return;
+      }
+      const data = await resp.json();
+      const addresses = (data.result && Array.isArray(data.result)) ? data.result : [];
+      if (!addresses.length) {
+        status.textContent = 'No addresses found for that postcode.';
+        status.classList.add('error');
+        return;
+      }
+      status.textContent = 'Found ' + addresses.length + ' address' + (addresses.length === 1 ? '' : 'es') + '. Click one below.';
+      addresses.forEach(function(a){
+        const div = document.createElement('div');
+        div.className = 'cl-address-result';
+        const label = [a.line_1, a.line_2, a.line_3, a.post_town].filter(Boolean).join(', ');
+        div.textContent = label;
+        div.onclick = function(){
+          if (addr1Id) document.getElementById(addr1Id).value = [a.line_1].filter(Boolean).join(', ');
+          if (addr2Id) document.getElementById(addr2Id).value = [a.line_2, a.line_3].filter(Boolean).join(', ');
+          if (cityId)  document.getElementById(cityId).value  = a.post_town || '';
+          results.classList.remove('open');
+          results.innerHTML = '';
+          status.textContent = 'Address filled. Edit fields below if needed.';
+        };
+        results.appendChild(div);
+      });
+      results.classList.add('open');
+    } catch (err) {
+      console.error('CL address lookup error:', err);
+      status.textContent = 'Network error. Please type the address manually.';
+      status.classList.add('error');
+    }
+  };
+
+  // Allow Enter key in postcode fields to trigger lookup
+  document.addEventListener('DOMContentLoaded', function(){
+    ['f-post','prop-post'].forEach(function(id){
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('keydown', function(e){
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const btn = el.parentElement.querySelector('.cl-postcode-btn');
+          if (btn) btn.click();
+        }
+      });
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
