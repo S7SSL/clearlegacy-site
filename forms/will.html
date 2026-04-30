@@ -119,35 +119,7 @@ footer a:hover{text-decoration:underline}
 /* MOBILE */
 @media(max-width:600px){ .field-row{grid-template-columns:1fr} .radio-group.horizontal{flex-direction:column} .form-nav{flex-wrap:wrap} .btn-back{width:100%;max-width:none;order:2} .btn-next{max-width:none;order:1} .step-title{font-size:22px} .review-body dl{grid-template-columns:1fr;gap:2px} .review-body dt{padding-top:8px}
 }
-
-  /* GetAddress.io postcode lookup widget */
-  .cl-postcode-row { display: flex; gap: 8px; align-items: stretch; margin-bottom: 4px; }
-  .cl-postcode-row input { flex: 1; }
-  .cl-postcode-btn {
-    background: #2563eb; color: #fff; border: none; padding: 0 16px;
-    font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer;
-    white-space: nowrap; min-height: 44px; transition: background .15s;
-  }
-  .cl-postcode-btn:hover { background: #1d4ed8; }
-  .cl-postcode-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .cl-address-results {
-    margin-top: 6px; border: 1px solid #e5e7eb; border-radius: 8px;
-    background: #fff; max-height: 200px; overflow-y: auto; display: none;
-  }
-  .cl-address-results.open { display: block; }
-  .cl-address-result {
-    padding: 10px 14px; font-size: 14px; cursor: pointer; border-bottom: 1px solid #f3f4f6;
-    color: #1f2937;
-  }
-  .cl-address-result:last-child { border-bottom: none; }
-  .cl-address-result:hover { background: #eff6ff; color: #2563eb; }
-  .cl-postcode-status { font-size: 12px; color: #6b7280; margin-top: 4px; min-height: 16px; }
-  .cl-postcode-status.error { color: #dc2626; }
-  @media (max-width: 480px) {
-    .cl-postcode-btn { padding: 0 12px; font-size: 12px; }
-  }
-
-  </style>
+</style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J3GPRFYR2Q"></script>
 <script>
@@ -197,14 +169,7 @@ gtag('config', 'AW-17990502106');
 <div class="form-wrap">
 
 <!-- STEP 1: ABOUT YOU -->
-<div class="step active" id="step-1">  <div class="step-header">  <div class="step-num">Step 1 of 7</div>  <h2 class="step-title">About You</h2>  <p class="step-sub">We need your details to correctly identify you as the person making this Will (the "Testator").</p>  </div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="f-first" placeholder="e.g. James" required></div>  <div class="field"><label>Last Name</label><input type="text" id="f-last" placeholder="e.g. Hargreaves" required></div>  </div>  <div class="field"><label>Date of Birth</label><input type="date" id="f-dob" required></div>  <div class="field"><label>Address Line 1</label><input type="text" id="f-addr1" placeholder="House number and street" required></div>  <div class="field"><label>Address Line 2 (optional)</label><input type="text" id="f-addr2" placeholder="Flat, apartment, etc."></div>  <div class="field-row">  <div class="field"><label>City / Town</label><input type="text" id="f-city" required></div>  <div class="field"><label>Postcode</label>
-  <div class="cl-postcode-row">
-    <input type="text" id="f-post" placeholder="e.g. SW1A 1AA" required>
-    <button type="button" class="cl-postcode-btn" onclick="clFindAddress('f-post','f-addr1','f-addr2','f-city','f-status','f-results')">Find address</button>
-  </div>
-  <div class="cl-address-results" id="f-results"></div>
-  <div class="cl-postcode-status" id="f-status"></div>
-</div>  </div>  <div class="field"><label>Email Address</label><input type="email" id="f-email" placeholder="Your email (for us to return your Will)" required></div>  <div class="field"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="In case we need to clarify anything" required></div>  <div class="field"><label>Marital Status</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="marital" value="single"> Single</label>  <label class="radio-opt"><input type="radio" name="marital" value="married"> Married</label>  <label class="radio-opt"><input type="radio" name="marital" value="civil-partner"> Civil Partner</label>  <label class="radio-opt"><input type="radio" name="marital" value="divorced"> Divorced</label>  <label class="radio-opt"><input type="radio" name="marital" value="widowed"> Widowed</label>  <label class="radio-opt"><input type="radio" name="marital" value="cohabiting"> Cohabiting</label>  </div>  </div>  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
+<div class="step active" id="step-1">  <div class="step-header">  <div class="step-num">Step 1 of 7</div>  <h2 class="step-title">About You</h2>  <p class="step-sub">We need your details to correctly identify you as the person making this Will (the "Testator").</p>  </div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="f-first" placeholder="e.g. James" required></div>  <div class="field"><label>Last Name</label><input type="text" id="f-last" placeholder="e.g. Hargreaves" required></div>  </div>  <div class="field"><label>Date of Birth</label><input type="date" id="f-dob" required></div>  <div class="field"><label>Address Line 1</label><input type="text" id="f-addr1" placeholder="House number and street" required></div>  <div class="field"><label>Address Line 2 (optional)</label><input type="text" id="f-addr2" placeholder="Flat, apartment, etc."></div>  <div class="field-row">  <div class="field"><label>City / Town</label><input type="text" id="f-city" required></div>  <div class="field"><label>Postcode</label><input type="text" id="f-post" placeholder="e.g. SW1A 1AA" required></div>  </div>  <div class="field"><label>Email Address</label><input type="email" id="f-email" placeholder="Your email (for us to return your Will)" required></div>  <div class="field"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="In case we need to clarify anything" required></div>  <div class="field"><label>Marital Status</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="marital" value="single"> Single</label>  <label class="radio-opt"><input type="radio" name="marital" value="married"> Married</label>  <label class="radio-opt"><input type="radio" name="marital" value="civil-partner"> Civil Partner</label>  <label class="radio-opt"><input type="radio" name="marital" value="divorced"> Divorced</label>  <label class="radio-opt"><input type="radio" name="marital" value="widowed"> Widowed</label>  <label class="radio-opt"><input type="radio" name="marital" value="cohabiting"> Cohabiting</label>  </div>  </div>  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
 </div>
 
 <!-- STEP 2: PARTNER -->
@@ -220,17 +185,7 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- STEP 5: YOUR ESTATE & GIFTS -->
-<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Step 5 of 7</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">  <div class="field"><label>Property Postcode</label>
-  <div class="cl-postcode-row">
-    <input type="text" id="prop-post" placeholder="e.g. SW1A 1AA">
-    <button type="button" class="cl-postcode-btn" onclick="clFindAddress('prop-post','prop-addr1','prop-addr2','prop-city','prop-status','prop-results')">Find address</button>
-  </div>
-  <div class="cl-address-results" id="prop-results"></div>
-  <div class="cl-postcode-status" id="prop-status"></div>
-</div>
-<div class="field"><label>Property Address Line 1</label><input type="text" id="prop-addr1" placeholder="House number and street"></div>
-<div class="field"><label>Property Address Line 2 (optional)</label><input type="text" id="prop-addr2" placeholder="Flat, apartment, etc."></div>
-<div class="field"><label>Property City / Town</label><input type="text" id="prop-city"></div>  <div class="field"><label>How is the property owned?</label>  <select>  <option value="">Select...</option>  <option value="sole">Solely in my name</option>  <option value="joint-tenants">Joint tenants (with partner/spouse)</option>  <option value="tenants-in-common">Tenants in common (I own a specific share)</option>  </select>  <div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div>  </div>  </div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
+<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Step 5 of 7</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">  <div class="field"><label>Property Address</label><input type="text" placeholder="Full address of the property"></div>  <div class="field"><label>How is the property owned?</label>  <select>  <option value="">Select...</option>  <option value="sole">Solely in my name</option>  <option value="joint-tenants">Joint tenants (with partner/spouse)</option>  <option value="tenants-in-common">Tenants in common (I own a specific share)</option>  </select>  <div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div>  </div>  </div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
 </div>
 
 <!-- STEP 6: FUNERAL & ADDITIONAL WISHES -->
@@ -760,13 +715,6 @@ function buildWorkerPayload(){
     guardians: buildGuardians(),
     specificGifts: buildSpecificGifts(),
     residuary: buildResiduary(children),
-    inheritanceAge: (function(){
-      var raw = (typeof getVal === 'function') ? getVal('child-age') : (document.getElementById('child-age') || {}).value;
-      var v = parseInt(raw, 10);
-      // Only include when meaningfully > 18; defaults to undefined so the template
-      // skips the trust clause for 18 (no deferral needed at the legal majority)
-      return Number.isFinite(v) && v > 18 ? v : null;
-    })(),
     funeralWishes: funeralWishes,
     notes: [buildNotes(residDetail), additional].filter(Boolean).join('\n\n'),
     marketingOptIn: false
@@ -977,95 +925,5 @@ function submitToWorker(payload){
     } catch (x) {}
   })();
   </script>
-
-<script>
-/* GetAddress.io postcode lookup
- * API key: client-side, domain-restricted in GetAddress.io dashboard.
- * Free tier: 20 lookups/day. Upgrade at getaddress.io if needed.
- */
-(function(){
-  const API_KEY = 'q6jiid106ku5peApAu03hQ51780';
-  const ENDPOINT = 'https://api.getaddress.io/find/';
-
-  window.clFindAddress = async function(postcodeId, addr1Id, addr2Id, cityId, statusId, resultsId){
-    const post = document.getElementById(postcodeId);
-    const status = document.getElementById(statusId);
-    const results = document.getElementById(resultsId);
-    if (!post || !post.value.trim()) {
-      status.textContent = 'Please enter a postcode first.';
-      status.classList.add('error');
-      return;
-    }
-    const postcode = post.value.trim().toUpperCase().replace(/\s+/g,' ');
-    status.classList.remove('error');
-    status.textContent = 'Searching…';
-    results.classList.remove('open');
-    results.innerHTML = '';
-
-    try {
-      const url = ENDPOINT + encodeURIComponent(postcode) + '?api-key=' + API_KEY + '&expand=true';
-      const resp = await fetch(url);
-      if (!resp.ok) {
-        const txt = await resp.text();
-        if (resp.status === 404) {
-          status.textContent = 'No addresses found for that postcode.';
-        } else if (resp.status === 401 || resp.status === 403) {
-          status.textContent = 'Address lookup unavailable. Please type the address manually.';
-        } else if (resp.status === 429) {
-          status.textContent = 'Lookup limit reached for today. Please type the address manually.';
-        } else {
-          status.textContent = 'Lookup failed (' + resp.status + '). Please type manually.';
-        }
-        status.classList.add('error');
-        return;
-      }
-      const data = await resp.json();
-      const addresses = data.addresses || [];
-      if (!addresses.length) {
-        status.textContent = 'No addresses found for that postcode.';
-        status.classList.add('error');
-        return;
-      }
-      status.textContent = 'Found ' + addresses.length + ' address' + (addresses.length === 1 ? '' : 'es') + '. Click one below.';
-      addresses.forEach(function(a){
-        const div = document.createElement('div');
-        div.className = 'cl-address-result';
-        const label = [a.line_1, a.line_2, a.line_3, a.locality, a.town_or_city].filter(Boolean).join(', ');
-        div.textContent = label;
-        div.onclick = function(){
-          if (addr1Id) document.getElementById(addr1Id).value = [a.line_1].filter(Boolean).join(', ');
-          if (addr2Id) document.getElementById(addr2Id).value = [a.line_2, a.line_3].filter(Boolean).join(', ');
-          if (cityId)  document.getElementById(cityId).value  = a.town_or_city || a.locality || '';
-          results.classList.remove('open');
-          results.innerHTML = '';
-          status.textContent = 'Address filled. Edit fields below if needed.';
-        };
-        results.appendChild(div);
-      });
-      results.classList.add('open');
-    } catch (err) {
-      console.error('CL address lookup error:', err);
-      status.textContent = 'Network error. Please type the address manually.';
-      status.classList.add('error');
-    }
-  };
-
-  // Allow Enter key in postcode fields to trigger lookup
-  document.addEventListener('DOMContentLoaded', function(){
-    ['f-post','prop-post'].forEach(function(id){
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('keydown', function(e){
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const btn = el.parentElement.querySelector('.cl-postcode-btn');
-          if (btn) btn.click();
-        }
-      });
-    });
-  });
-})();
-</script>
-
 </body>
 </html>
