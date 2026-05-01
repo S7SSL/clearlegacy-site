@@ -1070,5 +1070,111 @@ function submitToWorker(payload){
 })();
 </script>
 
+
+<script id="cl-funnel-events">
+/* Clear Legacy — upper-funnel events for Smart Bidding signals.
+   Fires:
+     - view_item       when user reaches the final step (Step 7)
+     - begin_checkout  when user clicks the Pay/Submit button
+   Both use transport:'beacon' so they survive the Stripe redirect. */
+(function(){
+  if (typeof window.gtag !== 'function') return;
+  var fired = { view_item: false, begin_checkout: false };
+
+  // Try to read the selected pricing tier; fall back to £99 (mid-tier average)
+  function selectedTier() {
+    // Look for a checked radio or selected option whose value/text mentions a tier
+    var inputs = document.querySelectorAll('input[type=radio]:checked, input[type=hidden]');
+    for (var i = 0; i < inputs.length; i++) {
+      var v = (inputs[i].value || '').toLowerCase();
+      if (v.indexOf('comprehensive') >= 0 || v === '149') return { id: 'comprehensive', name: 'Comprehensive Will', price: 149 };
+      if (v.indexOf('mirror') >= 0 || v === '99')        return { id: 'mirror',        name: 'Mirror Wills',       price: 99  };
+      if (v.indexOf('single') >= 0 || v === '69')         return { id: 'single',        name: 'Single Will',        price: 69  };
+    }
+    return { id: 'unknown', name: 'Will writing service', price: 99 };
+  }
+
+  function fire(eventName) {
+    if (fired[eventName]) return;
+    fired[eventName] = true;
+    var t = selectedTier();
+    var payload = {
+      currency: 'GBP',
+      value: t.price,
+      items: [{ item_id: t.id, item_name: t.name, price: t.price, quantity: 1 }],
+      transport_type: 'beacon'
+    };
+    try {
+      window.gtag('event', eventName, payload);
+      console.log('CL funnel:', eventName, payload);
+    } catch (e) {
+      console.warn('CL funnel: failed to fire', eventName, e);
+    }
+  }
+
+  // --- view_item: detect when Step 7 (final step) becomes active ---
+  // Common patterns: <div class="step active"> or [data-step="7"].active or <section class="step-7 active">
+  function checkActiveStep() {
+    // 1) Look for explicit step-7 indicators
+    var explicit = document.querySelector('.step-7.active, [data-step="7"].active, .step.active.step-7');
+    if (explicit) { fire('view_item'); return; }
+    // 2) Look for any "step" element that's active AND is the last one
+    var allSteps = document.querySelectorAll('.step, [data-step], .form-step');
+    if (allSteps.length === 0) return;
+    var last = allSteps[allSteps.length - 1];
+    if (last && last.classList && last.classList.contains('active')) {
+      fire('view_item');
+    }
+    // 3) Look for textual hints of the final step in the visible heading
+    var heading = document.querySelector('.step.active h1, .step.active h2, .step.active .step-title, .form-step.active h2');
+    if (heading) {
+      var txt = (heading.textContent || '').toLowerCase();
+      if (txt.indexOf('review') >= 0 || txt.indexOf('payment') >= 0 || txt.indexOf('checkout') >= 0 || txt.indexOf('confirm') >= 0) {
+        fire('view_item');
+      }
+    }
+  }
+
+  // --- begin_checkout: detect Pay button click ---
+  function attachPayListener() {
+    document.addEventListener('click', function(e) {
+      var el = e.target;
+      // Walk up to find the clicked button/link
+      while (el && el !== document.body) {
+        if (el.tagName === 'BUTTON' || el.tagName === 'A' || (el.getAttribute && el.getAttribute('role') === 'button')) {
+          var label = ((el.textContent || '') + ' ' + (el.getAttribute('aria-label') || '') + ' ' + (el.id || '') + ' ' + (el.className || '')).toLowerCase();
+          if (label.indexOf('pay') >= 0 || label.indexOf('checkout') >= 0 || label.indexOf('submit') >= 0 || label.indexOf('continue to payment') >= 0) {
+            fire('begin_checkout');
+            return;
+          }
+        }
+        el = el.parentElement;
+      }
+    }, true);
+  }
+
+  function init() {
+    checkActiveStep();
+    attachPayListener();
+    // Watch for class/attribute changes (step navigation)
+    var observer = new MutationObserver(function(mutations) {
+      checkActiveStep();
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class', 'data-step'],
+      subtree: true,
+      childList: false
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
 </body>
 </html>
