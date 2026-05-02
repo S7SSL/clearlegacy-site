@@ -413,7 +413,15 @@ footer{background:#fff;border-top:1px solid var(--border);padding:48px 5% 28px}
 </div>
 
 <!-- COMPARISON -->
-<section class="compare" id="pricing-compare">  <div class="compare-inner">  <p class="section-tag">Market Comparison</p>  <h2>Half the Price.<br>Same Legal Standard.</h2>  <p>Why pay more? Our Wills carry the same legal weight as a solicitor's — for a fraction of the cost.</p>  <div class="compare-grid">  <div class="compare-card ours">  <div class="label">ClearLegacy</div>  <div class="service">Single Will</div>  <div class="price" style="color:#3b82f6">£69</div>  <div class="vs">vs £100–350 elsewhere</div>  </div>  <div class="compare-card ours">  <div class="label">ClearLegacy</div>  <div class="service">Mirror Wills</div>  <div class="price" style="color:#3b82f6">£99</div>  <div class="vs">vs £160–600 elsewhere</div>  </div>  </div>  <p style="font-size:13px;color:var(--grey);margin-top:20px">Same qualified reviewers. Same legal validity. Lower price — always.</p>  </div>
+<style>
+  /* Stitch-inspired upgrades to compare cards */
+  .compare-grid{position:relative}
+  .compare-vs-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:#3b82f6;color:#fff;border:4px solid var(--bg-soft);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;letter-spacing:.5px;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+  @media(max-width:768px){.compare-vs-badge{display:none}}
+  .compare-card.ours .price-row{display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap}
+  .compare-card.ours .price-old{font-size:18px;color:rgba(255,255,255,.45);text-decoration:line-through;font-weight:600}
+</style>
+<section class="compare" id="pricing-compare">  <div class="compare-inner">  <p class="section-tag">Market Comparison</p>  <h2>Half the Price.<br>Same Legal Standard.</h2>  <p>Why pay more? Our Wills carry the same legal weight as a solicitor's — for a fraction of the cost.</p>  <div class="compare-grid">  <div class="compare-vs-badge">VS</div>  <div class="compare-card ours">  <div class="label">ClearLegacy</div>  <div class="service">Single Will</div>  <div class="price-row"><span class="price" style="color:#3b82f6">£69</span><span class="price-old">from £350</span></div>  <div class="vs">vs £100–350 at high-street solicitors</div>  </div>  <div class="compare-card ours">  <div class="label">ClearLegacy</div>  <div class="service">Mirror Wills</div>  <div class="price-row"><span class="price" style="color:#3b82f6">£99</span><span class="price-old">from £600</span></div>  <div class="vs">vs £160–600 at high-street solicitors</div>  </div>  </div>  <p style="font-size:13px;color:var(--grey);margin-top:20px">Same qualified reviewers. Same legal validity. Lower price — always.</p>  </div>
 </section>
 
 <!-- SERVICES -->
