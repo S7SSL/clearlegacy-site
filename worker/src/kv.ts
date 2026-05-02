@@ -50,7 +50,15 @@ export async function updateLead(
   patch: Partial<LeadRecord>,
 ): Promise<LeadRecord | null> {
   const current = await getLead(env, ref);
-  if (!current) return null;
+  if (!current) {
+    // Loud-log so silent updateLead misses are visible in `wrangler tail`.
+    // Callers that legitimately want create-or-update should use putLead directly.
+    console.error(
+      `updateLead: NO LEAD FOUND for ref=${ref} — patch dropped:`,
+      JSON.stringify(patch),
+    );
+    return null;
+  }
   const next: LeadRecord = { ...current, ...patch };
   await putLead(env, ref, next);
   return next;

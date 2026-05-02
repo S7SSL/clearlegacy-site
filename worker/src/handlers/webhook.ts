@@ -15,7 +15,7 @@
 import type { Env } from '../index';
 import type { LeadRecord, Product } from '../types';
 import { verifyStripeSignature } from '../stripe';
-import { getLead, putLead, updateLead, markEventProcessed } from '../kv';
+import { getLead, putLead, updateLead, markEventProcessed, appendActivity } from '../kv';
 import { render } from '../template';
 import { renderPdf } from '../pdf';
 import { sendEmail, sendOnboardingEmail, bytesToBase64 } from '../email';
@@ -70,15 +70,67 @@ export async function regenerateForRef(env: Env, ref: string): Promise<void> {
  * pre-select the product on the questionnaire form.
  */
 function inferProductFromSession(session: any, env: Env): Product {
-  // Payment Link id is exposed on the session at `session.payment_link`
-  // (string id). We can't reverse-lookup the URL without a Stripe API call,
-  // so we compare amounts as a simple heuristic: mirror wills are priced
-  // higher than single wills.
+  // We compare amounts as a simple heuristic, since Payment Link id alone
+  // doesn't tell us which product without a Stripe API call.
+  // Pricing (April 2026): single = £69 (6900), mirror = £99 (9900).
+  // A threshold of £80 (8000) cleanly separates the two and is robust to
+  // small future price tweaks in either direction.
+  // If product pricing changes materially, update this threshold (and the
+  // questionnaire pre-select on the form).
   const amount = Number(session?.amount_total || 0);
-  // Conservative default: single. If amount >= 150.00 GBP we treat it as mirror.
-  // (Real config lives in Stripe; this is only for picking email copy.)
-  if (amount >= 15000) return 'mirror';
+  if (amount >= 8000) return 'mirror';
   return 'single';
+}
+
+/**
+ * For a "mirror" order, derive the partner's questionnaire by swapping
+ * testator <-> partner roles. Mirror convention: each spouse's will is
+ * structurally identical, with the other spouse named wherever they
+ * themselves appear. Names matching the original testator become the
+ * partner's name and vice versa across executors, residuary, specific gifts
+ * and guardians. Guardians are typically non-spouse so the swap is a no-op
+ * for them; the helper still maps over them defensively.
+ *
+ * The questionnaire only collects the testator's email/phone, so the derived
+ * testator (the partner) won't have those — that's fine; the will template
+ * doesn't render contact details inside the document body.
+ */
+function swapForPartner(q: any): any {
+  const t = q.testator || {};
+  const p = q.partner || {};
+  if (!p.fullName) return q; // nothing to swap — return original
+
+  // Compare names case-insensitively and ignoring surrounding whitespace, so
+  // capitalisation differences in customer-typed data (e.g. partner "lesley
+  // houlton" vs executor "Lesley Houlton") don't break the swap. We return the
+  // OTHER party's fullName verbatim — preserving its original capitalisation —
+  // so the document reads naturally regardless of how the input was entered.
+  const norm = (s: string | undefined): string => (s || '').trim().toLowerCase();
+  const swapName = (name: string | undefined): string | undefined => {
+    if (!name) return name;
+    const n = norm(name);
+    if (n && n === norm(t.fullName)) return p.fullName;
+    if (n && n === norm(p.fullName)) return t.fullName;
+    return name;
+  };
+  const swapPeople = (people: any[] | undefined) =>
+    (people || []).map((person) => ({ ...person, name: swapName(person.name) }));
+
+  return {
+    ...q,
+    testator: {
+      fullName: p.fullName,
+      address: p.address || t.address,
+      dob: p.dob,
+    },
+    partner: { ...t },
+    executors: (q.partnerExecutors && q.partnerExecutors.length > 0)
+      ? q.partnerExecutors
+      : swapPeople(q.executors),
+    residuary: swapPeople(q.residuary),
+    specificGifts: swapPeople(q.specificGifts),
+    guardians: swapPeople(q.guardians),
+  };
 }
 
 /**
@@ -144,6 +196,24 @@ async function bootstrapLeadFromSession(env: Env, session: any): Promise<string 
   return ref;
 }
 
+
+/**
+ * Race a promise against a timeout. If the promise doesn't resolve within
+ * timeoutMs, throws an Error with the supplied label. Critical for protecting
+ * generateAndDeliver against Cloudflare Browser Rendering hangs that would
+ * otherwise let the worker run past its 30s background-task budget and die
+ * silently before the catch block can write pdfError to KV.
+ */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+  let timeoutId: any;
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`TIMEOUT after ${timeoutMs}ms: ${label}`));
+    }, timeoutMs);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
+}
+
 async function generateAndDeliver(env: Env, ref: string): Promise<void> {
   try {
     const lead = await getLead(env, ref);
@@ -159,17 +229,59 @@ async function generateAndDeliver(env: Env, ref: string): Promise<void> {
       console.log(`Webhook: lead ${ref} has no questionnaire yet — skipping generation`);
       return;
     }
-    await updateLead(env, ref, { pdfStatus: 'generating' });
+    console.log(`[generate ${ref}] START, product=${lead.product}, hasQuestionnaire=${!!lead.questionnaire}`);
+    await updateLead(env, ref, { pdfStatus: 'generating', generatingStartedAt: new Date().toISOString() });
 
-    // Render HTML
-    const html = render(willTemplate as string, {
-      ...lead.questionnaire,
+    // Render HTML — for mirror orders we render BOTH spouses' wills and
+    // concatenate them inside one PDF. The first will is the primary testator's
+    // (as captured in the questionnaire); the second is built by swapping
+    // testator <-> partner roles via swapForPartner(). Mirror convention is
+    // that the partner's will is structurally identical with names swapped, so
+    // re-rendering the same template on a swapped questionnaire is correct.
+    //
+    // We extract the <body> of the partner-will HTML and inject it before
+    // </body> of the primary-will HTML, separated by a CSS page break. This
+    // keeps a single <html>/<head> wrapper (so styles, fonts, base tags etc.
+    // apply uniformly) but produces two independent will documents in one PDF.
+    const baseExtras = {
       ref,
       renderDate: formatDate(new Date()),
+    };
+
+    const productEffective = (lead.questionnaire.product || lead.product) as Product | undefined;
+    const isMirror = productEffective === 'mirror' && !!lead.questionnaire.partner?.fullName;
+
+    const willPrimary = render(willTemplate as string, {
+      ...lead.questionnaire,
+      ...baseExtras,
     });
 
-    // PDF via Browser Rendering
-    const pdfBytes = await renderPdf(env.BROWSER, html);
+    let html: string;
+    if (isMirror) {
+      const partnerQuestionnaire = swapForPartner(lead.questionnaire);
+      const willPartner = render(willTemplate as string, {
+        ...partnerQuestionnaire,
+        ...baseExtras,
+      });
+      const bodyMatch = willPartner.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+      const partnerBody = bodyMatch ? bodyMatch[1] : willPartner;
+      const PAGE_BREAK = '<div style="page-break-before: always;"></div>';
+      html = willPrimary.replace('</body>', `${PAGE_BREAK}${partnerBody}</body>`);
+    } else {
+      html = willPrimary;
+    }
+
+    // PDF via Browser Rendering — wrapped in 25s timeout because
+    // Cloudflare's renderer occasionally hangs forever (especially when quota
+    // exhausted), which would let the worker die past its 30s budget without
+    // ever firing the catch block below.
+    console.log(`[generate ${ref}] HTML built, length=${html.length}, isMirror=${isMirror}, calling renderPdf...`);
+    const pdfBytes = await withTimeout(
+      renderPdf(env.BROWSER, html),
+      25000,
+      'renderPdf (Cloudflare Browser Rendering)',
+    );
+    console.log(`[generate ${ref}] renderPdf returned, pdfBytes=${pdfBytes?.length || 0} bytes`);
     const pdfKey = `wills/${ref}.pdf`;
     await env.CLEARLEGACY_PDFS.put(pdfKey, pdfBytes, {
       httpMetadata: { contentType: 'application/pdf' },
@@ -190,7 +302,7 @@ async function generateAndDeliver(env: Env, ref: string): Promise<void> {
 
       const plainHtml = `
         <p>Hello ${escapeHtml(customerName)},</p>
-        <p>Thank you for your order. Your ${escapeHtml(product)} is attached to this email as a PDF.</p>
+        <p>Thank you for your order. Please find your ${escapeHtml(product)} attached to this email as a PDF.</p>
         <p><strong>Next steps — please read carefully:</strong></p>
         <ol>
           <li>Print the document.</li>
@@ -206,7 +318,7 @@ async function generateAndDeliver(env: Env, ref: string): Promise<void> {
       `;
       const plainText = `Hello ${customerName},
 
-Thank you for your order. Your ${product} is attached as a PDF.
+Thank you for your order. Please find your ${product} attached as a PDF.
 
 Please print it, arrange two witnesses to be with you together, and sign it in their joint presence. The witnesses must not be beneficiaries.
 
@@ -216,19 +328,25 @@ ${downloadUrl}
 Reference: ${ref}
 — Clear Legacy`;
 
-      await sendEmail(env.RESEND_API_KEY, {
-        from: env.EMAIL_FROM,
-        to: toEmail,
-        bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
-        subject,
-        html: plainHtml,
-        text: plainText,
-        attachments: [{
-          filename: `${customerName.replace(/[^\w -]/g, '_')}-will.pdf`,
-          content: bytesToBase64(pdfBytes),
-          contentType: 'application/pdf',
-        }],
-      });
+      console.log(`[generate ${ref}] sending email to ${toEmail}...`);
+      await withTimeout(
+        sendEmail(env.RESEND_API_KEY, {
+          from: env.EMAIL_FROM,
+          to: toEmail,
+          bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+          subject,
+          html: plainHtml,
+          text: plainText,
+          attachments: [{
+            filename: `${customerName.replace(/[^\w -]/g, '_')}-${productEffective === 'mirror' ? 'mirror-wills' : 'will'}.pdf`,
+            content: bytesToBase64(pdfBytes),
+            contentType: 'application/pdf',
+          }],
+        }),
+        15000,
+        'sendEmail (Resend)',
+      );
+      console.log(`[generate ${ref}] email sent OK`);
     } else {
       console.warn(`Webhook: no customer email for ref=${ref}; PDF stored but no email sent`);
     }
@@ -310,6 +428,60 @@ export async function handleStripeWebhook(
 
   // Record payment info immediately so /api/status can reflect "paid" while PDF renders.
   if (event.type === 'checkout.session.completed' && session) {
+    // Defensive lookup: if the lead doesn't exist (questionnaire POST never landed,
+    // race condition, customer closed tab, etc.) the payment would otherwise be
+    // silently lost — updateLead is a no-op when the key is missing. Recover by
+    // bootstrapping a lead AT THE GIVEN REF, so traceability is preserved and the
+    // customer can finish the questionnaire via the email we send them.
+    const existing = await getLead(env, ref);
+    if (!existing) {
+      console.error(
+        `Webhook recovery: client_reference_id ${ref} present but no KV lead — bootstrapping from session ${session.id}`
+      );
+      const customerEmail: string | undefined =
+        session?.customer_details?.email || session?.customer_email || undefined;
+      const product = inferProductFromSession(session, env);
+      const customerName: string | undefined = session?.customer_details?.name || undefined;
+
+      const record: LeadRecord = {
+        pdfStatus: 'awaiting_questionnaire',
+        paidAt: new Date().toISOString(),
+        stripeSessionId: session.id,
+        stripePaymentIntentId: session.payment_intent,
+        stripeAmount: session.amount_total,
+        stripeCurrency: session.currency,
+        stripeCustomerEmail: customerEmail,
+        product,
+      };
+      await putLead(env, ref, record);
+
+      if (customerEmail) {
+        try {
+          await sendOnboardingEmail({
+            apiKey: env.RESEND_API_KEY,
+            from: env.EMAIL_FROM,
+            to: customerEmail,
+            bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+            customerName,
+            questionnaireUrl: questionnaireUrlFor(ref, product, env),
+            product,
+            ref,
+          });
+          await updateLead(env, ref, { onboardingEmailSentAt: new Date().toISOString() });
+        } catch (err: any) {
+          console.error(`Webhook recovery: onboarding email failed for ref=${ref}:`, err);
+          await updateLead(env, ref, { onboardingEmailError: err?.message || String(err) });
+        }
+      } else {
+        console.warn(`Webhook recovery: no customer email on session ${session.id} — lead created but onboarding email not sent`);
+      }
+
+      return new Response(
+        JSON.stringify({ received: true, recovered: true, ref }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+
     await updateLead(env, ref, {
       paidAt: new Date().toISOString(),
       stripeSessionId: session.id,
@@ -327,4 +499,46 @@ export async function handleStripeWebhook(
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
+}
+
+
+/**
+ * Watchdog — scan KV for leads stuck in pdfStatus="generating" for > 5 minutes
+ * and auto-flip them to "failed" with a clear error. This is a backstop for
+ * when PDF generation hangs in a way that bypasses our timeout wrapper (e.g.,
+ * if the worker dies before catch fires, or if Cloudflare kills the background
+ * task mid-flight). Called from scheduled() in index.ts every 2 minutes.
+ */
+export async function watchdogStuckGenerating(env: Env): Promise<void> {
+  const STUCK_AFTER_MS = 5 * 60 * 1000;
+  let cursor: string | undefined = undefined;
+  let stuckCount = 0;
+  let scanned = 0;
+  do {
+    const list: any = await env.CLEARLEGACY_KV.list({ prefix: 'lead:', cursor, limit: 100 });
+    for (const key of list.keys) {
+      scanned++;
+      const ref = key.name.replace(/^lead:/, '');
+      const lead = await getLead(env, ref);
+      if (!lead || lead.pdfStatus !== 'generating') continue;
+      const startedAt = (lead as any).generatingStartedAt as string | undefined;
+      let ageMs = STUCK_AFTER_MS + 1; // assume stuck if no timestamp
+      let ageDescription = 'no generatingStartedAt timestamp (legacy)';
+      if (startedAt) {
+        ageMs = Date.now() - new Date(startedAt).getTime();
+        ageDescription = `${Math.round(ageMs / 60000)} minutes`;
+      }
+      if (ageMs > STUCK_AFTER_MS) {
+        const reason = `Watchdog auto-failed: stuck in 'generating' for ${ageDescription}. Underlying generation likely hung beyond the 25s renderPdf timeout. Click Regenerate PDF to retry.`;
+        await updateLead(env, ref, { pdfStatus: 'failed', pdfError: reason });
+        await appendActivity(env, ref, { type: 'pdf_failed', at: new Date().toISOString(), detail: `[watchdog] ${reason}` });
+        console.log(`[watchdog] auto-failed ${ref}: ${ageDescription}`);
+        stuckCount++;
+      }
+    }
+    cursor = list.list_complete ? undefined : list.cursor;
+  } while (cursor);
+  if (stuckCount > 0 || scanned > 0) {
+    console.log(`[watchdog] scan complete: ${scanned} leads scanned, ${stuckCount} auto-failed`);
+  }
 }
