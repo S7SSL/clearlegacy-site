@@ -12,7 +12,7 @@
  */
 
 import type { Env } from '../index';
-import type { LeadRecord, Product, QuestionnaireData } from '../types';
+import type { Attribution, LeadRecord, Product, QuestionnaireData } from '../types';
 import { getLead, putLead, updateLead } from '../kv';
 import { regenerateForRef } from './webhook';
 
@@ -119,6 +119,50 @@ function isValidRef(v: unknown): v is string {
   return typeof v === 'string' && /^[a-zA-Z0-9-]{8,64}$/.test(v);
 }
 
+/**
+ * Extract attribution data from POST body. The form sends it as `body.attribution`
+ * after capturing UTMs / click ids / referrer / landing page from the URL on
+ * first landing. We sanitise — trim, length-cap each field, drop empty strings —
+ * and return undefined if nothing useful is present so we don't store empty
+ * attribution objects in KV.
+ */
+function extractAttribution(body: any): Attribution | undefined {
+  const a = body?.attribution;
+  if (!a || typeof a !== 'object') return undefined;
+  const clean = (v: unknown, max = 500): string | undefined => {
+    if (typeof v !== 'string') return undefined;
+    const trimmed = v.trim().slice(0, max);
+    return trimmed ? trimmed : undefined;
+  };
+  const out: Attribution = {
+    landingUrl: clean(a.landingUrl, 1000),
+    referrer: clean(a.referrer, 500),
+    utmSource: clean(a.utmSource, 100),
+    utmMedium: clean(a.utmMedium, 100),
+    utmCampaign: clean(a.utmCampaign, 200),
+    utmContent: clean(a.utmContent, 200),
+    utmTerm: clean(a.utmTerm, 200),
+    gclid: clean(a.gclid, 200),
+    fbclid: clean(a.fbclid, 200),
+    ttclid: clean(a.ttclid, 200),
+    msclkid: clean(a.msclkid, 200),
+    userAgent: clean(a.userAgent, 200),
+    capturedAt: clean(a.capturedAt, 40),
+  };
+  // Drop undefined keys for compactness in KV
+  for (const k of Object.keys(out) as (keyof Attribution)[]) {
+    if (out[k] === undefined) delete out[k];
+  }
+  // Return undefined if no customer-visible data remains (capturedAt + userAgent
+  // alone are uninteresting metadata; only persist if we have a referrer, UTM,
+  // click id, or landing URL).
+  const meaningful = Object.keys(out).filter(
+    (k) => k !== 'capturedAt' && k !== 'userAgent',
+  );
+  if (meaningful.length === 0) return undefined;
+  return out;
+}
+
 export async function handleLead(
   request: Request,
   env: Env,
@@ -139,6 +183,8 @@ export async function handleLead(
 
   const v = validate(body);
   if (!v.ok) return jsonError(400, 'validation_failed', v.error);
+
+  const attribution = extractAttribution(body);
 
   // Pay-first path: caller passed a ref that already exists as a paid lead.
   // In that case we merge the questionnaire into the existing record and kick
@@ -171,6 +217,10 @@ export async function handleLead(
       questionnaire,
       pdfStatus: 'pending',
       pdfError: undefined,
+      // Only set attribution if we captured something AND the lead doesn't
+      // already have it (preserve the original capture from the first lead
+      // submission, which is the truer source of the click).
+      ...(attribution && !existing.attribution ? { attribution } : {}),
     });
 
     // Kick PDF generation in the background and ack quickly.
@@ -192,6 +242,7 @@ export async function handleLead(
     },
     pdfStatus: 'pending',
     product: v.data.product,
+    ...(attribution ? { attribution } : {}),
   };
   await putLead(env, ref, record);
 

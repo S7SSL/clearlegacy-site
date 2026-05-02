@@ -13,6 +13,7 @@
     {{guardians}}         array (optional)
     {{specificGifts}}     array (optional)
     {{residuary}}         array (at least 1)
+    {{inheritanceAge}}    number > 18 (optional) — defers vesting for under-age beneficiaries
     {{funeralWishes}}     string (optional)
     {{notes}}             string (optional)
     {{renderDate}}        string like "20 April 2026"
@@ -37,6 +38,7 @@
   .small { font-size: 9pt; color: #555; }
   .ref-footer { margin-top: 40pt; font-size: 8pt; color: #888; text-align: center; }
   .box { border: 1px solid #aaa; padding: 8pt 10pt; margin: 8pt 0; background: #fafafa; }
+  .trust-clause { margin-top: 8pt; padding: 8pt 10pt; background: #f7f7f0; border-left: 3px solid #888; font-size: 10.5pt; }
   table.persons { border-collapse: collapse; width: 100%; margin-top: 6pt; }
   table.persons th, table.persons td { border: 1px solid #bbb; padding: 4pt 6pt; text-align: left; font-size: 10pt; }
   table.persons th { background: #eee; }
@@ -122,11 +124,25 @@
     {{#each residuary}}
       <li>
         <strong>{{this.name}}</strong>{{#if this.relationship}} ({{this.relationship}}){{/if}}
-        — {{#if this.share}}{{this.share}}{{else}}equal share of the residuary estate{{/if}}.
+        &mdash; {{#if this.share}}{{this.share}}{{else}}equal share of the residuary estate{{/if}}.
       </li>
     {{/each}}
   </ol>
   If any such beneficiary shall fail to survive me by 28 days, their share shall pass to their issue (if any) in equal shares per stirpes, and failing such issue, to the surviving residuary beneficiaries in proportion to their shares.
+  {{#if inheritanceAge}}
+  <p class="trust-clause">
+    <strong>CONTINGENT TRUST FOR UNDER-AGE BENEFICIARIES.</strong>
+    PROVIDED ALWAYS that any beneficiary entitled under this clause who has not attained the age of
+    <strong>{{inheritanceAge}}</strong> years at the date of my death shall not take a vested interest
+    absolutely until they attain that age. My Trustees shall meanwhile hold that beneficiary&rsquo;s share
+    on trust for them contingently on attaining that age, with the statutory powers of maintenance and
+    advancement conferred by sections 31 and 32 of the Trustee Act 1925 (as amended by the Inheritance and
+    Trustees&rsquo; Powers Act 2014) and any further powers conferred by this Will. If any such beneficiary
+    shall die before attaining that age, their share shall pass to their issue (if any) in equal shares per
+    stirpes, and failing such issue, shall accrue to the other residuary beneficiaries in proportion to their
+    respective shares.
+  </p>
+  {{/if}}
 </li>
 
 <li class="section">
@@ -136,7 +152,7 @@
     <li>to retain, sell, convert or vary any investments forming part of my estate;</li>
     <li>to appropriate any asset in or towards satisfaction of any share or interest under this Will without the consent of any beneficiary;</li>
     <li>to engage and remunerate any professional adviser (including any of themselves who is a professional) for work done on behalf of my estate;</li>
-    <li>to exercise all statutory powers of maintenance and advancement in respect of any beneficiary who is a minor.</li>
+    <li>to exercise all statutory powers of maintenance and advancement in respect of any beneficiary who is a minor or whose interest is contingent.</li>
   </ol>
 </li>
 
@@ -173,14 +189,14 @@
   <p>SIGNED by the above-named testator in our joint presence, and then by us in the presence of the testator and of each other:</p>
 
   <div class="sig-row">
-    <strong>Witness 1 — Signature:</strong> <span class="sig-line">&nbsp;</span><br/>
+    <strong>Witness 1 &mdash; Signature:</strong> <span class="sig-line">&nbsp;</span><br/>
     <span class="small">Name: </span><span class="sig-line" style="min-width:220px;">&nbsp;</span>
     <span class="small">Occupation: </span><span class="sig-line" style="min-width:180px;">&nbsp;</span><br/>
     <span class="small">Address: </span><span class="sig-line" style="min-width:360px;">&nbsp;</span>
   </div>
 
   <div class="sig-row">
-    <strong>Witness 2 — Signature:</strong> <span class="sig-line">&nbsp;</span><br/>
+    <strong>Witness 2 &mdash; Signature:</strong> <span class="sig-line">&nbsp;</span><br/>
     <span class="small">Name: </span><span class="sig-line" style="min-width:220px;">&nbsp;</span>
     <span class="small">Occupation: </span><span class="sig-line" style="min-width:180px;">&nbsp;</span><br/>
     <span class="small">Address: </span><span class="sig-line" style="min-width:360px;">&nbsp;</span>
@@ -192,7 +208,7 @@
 </div>
 
 <div class="ref-footer">
-  Clear Legacy — Reference {{ref}} — Prepared {{renderDate}} — Jurisdiction: England &amp; Wales
+  Clear Legacy &mdash; Reference {{ref}} &mdash; Prepared {{renderDate}} &mdash; Jurisdiction: England &amp; Wales
 </div>
 
 </body>

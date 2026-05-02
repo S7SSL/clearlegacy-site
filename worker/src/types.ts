@@ -71,6 +71,31 @@ export interface QuestionnaireData {
   marketingOptIn?: boolean;
 }
 
+/**
+ * Attribution capture — populated by forms/will.html from the URL params and
+ * referrer at the time of the questionnaire submission. All fields optional.
+ * The form already captures these into sessionStorage on landing and injects
+ * them into POST /api/lead under `body.attribution`.
+ */
+export interface Attribution {
+  /** Full URL the customer first landed on (e.g. https://www.clearlegacy.co.uk/?utm_source=google&...). */
+  landingUrl?: string;
+  referrer?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
+  gclid?: string;
+  fbclid?: string;
+  ttclid?: string;
+  msclkid?: string;
+  /** Browser user agent at first landing (truncated to 200 chars). */
+  userAgent?: string;
+  /** Captured at first landing (ISO). */
+  capturedAt?: string;
+}
+
 // ---------- v2 additions for admin + customer portal ----------
 
 /**
@@ -155,6 +180,10 @@ export interface LeadRecord {
   emailedAt?: string;
   emailError?: string;
 
+  /** Set when a generation run flips status to 'generating'; the watchdog
+   * uses this to detect runs that have hung past the 25s renderPdf timeout. */
+  generatingStartedAt?: string;
+
   // ---------- v2 additions ----------
 
   /** Private admin notes (visible in /admin only, never to the customer). */
@@ -166,6 +195,9 @@ export interface LeadRecord {
   /** Set when a customer signs in and claims this lead via /account. */
   customerId?: string;
   claimedAt?: string;
+
+  /** UTM / click-id / referrer data captured by the form at submit time. */
+  attribution?: Attribution;
 }
 
 /**

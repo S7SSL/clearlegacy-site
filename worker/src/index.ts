@@ -25,7 +25,7 @@
  */
 
 import { handleLead } from './handlers/lead';
-import { handleStripeWebhook } from './handlers/webhook';
+import { handleStripeWebhook, watchdogStuckGenerating } from './handlers/webhook';
 import { handleStatus } from './handlers/status';
 import { handlePdfDownload } from './handlers/download';
 import { handleAdmin } from './handlers/admin';
@@ -133,4 +133,14 @@ export default {
       });
     }
   },
+  /**
+   * Cron — runs every 2 minutes (configured in wrangler.toml [triggers]).
+   * Backstops the renderPdf timeout: if any lead has been stuck in
+   * pdfStatus="generating" for >5 minutes, watchdog auto-fails it so the admin
+   * Regenerate button reappears and the customer support flow can recover.
+   */
+  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(watchdogStuckGenerating(env));
+  },
+
 };

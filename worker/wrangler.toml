@@ -1,66 +1,58 @@
 # Cloudflare Worker for Clear Legacy — questionnaire, Stripe webhook, PDF generation, email delivery.
-# Deploy: `cd worker && npm install && npx wrangler deploy`
-# Secrets (set with `npx wrangler secret put <NAME>`):
-#   STRIPE_SECRET_KEY          — sk_live_... (for session lookup after webhook; optional if only using Payment Links)
-#   STRIPE_WEBHOOK_SECRET      — whsec_... (from Stripe Dashboard → Developers → Webhooks → your endpoint → Signing secret)
-#   RESEND_API_KEY             — re_... (from resend.com)
-#   DOWNLOAD_TOKEN_SECRET      — any long random string, e.g. `openssl rand -hex 32`
-#   ADMIN_NOTIFICATION_EMAIL   — where lead copies go (e.g. sat@clearlegacy.co.uk)
+# Deploy: cd worker && npm install && npx wrangler deploy
+# Secrets (set with npx wrangler secret put NAME --name clearlegacy-api):
+#   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, RESEND_API_KEY,
+#   DOWNLOAD_TOKEN_SECRET, ADMIN_NOTIFICATION_EMAIL, ADMIN_PASSWORD
 
-name = "clearlegacy-api"
+name = "clearlegacy-api-v2"
 main = "src/index.ts"
 compatibility_date = "2025-10-01"
 compatibility_flags = ["nodejs_compat"]
-
-# Pin deploys to the Clear Legacy Cloudflare account. Account IDs are not secret —
-# they appear in dashboard URLs. This avoids ambiguity if this user ever gains access
-# to additional accounts.
 account_id = "f520d3a645627577b250957a7341a988"
 
-# Custom domain — api.clearlegacy.co.uk resolves via Cloudflare zone and routes to this Worker.
-# Requires the clearlegacy.co.uk zone to be active on the same account (it is).
+# Custom domain — api.clearlegacy.co.uk routes to this Worker.
 routes = [
   { pattern = "api.clearlegacy.co.uk", custom_domain = true }
 ]
 
-# Bundle the Will HTML template as a text module so `import willTemplate from '../../templates/will.html'` works.
+# Bundle .html files as text modules so the will template imports work.
 rules = [
   { type = "Text", globs = ["**/*.html"], fallthrough = true }
 ]
 
+# # --- Assets ---
+# # Point at the empty placeholder so wrangler 4.x doesn't auto-discover the
+# # parent dir (which contains node_modules and trips "Asset too large").
+# # The directory must exist with at least one file.
+# [assets]
+# directory = "./_empty_assets"
+
 # --- Bindings ---
 
 # KV: stores questionnaire data keyed by reference UUID.
-# Create: `npx wrangler kv:namespace create "CLEARLEGACY_KV"` then paste the returned id below.
 [[kv_namespaces]]
 binding = "CLEARLEGACY_KV"
 id = "164df086360a43798d421bb1f26d654c"
 
 # R2: stores generated Will PDFs.
-# Create: `npx wrangler r2 bucket create clearlegacy-pdfs`
 [[r2_buckets]]
 binding = "CLEARLEGACY_PDFS"
 bucket_name = "clearlegacy-pdfs"
 
-# Browser Rendering API: for HTML → PDF.
-# Requires Cloudflare Workers Paid plan + Browser Rendering enabled in dashboard.
-# Docs: https://developers.cloudflare.com/browser-rendering/
-# NOTE: explicit [browser] section header — inline `browser = {...}` after [[r2_buckets]]
-# gets TOML-scoped into r2_buckets[0] and silently not bound.
+# Browser Rendering API for HTML -> PDF.
 [browser]
 binding = "BROWSER"
 
 # --- Public config (safe in source) ---
 [vars]
 SITE_ORIGIN = "https://www.clearlegacy.co.uk"
-# API origin — used for re-download links in emails. Must match the Worker's custom domain above.
 API_ORIGIN = "https://api.clearlegacy.co.uk"
-# Stripe Payment Link URLs — reused from existing static links, just add client_reference_id.
 STRIPE_URL_SINGLE = "https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03"
 STRIPE_URL_MIRROR = "https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04"
-# Where Stripe redirects the customer after payment. Must be set as the Payment Link's "After payment" redirect in Stripe Dashboard.
 THANK_YOU_URL = "https://www.clearlegacy.co.uk/thank-you.html"
-# Retention
 PDF_RETENTION_DAYS = "90"
-# Email sender (must be a verified sending domain on Resend)
 EMAIL_FROM = "Clear Legacy <no-reply@clearlegacy.co.uk>"
+
+# Cron — watchdog runs every 2 minutes (auto-fails stuck-generating leads)
+[triggers]
+crons = ["*/2 * * * *"]

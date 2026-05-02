@@ -21,3 +21,4 @@ worker/node_modules/
 .env.*
 .dev.vars
 worker/.dev.vars
+*.uetbak
