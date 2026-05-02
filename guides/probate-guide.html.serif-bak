@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Get Probate Without a Solicitor | Clear Legacy</title>
+<meta name="description" content="How to apply for probate in England & Wales without a solicitor. Step-by-step guide. Fixed fee probate service from £195.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.clearlegacy.co.uk/guides/probate-guide.html">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<!-- JSON-LD: Product + FAQPage + BreadcrumbList (Probate) -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Fixed-Fee Probate Service UK","description":"Fixed-fee probate service from £195. Grant of Probate applications handled by experts. No percentage of estate taken — transparent pricing for UK executors.","brand":{"@type":"Brand","name":"ClearLegacy"},"image":"https://www.clearlegacy.co.uk/images/og-image.png","url":"https://www.clearlegacy.co.uk/guides/probate-guide.html","offers":{"@type":"Offer","price":"195","priceCurrency":"GBP","availability":"https://schema.org/InStock","url":"https://www.clearlegacy.co.uk/guides/probate-guide.html","priceValidUntil":"2026-12-31"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much does probate cost in the UK?","acceptedAnswer":{"@type":"Answer","text":"ClearLegacy offers fixed-fee probate from £195. Solicitors typically charge 1–5% of the estate value, which can run into thousands of pounds. The government's Probate Registry fee is £300 for estates over £5,000, paid separately."}},{"@type":"Question","name":"How long does probate take in the UK?","acceptedAnswer":{"@type":"Answer","text":"A Grant of Probate typically takes 8–16 weeks from application, depending on HMRC and Probate Registry backlogs. The full administration of an estate (collecting assets, paying debts, distributing) usually takes 6–12 months."}},{"@type":"Question","name":"Do I always need probate?","acceptedAnswer":{"@type":"Answer","text":"Not always. Probate is usually required if the deceased owned property in their sole name, or had bank accounts or investments over the bank's limit (typically £5,000–£50,000). If everything was jointly owned, probate may not be needed."}},{"@type":"Question","name":"Can I do probate myself?","acceptedAnswer":{"@type":"Answer","text":"Yes. In the UK you can apply for probate yourself via GOV.UK. However, the inheritance tax calculations (IHT400 forms) are complex, and mistakes can cause personal liability for the executor. Many people use a fixed-fee service like ClearLegacy for peace of mind without the percentage-of-estate cost."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.clearlegacy.co.uk/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.clearlegacy.co.uk/guides/"},{"@type":"ListItem","position":3,"name":"Probate Guide","item":"https://www.clearlegacy.co.uk/guides/probate-guide.html"}]}</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html,body{overflow-x:hidden;max-width:100%}
+:root{--navy:#0f1f3d;--gold:#c9a84c;--cream:#f5f0e8;--white:#fff}
+body{font-family:'Lato',sans-serif;background:var(--cream);color:#1a1a1a;line-height:1.65}
+nav{background:var(--navy);padding:14px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--gold)}
+.logo{font-family:'Playfair Display',serif;font-size:18px;color:var(--white);text-decoration:none}.logo span{color:var(--gold)}
+.nav-cta{background:var(--gold);color:var(--navy);padding:8px 20px;font-size:13px;font-weight:700;text-decoration:none}
+.hero-bar{background:var(--navy);padding:50px 5% 40px;text-align:center}
+.breadcrumb{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px;font-family:'Cormorant Garamond',serif;letter-spacing:1px}
+.hero-bar h1{font-family:'Playfair Display',serif;font-size:38px;color:var(--white);max-width:700px;margin:0 auto 14px;line-height:1.2}
+.hero-bar p{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,.65);max-width:580px;margin:0 auto}
+.gold-line{width:50px;height:2px;background:var(--gold);margin:18px auto}
+.article-wrap{max-width:780px;margin:0 auto;padding:50px 4% 80px}
+h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--navy);margin:40px 0 14px}
+h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin:28px 0 10px}
+p{font-family:'Cormorant Garamond',serif;font-size:18px;color:#333;line-height:1.8;margin-bottom:16px}
+ul,ol{margin:14px 0 16px 24px}
+ul li,ol li{font-family:'Cormorant Garamond',serif;font-size:18px;color:#333;line-height:1.75;margin-bottom:8px}
+.steps{counter-reset:step;list-style:none;margin-left:0;padding:0}
+.steps li{counter-increment:step;padding:16px 16px 16px 60px;position:relative;border-bottom:1px solid #e8e0d0;font-family:'Cormorant Garamond',serif;font-size:18px;color:#333}
+.steps li::before{content:counter(step);position:absolute;left:0;top:12px;width:38px;height:38px;background:var(--navy);color:var(--gold);font-family:'Playfair Display',serif;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center}
+.cta-box{background:var(--navy);padding:36px;margin:40px 0;text-align:center}
+.cta-box h3{color:var(--white);font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px}
+.cta-box p{color:rgba(255,255,255,.65);margin-bottom:22px;font-size:17px}
+.btn{background:var(--gold);color:var(--navy);padding:13px 30px;font-weight:700;font-size:14px;text-decoration:none;display:inline-block}
+.callout{border-left:3px solid var(--gold);background:rgba(201,168,76,.08);padding:18px 22px;margin:20px 0}
+.callout p{margin:0;font-size:17px}
+.warn{border-left:3px solid #c0392b;background:rgba(192,57,43,.06);padding:18px 22px;margin:20px 0}
+.warn p{margin:0;font-size:17px;color:#7a1a1a}
+footer{background:#080f1e;padding:30px 5%;text-align:center}
+footer p{font-size:12px;color:rgba(255,255,255,.3)}
+footer a{color:var(--gold);text-decoration:none}
+@media(max-width:768px){.hero-bar h1{font-size:26px}}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J3GPRFYR2Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-J3GPRFYR2Q');
+</script>
+<!-- Microsoft UET tag (Bing Ads / clearlegacy-prod, ti=187249506) -->
+<script>(function(w, d, t, u, o) {w[u] = w[u] || [], o.ts = (new Date).getTime();var n = d.createElement(t);n.src = "https://bat.bing.net/bat.js?ti=" + o.ti + ("uetq" != u ? "&q=" + u : ""),n.async = 1, n.onload = n.onreadystatechange = function() {var s = this.readyState;s && "loaded" !== s && "complete" !== s ||(o.q = w[u], w[u] = new UET(o), w[u].push("pageLoad"),n.onload = n.onreadystatechange = null)};var i = d.getElementsByTagName(t)[0];i.parentNode.insertBefore(n, i);})(window, document, "script", "uetq", {ti: "187249506",enableAutoSpaTracking: true});</script>
+<script>window.uetq = window.uetq || [];window.uetq.push('consent', 'default', {'ad_storage': 'denied'});</script>
+<!-- End UET tag -->
+</head>
+<body>
+<nav>  <a href="/" class="logo">CLEAR <span>LEGACY</span></a>  <a href="/" class="nav-cta">Probate From £195</a>
+</nav>
+<div class="hero-bar">  <div class="breadcrumb">CLEAR LEGACY · GUIDES · PROBATE</div>  <h1>Probate Without a Solicitor: Can You Do It?</h1>  <div class="gold-line"></div>  <p>The honest answer — and a step-by-step guide to what's actually involved.</p>
+</div>
+<div class="article-wrap">
+
+<p>Yes — you can apply for probate yourself in England and Wales. The process is handled through HM Courts &amp; Tribunals Service and does not legally require a solicitor. But it is more complex, time-sensitive and emotionally demanding than most people expect.</p>
+
+<p>This guide explains what's involved, what can go wrong, and when it makes sense to get help.</p>
+
+<h2>What Is Probate?</h2>
+<div class="box"><p>&#128200; <strong>Not sure what probate will cost?</strong> Use our <a href="/tools/probate-calculator.html" style="color:var(--blue)">free probate cost calculator</a> to see solicitor fees vs our fixed &pound;195.</p></div>
+<p>When someone dies, their estate (property, money, possessions) cannot simply be handed to their beneficiaries. Banks, land registries and financial institutions need legal authority before they will release assets. Probate is the process of obtaining that authority.</p>
+<p>If the deceased left a valid Will, the executor named in the Will applies for a <strong>Grant of Probate</strong>. If there is no Will, the next of kin applies for <strong>Letters of Administration</strong>. Both documents give the holder legal authority to administer the estate.</p>
+
+<h2>When Is Probate Required?</h2>
+<p>Not every death requires probate. You usually need it when:</p>
+<ul>  <li>The deceased owned property (land or buildings) in their sole name</li>  <li>The estate includes stocks, shares or investments held in the deceased's name</li>  <li>A bank account held solely in the deceased's name exceeds the bank's probate threshold (typically £15,000–£50,000, varies by bank)</li>
+</ul>
+<p>Jointly owned assets, nominated pension benefits, and life insurance with a named beneficiary typically pass outside of probate.</p>
+
+<h2>The Probate Process: Step by Step</h2>
+<ol class="steps">  <li><strong>Obtain the death certificate</strong> — You will need multiple certified copies (typically 5–10) to send to banks, insurers and the Land Registry simultaneously.</li>  <li><strong>Value the estate</strong> — Every asset must be valued as at the date of death: bank accounts, investments, property (formal RICS valuation), vehicles, jewellery, business interests. Liabilities (mortgage, debts) are deducted.</li>  <li><strong>Complete the HMRC inheritance tax forms</strong> — Even if no IHT is due, HMRC requires an IHT205 or IHT400 form (depending on estate complexity) before the probate application can proceed.</li>  <li><strong>Pay any Inheritance Tax due</strong> — IHT must be paid before the Grant of Probate is issued. This creates a challenge: you cannot access the estate's cash until you have probate, but you need to pay IHT before probate. Banks will often release funds for IHT payment directly to HMRC upon request.</li>  <li><strong>Submit the probate application</strong> — Online via MyHMCTS or by post. The court fee is £300 for estates over £5,000.</li>  <li><strong>Receive the Grant of Probate</strong> — Currently taking 8–16 weeks from application to receipt.</li>  <li><strong>Administer the estate</strong> — Collect all assets, pay debts, sell property if required, and distribute to beneficiaries. Keep detailed records of every transaction.</li>  <li><strong>Prepare estate accounts</strong> — A formal record of all assets received, all payments made, and the final distribution to beneficiaries. Beneficiaries are entitled to see these.</li>
+</ol>
+
+<div class="warn"><p>⚠️ Executors are personally liable for errors. If you distribute the estate before all debts are identified and paid, beneficiaries can be required to repay gifts — and you may be personally liable for the shortfall.</p></div>
+
+<h2>When to Get Professional Help</h2>
+<p>DIY probate is feasible for simple estates — one property, straightforward finances, no disputes, no IHT. Consider professional help when:</p>
+<ul>  <li>The estate includes business assets or complex investments</li>  <li>Inheritance Tax is payable and the estate is complex</li>  <li>There are disputes between beneficiaries or potential claims against the estate</li>  <li>The deceased had assets in more than one country</li>  <li>The Will is being contested</li>  <li>You simply don't have the time — probate typically requires 20–40 hours of work</li>
+</ul>
+
+<div class="cta-box">  <h3>Probate from £195 — Fixed Fee</h3>  <p>We handle the entire process: estate valuation, HMRC forms, probate application, asset collection and distribution. Fixed fee agreed upfront — no percentage of the estate.</p>  <a href="/clearlegacy.html#contact" class="btn">Start Probate — Free Consultation</a>
+</div>
+
+<h2>What Does Probate Cost?</h2>
+<ul>  <li><strong>Court fee:</strong> £300 (waived for estates under £5,000)</li>  <li><strong>Clear Legacy fixed fee:</strong> from £195 (simple estates)</li>  <li><strong>Solicitor fee:</strong> typically 1–3% of the estate value — on a £400,000 estate, that's £4,000–£12,000</li>  <li><strong>Other online services:</strong> Farewill from £595, Co-op from £1,995</li>
+</ul>
+
+<div class="callout"><p>Percentage-based probate fees can cost tens of thousands of pounds on large estates. Clear Legacy charges a fixed fee agreed at the outset — regardless of estate size.</p></div>
+
+</div>
+<footer>  <p><a href="/">Clear Legacy</a> · A trading name of Kaizen Finance Ltd <small style="font-size:0.85em;opacity:0.75">(Company No. <a href="https://find-and-update.company-information.service.gov.uk/company/12092327" target="_blank" rel="noopener noreferrer" style="color:inherit">12092327</a>)</small> · <a href="/">Home</a></p>
+</footer>
+<script src="../cl-chat.js"></script>
+<!-- Cookie Consent -->
+<div id="cl-cookie" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;color:#e2e8f0;padding:14px 24px;z-index:9999;align-items:center;justify-content:space-between;gap:16px;font-family:Inter,sans-serif;font-size:14px;border-top:1px solid #334155;">  <span>We use cookies to improve your experience. <a href="/terms.html" style="color:#60a5fa;text-decoration:none;">Learn more</a></span>  <button onclick="document.getElementById('cl-cookie').style.display='none';localStorage.setItem('cl_ok','1')" style="background:#2563eb;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;">Accept</button>
+</div>
+<script>if(!localStorage.getItem('cl_ok'))document.getElementById('cl-cookie').style.display='flex';</script>
+</body>
+</html>

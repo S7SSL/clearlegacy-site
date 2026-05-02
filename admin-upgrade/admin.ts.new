@@ -1,0 +1,581 @@
+/**
+ * Admin dashboard — password-protected.
+ *
+ *   GET  /admin                         HTML dashboard listing leads + stats
+ *   GET  /admin/lead?ref=UUID           JSON of a single lead record (for inspection)
+ *   GET  /admin/amend?ref=UUID          HTML form to edit the questionnaire JSON
+ *   POST /admin/amend?ref=UUID          save edits; optionally trigger regenerate
+ *   POST /admin/regenerate?ref=UUID     re-run PDF generation + email using current data
+ *   POST /admin/delete?ref=UUID         permanently delete the lead record + its R2 PDF
+ *   POST /admin/create-lead             bootstrap a pre-paid customer
+ *   POST /admin/resend-onboarding?ref=X re-send the questionnaire link email
+ *
+ * Auth: HTTP Basic. Set ADMIN_PASSWORD as a Wrangler secret. Username is ignored;
+ * we compare only the password so typing anything as user is fine.
+ *
+ * This is not meant to scale — it's for Sat to spot-check a few orders a day,
+ * amend customer requests, re-fire emails when something fails, and keep the
+ * dashboard tidy.
+ */
+
+import type { Env } from '../index';
+import type { LeadRecord, Product } from '../types';
+import { getLead, listLeadRefs, putLead, updateLead, deleteLead } from '../kv';
+import { regenerateForRef } from './webhook';
+import { sendOnboardingEmail } from '../email';
+
+/* ------------------------------------------------------------------ auth */
+
+function unauthorized(): Response {
+  return new Response('Authentication required', {
+    status: 401,
+    headers: {
+      'WWW-Authenticate': 'Basic realm="Clear Legacy Admin"',
+      'Content-Type': 'text/plain',
+    },
+  });
+}
+
+function safeEquals(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+function checkAuth(request: Request, env: Env): boolean {
+  const expected = env.ADMIN_PASSWORD;
+  if (!expected) return false;
+  const header = request.headers.get('Authorization') || '';
+  if (!header.startsWith('Basic ')) return false;
+  let decoded: string;
+  try { decoded = atob(header.slice('Basic '.length)); } catch { return false; }
+  const idx = decoded.indexOf(':');
+  if (idx < 0) return false;
+  return safeEquals(decoded.slice(idx + 1), expected);
+}
+
+/* --------------------------------------------------------------- helpers */
+
+function escapeHtml(v: string): string {
+  return String(v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function statusBadge(lead: LeadRecord): string {
+  const s = lead.pdfStatus;
+  const palette: Record<string, { bg: string; fg: string }> = {
+    awaiting_questionnaire: { bg: '#dbeafe', fg: '#1e40af' },
+    pending:                 { bg: '#f3f4f6', fg: '#374151' },
+    generating:              { bg: '#fef3c7', fg: '#92400e' },
+    ready:                   { bg: '#d1fae5', fg: '#065f46' },
+    failed:                  { bg: '#fee2e2', fg: '#991b1b' },
+  };
+  const c = palette[s] || { bg: '#e5e7eb', fg: '#374151' };
+  const label = s === 'awaiting_questionnaire' ? 'awaiting q' : s;
+  return `<span style="display:inline-block;padding:3px 10px;border-radius:999px;background:${c.bg};color:${c.fg};font-size:11px;font-weight:600;letter-spacing:0.02em;text-transform:lowercase">${escapeHtml(label)}</span>`;
+}
+
+function formatMoney(amountMinor?: number, currency?: string): string {
+  if (!amountMinor) return '—';
+  const major = (amountMinor / 100).toFixed(2);
+  const cur = (currency || 'GBP').toUpperCase();
+  const symbol = cur === 'GBP' ? '£' : cur === 'USD' ? '$' : cur === 'EUR' ? '€' : `${cur} `;
+  return `${symbol}${major}`;
+}
+
+function fmtTime(iso?: string): string {
+  if (!iso) return '—';
+  return new Date(iso).toISOString().replace('T', ' ').slice(0, 16);
+}
+
+interface DashboardRow { ref: string; lead: LeadRecord | null }
+
+interface DashboardStats {
+  total: number;
+  paidThisMonth: number;
+  revenueThisMonth: number;
+  revenueCurrency: string;
+  byStatus: Record<string, number>;
+}
+
+function computeStats(rows: DashboardRow[]): DashboardStats {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const stats: DashboardStats = {
+    total: rows.length,
+    paidThisMonth: 0,
+    revenueThisMonth: 0,
+    revenueCurrency: 'gbp',
+    byStatus: {},
+  };
+  for (const { lead } of rows) {
+    if (!lead) continue;
+    stats.byStatus[lead.pdfStatus] = (stats.byStatus[lead.pdfStatus] || 0) + 1;
+    if (lead.paidAt && lead.paidAt >= monthStart && (lead.stripeAmount || 0) > 0) {
+      stats.paidThisMonth++;
+      stats.revenueThisMonth += lead.stripeAmount || 0;
+      if (lead.stripeCurrency) stats.revenueCurrency = lead.stripeCurrency;
+    }
+  }
+  return stats;
+}
+
+function renderFlash(url: URL): string {
+  const flash = url.searchParams.get('flash');
+  if (!flash) return '';
+  const kinds: Record<string, { bg: string; fg: string; msg: string }> = {
+    regenerated:   { bg: '#d1fae5', fg: '#065f46', msg: 'Regenerate queued. Refresh in ~20s to see updated status.' },
+    saved:         { bg: '#d1fae5', fg: '#065f46', msg: 'Questionnaire saved.' },
+    'saved-regen': { bg: '#d1fae5', fg: '#065f46', msg: 'Saved & regenerate queued. Customer will receive a fresh PDF shortly.' },
+    deleted:       { bg: '#fee2e2', fg: '#991b1b', msg: 'Lead deleted.' },
+    resent:        { bg: '#d1fae5', fg: '#065f46', msg: 'Onboarding email re-sent.' },
+  };
+  const k = kinds[flash] || { bg: '#e5e7eb', fg: '#374151', msg: flash };
+  return `<div style="margin:0 0 16px;padding:10px 14px;border-radius:6px;background:${k.bg};color:${k.fg};font-size:14px">${escapeHtml(k.msg)}</div>`;
+}
+
+/* ------------------------------------------------------------- renderers */
+
+const CSS = `
+  * { box-sizing: border-box }
+  body { font-family: -apple-system, system-ui, 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f9fafb; color: #111827; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px 24px 40px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #fff; border-bottom: 1px solid #e5e7eb; }
+  .topbar .brand { font-weight: 700; font-size: 16px; color: #111827; }
+  .topbar .env { font-size: 11px; padding: 3px 8px; background: #eff6ff; color: #1e40af; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .topbar nav a { margin-left: 14px; color: #374151; text-decoration: none; font-size: 14px; }
+  .topbar nav a:hover { color: #111827; text-decoration: underline; }
+  h1 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+  h2 { margin: 28px 0 12px; font-size: 15px; font-weight: 600; color: #374151; }
+  .meta { color: #6b7280; font-size: 13px; margin-bottom: 16px; }
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 0 0 24px; }
+  .stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; }
+  .stat .label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; font-weight: 600; }
+  .stat .value { font-size: 22px; font-weight: 700; color: #111827; }
+  .stat .sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; font-size: 13.5px; }
+  thead th { text-align: left; padding: 10px 12px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; font-weight: 600; font-size: 11px; text-transform: uppercase; color: #374151; letter-spacing: 0.04em; }
+  tbody td { padding: 12px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #fafbfc; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #374151; }
+  .btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; font-size: 12px; border: 1px solid #d1d5db; background: #fff; color: #111827; border-radius: 5px; cursor: pointer; text-decoration: none; font-weight: 500; line-height: 1.4; font-family: inherit; }
+  .btn:hover { background: #f9fafb; border-color: #9ca3af; }
+  .btn.primary { background: #111; color: #fff; border-color: #111; }
+  .btn.primary:hover { background: #000; border-color: #000; }
+  .btn.danger { color: #991b1b; border-color: #fecaca; }
+  .btn.danger:hover { background: #fef2f2; border-color: #f87171; }
+  .actions { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+  .actions form { margin: 0; }
+  .form-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; max-width: 760px; }
+  .form-card label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 4px; }
+  .form-card input[type=text], .form-card input[type=email], .form-card input[type=number], .form-card select { width: 100%; padding: 7px 10px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 5px; font-family: inherit; }
+  .form-card textarea { width: 100%; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 5px; min-height: 480px; resize: vertical; line-height: 1.5; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .topbar { padding: 12px 16px; } .container { padding: 16px; } }
+`;
+
+function renderTopbar(showDashLink: boolean): string {
+  return `<div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="/admin" style="text-decoration:none"><span class="brand">Clear Legacy · Admin</span></a>
+      <span class="env">prod</span>
+    </div>
+    <nav>
+      ${showDashLink ? '<a href="/admin">← Dashboard</a>' : ''}
+    </nav>
+  </div>`;
+}
+
+function renderDashboard(rows: DashboardRow[], cursor: string | null, url: URL): string {
+  const stats = computeStats(rows);
+
+  const tbody = rows.map(({ ref, lead }) => {
+    if (!lead) {
+      return `<tr><td colspan="6" style="color:#9ca3af">ref=${escapeHtml(ref)} — record missing</td></tr>`;
+    }
+    const q = lead.questionnaire;
+    const name = q?.testator?.fullName || '—';
+    const email = lead.stripeCustomerEmail || q?.testator?.email || '—';
+    const product = q?.product === 'mirror' ? 'Mirror' : 'Single';
+    const amount = formatMoney(lead.stripeAmount, lead.stripeCurrency);
+    const paid = fmtTime(lead.paidAt);
+    const generated = fmtTime(lead.pdfGeneratedAt);
+    const canRegen = lead.pdfStatus === 'failed' || lead.pdfStatus === 'ready';
+    const canResendOnboarding = lead.pdfStatus === 'awaiting_questionnaire';
+    const shortRef = ref.slice(0, 8);
+
+    const detailsLink = `<a href="/admin/lead?ref=${encodeURIComponent(ref)}" class="btn" target="_blank" rel="noopener">JSON</a>`;
+    const amendBtn = q ? `<a href="/admin/amend?ref=${encodeURIComponent(ref)}" class="btn">Amend</a>` : '';
+    const regenBtn = canRegen
+      ? `<form method="POST" action="/admin/regenerate?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Regenerate PDF and re-email ${escapeHtml(name)}?')"><button type="submit" class="btn">Regenerate</button></form>`
+      : '';
+    const resendBtn = canResendOnboarding
+      ? `<form method="POST" action="/admin/resend-onboarding?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Re-send questionnaire email to ${escapeHtml(email)}?')"><button type="submit" class="btn">Resend</button></form>`
+      : '';
+    const deleteBtn = `<form method="POST" action="/admin/delete?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('PERMANENTLY delete ${escapeHtml(name)} (ref ${escapeHtml(shortRef)}) and their PDF? This cannot be undone.') &amp;&amp; confirm('Final check — are you absolutely sure?')"><button type="submit" class="btn danger">Delete</button></form>`;
+
+    return `<tr>
+      <td><code title="${escapeHtml(ref)}">${escapeHtml(shortRef)}…</code></td>
+      <td>${escapeHtml(name)}<div style="font-size:11.5px;color:#6b7280;margin-top:2px">${escapeHtml(email)}</div></td>
+      <td>${escapeHtml(product)}</td>
+      <td>${escapeHtml(amount)}<div style="font-size:11px;color:#6b7280;margin-top:2px">${escapeHtml(paid)}</div></td>
+      <td>${statusBadge(lead)}<div style="font-size:11px;color:#6b7280;margin-top:4px">${escapeHtml(generated)}</div></td>
+      <td><div class="actions">${detailsLink}${amendBtn}${regenBtn}${resendBtn}${deleteBtn}</div></td>
+    </tr>`;
+  }).join('');
+
+  const nextLink = cursor ? `<div style="margin-top:16px"><a href="/admin?cursor=${encodeURIComponent(cursor)}" class="btn">Next page →</a></div>` : '';
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Clear Legacy — Admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>${CSS}</style>
+</head>
+<body>
+${renderTopbar(false)}
+<div class="container">
+  ${renderFlash(url)}
+  <h1>Dashboard</h1>
+  <div class="meta">${stats.total} lead${stats.total === 1 ? '' : 's'} on this page · sorted by most recent activity · stats reflect current page only</div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Leads (page)</div><div class="value">${stats.total}</div></div>
+    <div class="stat"><div class="label">Paid this month</div><div class="value">${stats.paidThisMonth}</div></div>
+    <div class="stat"><div class="label">Revenue this month</div><div class="value">${formatMoney(stats.revenueThisMonth, stats.revenueCurrency)}</div></div>
+    <div class="stat"><div class="label">Ready</div><div class="value" style="color:#065f46">${stats.byStatus.ready || 0}</div></div>
+    <div class="stat"><div class="label">Failed</div><div class="value" style="color:${(stats.byStatus.failed||0) > 0 ? '#991b1b' : '#111827'}">${stats.byStatus.failed || 0}</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ref</th>
+        <th>Customer</th>
+        <th>Product</th>
+        <th>Amount / Paid</th>
+        <th>PDF</th>
+        <th style="text-align:right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>${tbody || '<tr><td colspan="6" style="color:#9ca3af;padding:28px;text-align:center">No leads yet.</td></tr>'}</tbody>
+  </table>
+  ${nextLink}
+
+  <h2>Bootstrap a pre-paid customer</h2>
+  <div class="meta">For customers who paid via a bare Payment Link before webhook-bootstrap was live (e.g. Samara, woodstocksdream). Creates a lead with status "awaiting_questionnaire" and sends the onboarding email.</div>
+  <form method="POST" action="/admin/create-lead" class="form-card">
+    <div class="grid-2">
+      <div><label>Email</label><input name="email" type="email" required></div>
+      <div><label>Name</label><input name="name" type="text"></div>
+      <div><label>Product</label><select name="product"><option value="single">Single</option><option value="mirror">Mirror</option></select></div>
+      <div><label>Amount (pence)</label><input name="amountMinor" type="number" min="0" placeholder="9900"></div>
+      <div><label>Stripe PI id</label><input name="stripePaymentIntentId" type="text" placeholder="pi_…"></div>
+      <div><label>Paid at (ISO, optional)</label><input name="paidAt" type="text" placeholder="2026-04-20T14:00:00Z"></div>
+    </div>
+    <label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-weight:400">
+      <input name="skipEmail" type="checkbox" value="1">
+      Just create the record — don't send the onboarding email
+    </label>
+    <div style="margin-top:16px"><button type="submit" class="btn primary">Create lead &amp; send questionnaire link</button></div>
+  </form>
+</div>
+</body>
+</html>`;
+}
+
+function renderAmend(ref: string, lead: LeadRecord, url: URL): string {
+  const q = lead.questionnaire || {};
+  const name = q.testator?.fullName || '—';
+  const email = lead.stripeCustomerEmail || q.testator?.email || '—';
+  const prettyJson = JSON.stringify(q, null, 2);
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Clear Legacy — Amend ${escapeHtml(name)}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>${CSS}
+  .warn { background:#fef3c7;color:#92400e;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px }
+  .meta-row { display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:13.5px;margin-bottom:6px }
+  .meta-row .k { color:#6b7280 }
+  #json-err { display:none;margin-top:10px;padding:10px 14px;background:#fee2e2;color:#991b1b;border-radius:6px;font-size:13px;white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace }
+</style>
+</head>
+<body>
+${renderTopbar(true)}
+<div class="container">
+  ${renderFlash(url)}
+  <h1>Amend questionnaire</h1>
+  <div class="meta">
+    <div class="meta-row"><span class="k">Ref</span><span><code>${escapeHtml(ref)}</code></span></div>
+    <div class="meta-row"><span class="k">Customer</span><span>${escapeHtml(name)} · ${escapeHtml(email)}</span></div>
+    <div class="meta-row"><span class="k">Status</span><span>${statusBadge(lead)} &nbsp; last generated ${escapeHtml(fmtTime(lead.pdfGeneratedAt))}</span></div>
+  </div>
+
+  <div class="warn">
+    Edit the JSON below. On "Save &amp; Regenerate" the customer is re-emailed with the refreshed PDF — the only party contacted is the customer themselves.
+  </div>
+
+  <form method="POST" action="/admin/amend?ref=${encodeURIComponent(ref)}" class="form-card" style="max-width:none" id="amend-form" onsubmit="return validateAmend()">
+    <label for="qjson">Questionnaire (JSON)</label>
+    <textarea id="qjson" name="questionnaire_json" spellcheck="false">${escapeHtml(prettyJson)}</textarea>
+    <div id="json-err"></div>
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button type="submit" name="regenerate" value="0" class="btn">Save (no regenerate)</button>
+      <button type="submit" name="regenerate" value="1" class="btn primary">Save &amp; Regenerate</button>
+      <a href="/admin" class="btn" style="margin-left:auto">Cancel</a>
+    </div>
+  </form>
+</div>
+<script>
+function validateAmend() {
+  var ta = document.getElementById('qjson');
+  var errBox = document.getElementById('json-err');
+  try {
+    var parsed = JSON.parse(ta.value);
+    if (typeof parsed !== 'object' || Array.isArray(parsed) || parsed === null) {
+      throw new Error('Top-level must be a JSON object, not an array or primitive.');
+    }
+    errBox.style.display = 'none';
+    return true;
+  } catch (e) {
+    errBox.textContent = 'JSON parse error — ' + (e.message || e);
+    errBox.style.display = 'block';
+    ta.focus();
+    return false;
+  }
+}
+</script>
+</body>
+</html>`;
+}
+
+/* --------------------------------------------------------------- handlers */
+
+async function handleList(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  const cursor = url.searchParams.get('cursor') || undefined;
+  const { refs, cursor: nextCursor } = await listLeadRefs(env, 50, cursor);
+  const rows: DashboardRow[] = [];
+  for (const ref of refs) rows.push({ ref, lead: await getLead(env, ref) });
+  rows.sort((a, b) => {
+    const ta = a.lead?.paidAt || a.lead?.questionnaire?.createdAt || '';
+    const tb = b.lead?.paidAt || b.lead?.questionnaire?.createdAt || '';
+    return tb.localeCompare(ta);
+  });
+  return new Response(renderDashboard(rows, nextCursor, url), {
+    status: 200,
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+  });
+}
+
+async function handleLeadDetail(request: Request, env: Env): Promise<Response> {
+  const ref = new URL(request.url).searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) {
+    return new Response(JSON.stringify({ error: 'bad_ref' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+  }
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response(JSON.stringify({ error: 'not_found', ref }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify({ ref, lead }, null, 2), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+  });
+}
+
+async function handleAmendView(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  const ref = url.searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+  return new Response(renderAmend(ref, lead, url), {
+    status: 200,
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+  });
+}
+
+async function handleAmendSave(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const ref = new URL(request.url).searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+
+  let form: FormData;
+  try { form = await request.formData(); }
+  catch { return new Response('Could not parse body', { status: 400 }); }
+
+  const raw = String(form.get('questionnaire_json') || '').trim();
+  if (!raw) return new Response('Empty questionnaire', { status: 400 });
+
+  let parsed: any;
+  try { parsed = JSON.parse(raw); }
+  catch (e: any) { return new Response(`JSON parse error: ${e?.message || e}`, { status: 400 }); }
+  if (typeof parsed !== 'object' || Array.isArray(parsed) || parsed === null) {
+    return new Response('Top-level must be a JSON object', { status: 400 });
+  }
+
+  const wantRegenerate = String(form.get('regenerate') || '0') === '1';
+  const patch: Partial<LeadRecord> = { questionnaire: parsed };
+  if (wantRegenerate) {
+    patch.pdfStatus = 'pending';
+    patch.pdfError = undefined;
+  }
+  await updateLead(env, ref, patch);
+
+  if (wantRegenerate) {
+    ctx.waitUntil(regenerateForRef(env, ref));
+    return new Response(null, { status: 303, headers: { Location: '/admin?flash=saved-regen' } });
+  }
+  return new Response(null, { status: 303, headers: { Location: '/admin?flash=saved' } });
+}
+
+async function handleDelete(request: Request, env: Env): Promise<Response> {
+  const ref = new URL(request.url).searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response(null, { status: 303, headers: { Location: '/admin?flash=deleted' } });
+
+  // Best-effort R2 cleanup first, then KV. Either failing is non-fatal — we
+  // log and proceed rather than leaving a half-deleted record.
+  if (lead.pdfKey) {
+    try { await env.CLEARLEGACY_PDFS.delete(lead.pdfKey); }
+    catch (err) { console.error('Admin delete: R2 delete failed for', lead.pdfKey, err); }
+  }
+  try { await deleteLead(env, ref); }
+  catch (err) { console.error('Admin delete: KV delete failed for', ref, err); }
+
+  return new Response(null, { status: 303, headers: { Location: '/admin?flash=deleted' } });
+}
+
+/**
+ * POST /admin/create-lead
+ *
+ * Bootstrap a lead record for a customer who paid directly via a Stripe
+ * Payment Link before the webhook-driven pay-first flow was in place.
+ */
+async function handleCreateLead(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  let params: Record<string, string> = {};
+  const contentType = request.headers.get('Content-Type') || '';
+  try {
+    if (contentType.includes('application/json')) {
+      const body = await request.json() as Record<string, any>;
+      for (const [k, v] of Object.entries(body)) if (v != null) params[k] = String(v);
+    } else {
+      const form = await request.formData();
+      form.forEach((v, k) => { params[k] = String(v); });
+    }
+  } catch { return new Response('Could not parse body', { status: 400 }); }
+
+  const email = (params.email || '').trim();
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return new Response('Valid email is required', { status: 400 });
+  const product: Product = params.product === 'mirror' ? 'mirror' : 'single';
+  const name = (params.name || '').trim() || undefined;
+  const amountMinor = parseInt(params.amountMinor || '', 10);
+  const currency = (params.currency || 'gbp').toLowerCase();
+  const paidAt = params.paidAt && !Number.isNaN(Date.parse(params.paidAt))
+    ? new Date(params.paidAt).toISOString()
+    : new Date().toISOString();
+
+  const ref = crypto.randomUUID();
+  const record: LeadRecord = {
+    pdfStatus: 'awaiting_questionnaire',
+    paidAt,
+    stripeSessionId: params.stripeSessionId || undefined,
+    stripePaymentIntentId: params.stripePaymentIntentId || undefined,
+    stripeAmount: Number.isFinite(amountMinor) && amountMinor > 0 ? amountMinor : undefined,
+    stripeCurrency: currency,
+    stripeCustomerEmail: email,
+    product,
+  };
+  await putLead(env, ref, record);
+
+  const origin = (env.SITE_ORIGIN || '').replace(/\/$/, '');
+  const questionnaireUrl = `${origin}/forms/will.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(product)}`;
+
+  if (params.skipEmail !== '1') {
+    try {
+      await sendOnboardingEmail({
+        apiKey: env.RESEND_API_KEY, from: env.EMAIL_FROM, to: email,
+        bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+        customerName: name, questionnaireUrl, product, ref,
+      });
+      await updateLead(env, ref, { onboardingEmailSentAt: new Date().toISOString() });
+    } catch (err: any) {
+      await updateLead(env, ref, { onboardingEmailError: err?.message || String(err) });
+      return new Response(
+        JSON.stringify({ ref, created: true, emailSent: false, error: err?.message || String(err), questionnaireUrl }, null, 2),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+  }
+
+  return new Response(
+    JSON.stringify({ ref, created: true, emailSent: params.skipEmail !== '1', questionnaireUrl }, null, 2),
+    { status: 200, headers: { 'Content-Type': 'application/json' } },
+  );
+}
+
+async function handleResendOnboarding(request: Request, env: Env): Promise<Response> {
+  const ref = new URL(request.url).searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+  if (!lead.stripeCustomerEmail) return new Response('No customer email on record', { status: 400 });
+
+  const product: Product = (lead.product || lead.questionnaire?.product || 'single') as Product;
+  const origin = (env.SITE_ORIGIN || '').replace(/\/$/, '');
+  const questionnaireUrl = `${origin}/forms/will.html?ref=${encodeURIComponent(ref)}&product=${encodeURIComponent(product)}`;
+
+  try {
+    await sendOnboardingEmail({
+      apiKey: env.RESEND_API_KEY, from: env.EMAIL_FROM, to: lead.stripeCustomerEmail,
+      bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+      customerName: lead.questionnaire?.testator?.fullName, questionnaireUrl, product, ref,
+    });
+    await updateLead(env, ref, { onboardingEmailSentAt: new Date().toISOString(), onboardingEmailError: undefined });
+  } catch (err: any) {
+    await updateLead(env, ref, { onboardingEmailError: err?.message || String(err) });
+    return new Response(`Email failed: ${err?.message || err}`, { status: 500 });
+  }
+  return new Response(null, { status: 303, headers: { Location: '/admin?flash=resent' } });
+}
+
+async function handleRegenerate(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const ref = new URL(request.url).searchParams.get('ref');
+  if (!ref || !/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+  await updateLead(env, ref, { pdfStatus: 'pending', pdfError: undefined });
+  ctx.waitUntil(regenerateForRef(env, ref));
+  return new Response(null, { status: 303, headers: { Location: '/admin?flash=regenerated' } });
+}
+
+/* ----------------------------------------------------------------- router */
+
+export async function handleAdmin(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  if (!checkAuth(request, env)) return unauthorized();
+
+  const url = new URL(request.url);
+  const path = url.pathname;
+  const method = request.method;
+
+  if (path === '/admin' && method === 'GET') return handleList(request, env);
+  if (path === '/admin/lead' && method === 'GET') return handleLeadDetail(request, env);
+  if (path === '/admin/amend' && method === 'GET') return handleAmendView(request, env);
+  if (path === '/admin/amend' && method === 'POST') return handleAmendSave(request, env, ctx);
+  if (path === '/admin/regenerate' && method === 'POST') return handleRegenerate(request, env, ctx);
+  if (path === '/admin/delete' && method === 'POST') return handleDelete(request, env);
+  if (path === '/admin/create-lead' && method === 'POST') return handleCreateLead(request, env, ctx);
+  if (path === '/admin/resend-onboarding' && method === 'POST') return handleResendOnboarding(request, env);
+  return new Response('Not found', { status: 404 });
+}

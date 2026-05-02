@@ -1,0 +1,199 @@
+<!--
+  Clear Legacy — Will template (E&W jurisdiction)
+  This is a DRAFT template. It MUST be reviewed by Marge (estate planner) before
+  any customer-facing use. The attestation clause is written to satisfy s.9
+  Wills Act 1837 (signed by testator in presence of two witnesses present at
+  the same time, who each attest and sign or acknowledge the signature in the
+  presence of the testator).
+
+  Template variables (all HTML-escaped unless {{{...}}}):
+    {{testator.fullName}} {{testator.address}} {{testator.dob}}
+    {{partner.fullName}}  (only when product == "mirror")
+    {{executors}}         array
+    {{guardians}}         array (optional)
+    {{specificGifts}}     array (optional)
+    {{residuary}}         array (at least 1)
+    {{funeralWishes}}     string (optional)
+    {{notes}}             string (optional)
+    {{renderDate}}        string like "20 April 2026"
+    {{ref}}               reference UUID (printed in footer)
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<title>Last Will and Testament — {{testator.fullName}}</title>
+<style>
+  @page { size: A4; }
+  body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; line-height: 1.55; color: #111; }
+  h1 { text-align: center; font-size: 18pt; margin: 0 0 4pt 0; letter-spacing: 0.08em; }
+  h2 { text-align: center; font-size: 12pt; font-weight: normal; font-style: italic; margin: 0 0 24pt 0; color: #444; }
+  h3 { font-size: 12pt; margin-top: 20pt; margin-bottom: 6pt; text-transform: uppercase; letter-spacing: 0.05em; }
+  ol.clauses > li { margin-bottom: 14pt; }
+  .section { page-break-inside: avoid; }
+  .sig-block { margin-top: 24pt; page-break-inside: avoid; }
+  .sig-line { border-bottom: 1px solid #111; display: inline-block; min-width: 260px; margin-left: 6pt; vertical-align: baseline; }
+  .sig-row { margin-bottom: 18pt; }
+  .small { font-size: 9pt; color: #555; }
+  .ref-footer { margin-top: 40pt; font-size: 8pt; color: #888; text-align: center; }
+  .box { border: 1px solid #aaa; padding: 8pt 10pt; margin: 8pt 0; background: #fafafa; }
+  table.persons { border-collapse: collapse; width: 100%; margin-top: 6pt; }
+  table.persons th, table.persons td { border: 1px solid #bbb; padding: 4pt 6pt; text-align: left; font-size: 10pt; }
+  table.persons th { background: #eee; }
+</style>
+</head>
+<body>
+
+<h1>LAST WILL AND TESTAMENT</h1>
+<h2>of {{testator.fullName}}</h2>
+
+<ol class="clauses">
+
+<li class="section">
+  <strong>DECLARATION AND REVOCATION.</strong>
+  I, <strong>{{testator.fullName}}</strong>{{#if testator.dob}} (born {{testator.dob}}){{/if}},
+  of {{testator.address}}, DECLARE this to be my last Will and Testament. I HEREBY REVOKE
+  all former wills and testamentary dispositions made by me.
+</li>
+
+<li class="section">
+  <strong>APPOINTMENT OF EXECUTORS.</strong>
+  I APPOINT the following person{{#if executors.1}}s{{/if}} to be the executor{{#if executors.1}}s{{/if}} and trustee{{#if executors.1}}s{{/if}} of this my Will
+  (together, &ldquo;my Trustees&rdquo;):
+  <table class="persons">
+    <thead><tr><th>#</th><th>Name</th><th>Relationship</th><th>Address</th></tr></thead>
+    <tbody>
+    {{#each executors}}
+      <tr>
+        <td>{{@number}}</td>
+        <td>{{this.name}}</td>
+        <td>{{this.relationship}}</td>
+        <td>{{this.address}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+  If any of them shall die before me or be unwilling or unable to act, the survivor or survivors shall act as sole executor and trustee.
+</li>
+
+{{#if guardians}}
+<li class="section">
+  <strong>APPOINTMENT OF GUARDIAN(S).</strong>
+  If any of my children is a minor at the date of my death and no person with parental responsibility for that child survives me, I APPOINT the following as guardian{{#if guardians.1}}s{{/if}} of my minor children:
+  <table class="persons">
+    <thead><tr><th>#</th><th>Name</th><th>Relationship</th><th>Address</th></tr></thead>
+    <tbody>
+    {{#each guardians}}
+      <tr>
+        <td>{{@number}}</td>
+        <td>{{this.name}}</td>
+        <td>{{this.relationship}}</td>
+        <td>{{this.address}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</li>
+{{/if}}
+
+{{#if specificGifts}}
+<li class="section">
+  <strong>SPECIFIC GIFTS.</strong>
+  I GIVE the following specific gifts free of inheritance tax and free of any costs of transfer or delivery:
+  <ol>
+    {{#each specificGifts}}
+      <li>
+        {{#if this.gift}}<strong>{{this.gift}}</strong>{{else}}<strong>{{this.share}}</strong>{{/if}}
+        to <strong>{{this.name}}</strong>{{#if this.relationship}} ({{this.relationship}}){{/if}},
+        provided that person survives me by 28 days; failing which the gift shall fall into my residuary estate.
+      </li>
+    {{/each}}
+  </ol>
+</li>
+{{/if}}
+
+<li class="section">
+  <strong>RESIDUARY ESTATE.</strong>
+  I GIVE, DEVISE AND BEQUEATH the whole of my estate of whatsoever nature and wheresoever
+  situate (subject to the payment of my debts, funeral and testamentary expenses, and any
+  legacies given by this Will or any codicil hereto) to my Trustees upon trust to hold the
+  same for the following beneficiaries, provided they survive me by 28 days:
+  <ol>
+    {{#each residuary}}
+      <li>
+        <strong>{{this.name}}</strong>{{#if this.relationship}} ({{this.relationship}}){{/if}}
+        — {{#if this.share}}{{this.share}}{{else}}equal share of the residuary estate{{/if}}.
+      </li>
+    {{/each}}
+  </ol>
+  If any such beneficiary shall fail to survive me by 28 days, their share shall pass to their issue (if any) in equal shares per stirpes, and failing such issue, to the surviving residuary beneficiaries in proportion to their shares.
+</li>
+
+<li class="section">
+  <strong>POWERS OF MY TRUSTEES.</strong>
+  In addition to all powers conferred by law, my Trustees shall have power:
+  <ol type="a">
+    <li>to retain, sell, convert or vary any investments forming part of my estate;</li>
+    <li>to appropriate any asset in or towards satisfaction of any share or interest under this Will without the consent of any beneficiary;</li>
+    <li>to engage and remunerate any professional adviser (including any of themselves who is a professional) for work done on behalf of my estate;</li>
+    <li>to exercise all statutory powers of maintenance and advancement in respect of any beneficiary who is a minor.</li>
+  </ol>
+</li>
+
+{{#if funeralWishes}}
+<li class="section">
+  <strong>FUNERAL WISHES.</strong>
+  The following are my non-binding wishes regarding my funeral: {{funeralWishes}}
+</li>
+{{/if}}
+
+{{#if notes}}
+<li class="section">
+  <strong>ADDITIONAL WISHES.</strong>
+  <div class="box">{{notes}}</div>
+</li>
+{{/if}}
+
+<li class="section">
+  <strong>ATTESTATION.</strong>
+  IN WITNESS WHEREOF I, the said <strong>{{testator.fullName}}</strong>, have signed my name to this my last Will and Testament, consisting of this and the preceding pages, on the date written below, in the joint presence of the two witnesses named below, who have then at my request and in my presence and in the presence of each other signed their names as witnesses.
+</li>
+
+</ol>
+
+<div class="sig-block">
+  <p>Dated this ______ day of __________________________ 20____.</p>
+
+  <div class="sig-row">
+    <strong>Signature of testator:</strong>
+    <span class="sig-line">&nbsp;</span>
+    <div class="small">Printed name: {{testator.fullName}}</div>
+  </div>
+
+  <p>SIGNED by the above-named testator in our joint presence, and then by us in the presence of the testator and of each other:</p>
+
+  <div class="sig-row">
+    <strong>Witness 1 — Signature:</strong> <span class="sig-line">&nbsp;</span><br/>
+    <span class="small">Name: </span><span class="sig-line" style="min-width:220px;">&nbsp;</span>
+    <span class="small">Occupation: </span><span class="sig-line" style="min-width:180px;">&nbsp;</span><br/>
+    <span class="small">Address: </span><span class="sig-line" style="min-width:360px;">&nbsp;</span>
+  </div>
+
+  <div class="sig-row">
+    <strong>Witness 2 — Signature:</strong> <span class="sig-line">&nbsp;</span><br/>
+    <span class="small">Name: </span><span class="sig-line" style="min-width:220px;">&nbsp;</span>
+    <span class="small">Occupation: </span><span class="sig-line" style="min-width:180px;">&nbsp;</span><br/>
+    <span class="small">Address: </span><span class="sig-line" style="min-width:360px;">&nbsp;</span>
+  </div>
+
+  <p class="small">
+    <em>Guidance:</em> Both witnesses must be present with you at the same time when you sign. Witnesses must be 18 or over, of sound mind, and must not be (nor married to) any beneficiary named in this Will, otherwise the gift to that beneficiary will fail under s.15 Wills Act 1837.
+  </p>
+</div>
+
+<div class="ref-footer">
+  Clear Legacy — Reference {{ref}} — Prepared {{renderDate}} — Jurisdiction: England &amp; Wales
+</div>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UK Wills &amp; Estate Planning Guides | ClearLegacy</title>
+<meta name="description" content="Plain-English guides on writing a will, setting up an LPA, and applying for probate in England and Wales. No jargon, no sales pitch — just what you need to know.">
+<link rel="canonical" href="https://clearlegacy.co.uk/guides/">
+<meta property="og:title" content="UK Wills &amp; Estate Planning Guides">
+<meta property="og:description" content="Plain-English guides on writing a will, LPAs, and probate in England and Wales.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clearlegacy.co.uk/guides/">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://clearlegacy.co.uk/"},
+        {"@type":"ListItem","position":2,"name":"Guides","item":"https://clearlegacy.co.uk/guides/"}
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "name": "UK Wills &amp; Estate Planning Guides",
+      "url": "https://clearlegacy.co.uk/guides/",
+      "description": "Plain-English guides on writing a will, setting up an LPA, and applying for probate in England and Wales."
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="logo">Clear<span>Legacy</span></a>
+    <ul class="nav-links">
+      <li><a href="/wills/">Wills</a></li>
+      <li><a href="/lasting-power-of-attorney/">LPA</a></li>
+      <li><a href="/probate/">Probate</a></li>
+      <li><a href="/pricing/">Pricing</a></li>
+      <li><a href="/guides/">Guides</a></li>
+    </ul>
+    <a href="/wills/" class="nav-cta">Start My Will</a>
+  </div>
+</nav>
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <a href="/">Home</a> &nbsp;›&nbsp; <span>Guides</span>
+</nav>
+
+<section class="hero">
+  <span class="eyebrow">Free guides</span>
+  <h1>Estate planning, <span class="accent">without the jargon.</span></h1>
+  <p class="lede">Plain-English guides on writing a will, setting up a Lasting Power of Attorney, and applying for probate in England and Wales. No sales pitch. Just what you actually need to know.</p>
+</section>
+
+<section class="related" style="padding-top:24px">
+  <h2 class="related-title">Most-read guides</h2>
+  <div class="related-grid">
+    <a href="/guides/write-a-will-online-uk/" class="related-card">
+      <h3>How to write a will online in the UK</h3>
+      <p>A 10-minute read covering the Wills Act 1837, witnesses, executors, guardians, mirror wills and common mistakes to avoid.</p>
+      <span class="arrow">Read guide →</span>
+    </a>
+    <a href="/guides/what-happens-if-you-die-without-a-will/" class="related-card">
+      <h3>What happens if you die without a will</h3>
+      <p>The UK Intestacy Rules explained. Who gets what when there's no will — and why it rarely matches what you'd actually want.</p>
+      <span class="arrow">Read guide →</span>
+    </a>
+    <a href="/guides/lpa-vs-power-of-attorney/" class="related-card">
+      <h3>LPA vs Power of Attorney: the difference</h3>
+      <p>The two types of LPA, why ordinary Powers of Attorney don't cover mental capacity, and when to put yours in place.</p>
+      <span class="arrow">Read guide →</span>
+    </a>
+    <a href="/guides/how-probate-works-uk/" class="related-card">
+      <h3>How UK probate works, start to finish</h3>
+      <p>The full process — from death certificate to estate distribution. Timelines, court fees, inheritance tax thresholds.</p>
+      <span class="arrow">Read guide →</span>
+    </a>
+    <a href="/guides/inheritance-tax-thresholds/" class="related-card">
+      <h3>Inheritance tax thresholds explained</h3>
+      <p>The £325k nil-rate band, the £175k residence nil-rate band, and the rules that let couples pass on up to £1 million tax-free.</p>
+      <span class="arrow">Read guide →</span>
+    </a>
+    <a href="/guides/choosing-executors/" class="related-card">
+      <h3>How to choose your executors</h3>
+      <p>Who can be an executor, how many you need, why professional executors often charge more than you'd expect, and common pitfalls.</p>
+      <span class="arrow">Read guide →</span>
+    </a>
+  </div>
+</section>
+
+<main>
+  <h2>Where to start</h2>
+  <p>If you've never written a will before, start with our pillar guide: <a href="/guides/write-a-will-online-uk/">how to write a will online in the UK</a>. It takes about ten minutes to read and walks through every decision you'll face when you draft your will — who inherits what, who your executors are, what happens to any children under 18, and how to make the signing legally watertight.</p>
+
+  <p>If you already have a will and you're wondering what's next, the usual answer is an LPA. Most people only think about a Lasting Power of Attorney when something goes wrong — a stroke, a dementia diagnosis, an accident. By that point it's too late to set one up. Our guide on <a href="/guides/lpa-vs-power-of-attorney/">LPAs and ordinary powers of attorney</a> explains why.</p>
+
+  <p>If you're here because someone has died and you're handling their estate, start with <a href="/guides/how-probate-works-uk/">our probate walkthrough</a>. The probate process is slow — four to eight weeks for the Grant, six to twelve months for the full estate — and knowing the steps in advance removes most of the stress.</p>
+
+  <h2>What we won't tell you</h2>
+  <p>We won't tell you that estate planning is urgent. It usually isn't. What it is, is important — important enough that when you do sit down to write a will it's worth taking an hour to get the details right, rather than clicking through a template in ten minutes and hoping for the best.</p>
+
+  <p>We also won't use scare tactics. Every year thousands of UK adults die without a will, and the outcome is rarely catastrophic — it's just not what the person would have chosen. The Intestacy Rules do what they're designed to do, which is distribute your estate to your closest relatives in a fixed order. If that order matches your wishes, you're fine. If it doesn't — say you live with a partner you're not married to, or you want a friend to inherit something, or you have stepchildren you'd like to provide for — a will is how you say so.</p>
+
+  <h2>A note on sources</h2>
+  <p>Every one of our guides is written by our team and reviewed against UK statute: the Wills Act 1837, the Mental Capacity Act 2005, the Administration of Estates Act 1925, and HMRC's published inheritance tax thresholds. Where we reference court fees we use the current HMCTS schedule; where we reference the OPG we use the Office of the Public Guardian's published registration charge. If any figure looks out of date, please tell us.</p>
+
+  <p>We are not a law firm. If your situation is genuinely unusual — trusts for vulnerable beneficiaries, second marriages with children from both sides, business succession, overseas assets — these guides are a starting point, not a substitute for a solicitor.</p>
+</main>
+
+<section class="cta-section">
+  <h2>Ready to put your plan in place?</h2>
+  <p>A single will takes about twenty minutes and costs £69. That's the whole thing.</p>
+  <a href="/wills/" class="btn-primary">Start My Will</a>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Clear<span>Legacy</span></div>
+        <p class="footer-desc">Straightforward will writing, LPAs and probate for England and Wales. Transparent prices. No legal jargon.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/wills/">Online Wills</a></li>
+          <li><a href="/mirror-wills/">Mirror Wills</a></li>
+          <li><a href="/lasting-power-of-attorney/">LPA</a></li>
+          <li><a href="/probate/">Probate</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/pricing/">Pricing</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/terms/">Terms</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/complaints/">Complaints</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 ClearLegacy. Company registered in England and Wales.</div>
+      <div>Regulated framework: Wills Act 1837 · OPG-recognised LPAs</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

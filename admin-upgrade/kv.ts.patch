@@ -1,0 +1,9 @@
+
+/**
+ * Delete a lead record from KV. Caller is responsible for cleaning up the
+ * associated R2 PDF object (if any) — we keep this layer pure KV so it
+ * doesn't need the R2 binding.
+ */
+export async function deleteLead(env: Env, ref: string): Promise<void> {
+  await env.CLEARLEGACY_KV.delete(`lead:${ref}`);
+}

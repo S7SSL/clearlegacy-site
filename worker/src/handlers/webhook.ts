@@ -31,6 +31,27 @@ type StripeEvent = {
 };
 
 /**
+ * Filter to identify Clear Legacy checkout sessions vs other businesses sharing
+ * the same Stripe account (e.g., itsadecline.com). Each Payment Link has a
+ * domain-specific success_url configured at Payment Link creation time; we
+ * treat the session as Clear Legacy only if that URL lives on clearlegacy.co.uk.
+ *
+ * Without this filter, `checkout.session.completed` events from sibling
+ * businesses on the same Stripe account would hit our bootstrap path and email
+ * the wrong customer a Clear Legacy questionnaire link.
+ */
+function isClearLegacySession(session: any): boolean {
+  const url = session?.success_url || '';
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.hostname === 'clearlegacy.co.uk' || u.hostname.endsWith('.clearlegacy.co.uk');
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Pull the reference UUID from a Stripe event. For Payment Links we expect it on
  * checkout.session.completed.client_reference_id. Fall back to payment_intent metadata.
  */
@@ -403,6 +424,19 @@ export async function handleStripeWebhook(
 
   // Ack quickly to Stripe; do heavy lifting in the background.
   const { ref, session } = extractRef(event);
+
+  // Cross-business filter: same Stripe account is used by sibling sites
+  // (e.g., itsadecline.com). Only proceed for events whose checkout session
+  // belongs to Clear Legacy, identified by the success_url domain. Without
+  // this guard the bootstrap path below would email Clear Legacy questionnaire
+  // links to customers of unrelated businesses.
+  if (event.type === 'checkout.session.completed' && session && !isClearLegacySession(session)) {
+    console.log(`Webhook: ignoring non-CL checkout session ${session.id} (success_url=${session.success_url || 'missing'})`);
+    return new Response(
+      JSON.stringify({ received: true, ignored: 'non_clearlegacy_business' }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  }
 
   if (!ref) {
     // No client_reference_id — this is the pay-first path: the customer paid

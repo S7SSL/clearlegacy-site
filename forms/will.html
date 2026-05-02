@@ -242,7 +242,7 @@ gtag('config', 'AW-17990502106');
 </div><!-- /form-wrap -->
 
 <footer>
-© 2026 Clear Legacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd
+© 2026 Clear Legacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd <small style="font-size:0.85em;opacity:0.75">(Company No. <a href="https://find-and-update.company-information.service.gov.uk/company/12092327" target="_blank" rel="noopener noreferrer" style="color:inherit">12092327</a>)</small>
 </footer>
 
 <script>
@@ -281,8 +281,131 @@ function showStep(n){
   if(String(n) === '7'){ try { renderReviewSummary(); } catch(e){ console.error('renderReviewSummary failed', e); } hideFormError(); }
   window.scrollTo(0,0);
 }
-function nextStep(n){ currentStep = n+1; showStep(currentStep); }
-function prevStep(n){ currentStep = n-1; showStep(currentStep); }
+function nextStep(n){
+  if (!validateStep(n)) return; // block advance until current step is valid
+  hideFormError();
+  currentStep = n+1; showStep(currentStep);
+}
+function prevStep(n){ hideFormError(); currentStep = n-1; showStep(currentStep); }
+
+// Per-step validation. Mirror Wills enforce partner-required (otherwise the
+// customer paid for two wills but only gave us one set of details — the worker
+// would later reject at /api/lead, but we want fail-fast at the customer's step).
+function validateStep(n){
+  hideFormError();
+  const productSel = document.querySelector('input[name="will-type"]:checked');
+  const product = productSel ? productSel.value : (sessionStorage.getItem('cl_product') || 'single');
+
+  function need(id, label){
+    const el = document.getElementById(id);
+    if (!el || !String(el.value || '').trim()) {
+      showFormError('Please fill in ' + label + ' to continue.');
+      if (el) { try { el.focus(); } catch(e){} }
+      return false;
+    }
+    return true;
+  }
+  function needRadio(name, label){
+    if (!document.querySelector('input[name="' + name + '"]:checked')) {
+      showFormError('Please choose ' + label + ' to continue.');
+      return false;
+    }
+    return true;
+  }
+
+  if (n === 1) {
+    if (!need('f-first', 'your first name')) return false;
+    if (!need('f-last', 'your last name')) return false;
+    if (!need('f-dob', 'your date of birth')) return false;
+    if (!need('f-addr1', 'your address')) return false;
+    if (!need('f-city', 'your town/city')) return false;
+    if (!need('f-post', 'your postcode')) return false;
+    if (!need('f-email', 'your email address')) return false;
+    if (!need('f-phone', 'your phone number')) return false;
+    if (!needRadio('marital', 'your marital status')) return false;
+    const email = (document.getElementById('f-email').value || '').trim();
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      showFormError('Please enter a valid email address.'); return false;
+    }
+    return true;
+  }
+  if (n === 2) {
+    const hasPartner = document.querySelector('input[name="has-partner"]:checked');
+    if (product === 'mirror') {
+      if (!hasPartner || hasPartner.value !== 'yes') {
+        showFormError('Mirror Wills cover both partners. Please tick "Yes" and add your partner’s details, or change to Single Will at the final step.');
+        return false;
+      }
+    }
+    if (!hasPartner) {
+      showFormError('Please tell us whether you have a spouse or civil partner.');
+      return false;
+    }
+    if (hasPartner.value === 'yes') {
+      if (!need('p-first', 'your partner’s first name')) return false;
+      if (!need('p-last', 'your partner’s last name')) return false;
+      if (!need('p-dob', 'your partner’s date of birth')) return false;
+      if (!needRadio('partner-primary', 'how you wish to leave your estate to your partner')) return false;
+    }
+    return true;
+  }
+  if (n === 3) {
+    if (!needRadio('has-children', 'whether you have children')) return false;
+    if (!needRadio('has-guardian', 'whether you wish to appoint a guardian')) return false;
+    if (document.querySelector('input[name="has-children"]:checked').value === 'yes') {
+      const childBlocks = document.querySelectorAll('#children-list .person-block');
+      let validChildren = 0;
+      childBlocks.forEach(b => {
+        const txts = Array.from(b.querySelectorAll('input[type="text"]')).map(i => (i.value||'').trim());
+        if (txts.filter(Boolean).length >= 2) validChildren++;
+      });
+      if (validChildren < 1) {
+        showFormError('You said you have children — please add at least one child’s details, or change your answer above.');
+        return false;
+      }
+    }
+    return true;
+  }
+  if (n === 4) {
+    const blocks = document.querySelectorAll('#executor-list .person-block');
+    let valid = 0;
+    blocks.forEach(b => {
+      const txts = Array.from(b.querySelectorAll('input[type="text"]')).map(i => (i.value||'').trim());
+      if (txts[0] && txts[1]) valid++;
+    });
+    if (valid < 1) {
+      showFormError('Please add at least one Executor with their full name to continue.');
+      return false;
+    }
+    return true;
+  }
+  if (n === 5) {
+    if (!needRadio('residuary', 'how your residuary estate should be distributed')) return false;
+    const r = document.querySelector('input[name="residuary"]:checked').value;
+    if (r === 'named' || r === 'other') {
+      const ta = document.querySelector('#residuary-detail textarea');
+      if (!ta || !ta.value.trim()) {
+        showFormError('Please describe your residuary arrangement in the text box.');
+        if (ta) { try { ta.focus(); } catch(e){} }
+        return false;
+      }
+    }
+    if (document.querySelector('input[name="has-property"]:checked')?.value === 'yes') {
+      const propSection = document.getElementById('property-section');
+      const propAddr = propSection?.querySelector('input[type="text"]')?.value?.trim();
+      if (!propAddr) {
+        showFormError('Please enter the address of the property you own.');
+        return false;
+      }
+    }
+    return true;
+  }
+  if (n === 6) {
+    if (!needRadio('funeral', 'a funeral preference (or "No preference")')) return false;
+    return true;
+  }
+  return true;
+}
 function toggleSection(id, val){ document.getElementById(id).style.display = val==='yes'?'block':'none'; updateResiduaryVisibility(); }
 // "Edit" button on the review page jumps back to the chosen step. When the
 // customer then clicks Continue they'll step forward again and eventually land
