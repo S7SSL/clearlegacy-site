@@ -22,6 +22,9 @@ worker/node_modules/
 .dev.vars
 worker/.dev.vars
 *.uetbak
+*.serif-bak
+*.pre-301-bak
+*.bak
 
 # Claude Code internal tooling — never commit
 .claude/
