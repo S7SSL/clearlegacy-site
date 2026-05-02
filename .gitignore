@@ -22,3 +22,6 @@ worker/node_modules/
 .dev.vars
 worker/.dev.vars
 *.uetbak
+
+# Claude Code internal tooling — never commit
+.claude/
