@@ -6,15 +6,15 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="canonical" href="https://www.clearlegacy.co.uk/forms/will.html">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Start Your Will Online | Clear Legacy — From £69</title>
-  <meta property="og:title" content="Start Your Will Online | Clear Legacy – From £69">
+<title>Start Your Will Online | ClearLegacy — From £69</title>
+  <meta property="og:title" content="Start Your Will Online | ClearLegacy – From £69">
   <meta property="og:description" content="Prepare your Will online in minutes. Expert reviewed, legally valid in England & Wales. Single Will £69, Mirror Wills £99. Start now.">
   <meta property="og:url" content="https://www.clearlegacy.co.uk/forms/will.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://www.clearlegacy.co.uk/images/og-image-1200x630.jpg">
-  <meta property="og:site_name" content="Clear Legacy">
+  <meta property="og:site_name" content="ClearLegacy">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Start Your Will Online | Clear Legacy – From £69">
+  <meta name="twitter:title" content="Start Your Will Online | ClearLegacy – From £69">
   <meta name="twitter:description" content="Prepare your Will online in minutes. Expert reviewed, legally valid in England & Wales. Single Will £69, Mirror Wills £99. Start now.">
   <meta name="twitter:image" content="https://www.clearlegacy.co.uk/images/og-image-1200x630.jpg">
 <meta name="description" content="Prepare your Will online in minutes. Expert reviewed, legally valid in England & Wales. Single Will £69, Mirror Wills £99. Start now.">
@@ -144,7 +144,7 @@ gtag('config', 'AW-17990502106');
     "serviceType": "Online Will Writing",
     "provider": {
       "@type": "LegalService",
-      "name": "Clear Legacy",
+      "name": "ClearLegacy",
       "url": "https://www.clearlegacy.co.uk/",
       "areaServed": {"@type": "Country", "name": "United Kingdom"}
     },
@@ -236,13 +236,13 @@ gtag('config', 'AW-17990502106');
 </div>
 
 <!-- CONFIRMATION -->
-<div class="step" id="step-confirm">  <div class="confirm-wrap">  <div class="confirm-icon">⚖️</div>  <h2>Thank You — We Have Your Questionnaire</h2>  <p>Our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email at the address you provided.</p>  <p>If we have any questions about your instructions, we will contact you directly before preparing the document.</p>  <a href="/index.html">Return to Clear Legacy</a>  </div>
+<div class="step" id="step-confirm">  <div class="confirm-wrap">  <div class="confirm-icon">⚖️</div>  <h2>Thank You — We Have Your Questionnaire</h2>  <p>Our estate planners will review your responses and prepare your Will within 24 hours. You will receive a draft by email at the address you provided.</p>  <p>If we have any questions about your instructions, we will contact you directly before preparing the document.</p>  <a href="/index.html">Return to ClearLegacy</a>  </div>
 </div>
 
 </div><!-- /form-wrap -->
 
 <footer>
-© 2026 Clear Legacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd <small style="font-size:0.85em;opacity:0.75">(Company No. <a href="https://find-and-update.company-information.service.gov.uk/company/12092327" target="_blank" rel="noopener noreferrer" style="color:inherit">12092327</a>)</small>
+© 2026 ClearLegacy · <a href="/index.html">Home</a> · <a href="/terms.html">Terms</a> · A trading name of Kaizen Finance Ltd <small style="font-size:0.85em;opacity:0.75">(Company No. <a href="https://find-and-update.company-information.service.gov.uk/company/12092327" target="_blank" rel="noopener noreferrer" style="color:inherit">12092327</a>)</small>
 </footer>
 
 <script>
@@ -257,7 +257,7 @@ const STRIPE_URLS = {
   // 'full' maps to 'single' below — no dedicated Stripe link yet
 };
 
-// Clear Legacy Worker (intake + PDF pipeline). Set to the deployed URL.
+// ClearLegacy Worker (intake + PDF pipeline). Set to the deployed URL.
 // For launch: replace with custom domain once DNS is configured (e.g. https://api.clearlegacy.co.uk)
 const WORKER_ENDPOINT = 'https://api.clearlegacy.co.uk/api/lead';
 
@@ -911,7 +911,7 @@ function submitForm(){
 function fireLegacyBackup(){
   try {
     const legacy = {
-      _subject: 'New Clear Legacy lead: Will',
+      _subject: 'New ClearLegacy lead: Will',
       service: 'Will',
       product: (document.querySelector('input[name="will-type"]:checked')?.value || sessionStorage.getItem('cl_product') || 'single')
     };
@@ -1199,7 +1199,7 @@ function submitToWorker(payload){
 
 
 <script id="cl-funnel-events">
-/* Clear Legacy — upper-funnel events for Smart Bidding signals.
+/* ClearLegacy — upper-funnel events for Smart Bidding signals.
    Fires:
      - view_item       when user reaches the final step (Step 7)
      - begin_checkout  when user clicks the Pay/Submit button
