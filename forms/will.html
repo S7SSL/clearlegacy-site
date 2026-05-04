@@ -200,7 +200,21 @@ fbq('track', 'PageView');
 </div>
 
 <!-- STEP 5: YOUR ESTATE & GIFTS -->
-<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Step 5 of 7</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">  <div class="field"><label>Property Address <button class="quick-fill-btn" type="button" onclick="useHomeAsProperty()">Same as my home</button></label><input type="text" id="prop-addr" placeholder="Full address of the property"></div>  <div class="field"><label>How is the property owned?</label>  <select>  <option value="">Select...</option>  <option value="sole">Solely in my name</option>  <option value="joint-tenants">Joint tenants (with partner/spouse)</option>  <option value="tenants-in-common">Tenants in common (I own a specific share)</option>  </select>  <div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div>  </div>  </div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
+<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Step 5 of 7</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">
+<div id="properties-list">
+<div class="person-block" id="prop-block-1">
+<div class="block-title">Property 1 <button class="quick-fill-btn" type="button" onclick="useHomeAsProp(1)">Same as my home</button></div>
+<div class="field"><label>Address Line 1</label><input type="text" id="prop-addr1" placeholder="House number and street"></div>
+<div class="field"><label>Address Line 2 (optional)</label><input type="text" id="prop-addr2" placeholder="Flat, apartment, etc."></div>
+<div class="field-row">
+<div class="field"><label>City / Town</label><input type="text" id="prop-city"></div>
+<div class="field"><label>Postcode</label><input type="text" id="prop-post" placeholder="e.g. SW1A 1AA"></div>
+</div>
+<div class="field"><label>How is the property owned?</label><select id="prop-ownership"><option value="">Select...</option><option value="sole">Solely in my name</option><option value="joint-tenants">Joint tenants (with partner/spouse)</option><option value="tenants-in-common">Tenants in common (I own a specific share)</option></select><div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div></div>
+</div>
+</div>
+<button class="add-btn" type="button" onclick="addProperty()">+ Add another property</button>
+</div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
 </div>
 
 <!-- STEP 6: FUNERAL & ADDITIONAL WISHES -->
@@ -642,11 +656,42 @@ function usePartnerAsGuardian() {
   _set('g-rel', 'Spouse');
 }
 
-function useHomeAsProperty() {
+function useHomeAsProperty() { useHomeAsProp(1); } // legacy — keep for old callers
+function useHomeAsProp(idx) {
   var a1 = _get('f-addr1'), a2 = _get('f-addr2'), c = _get('f-city'), p = _get('f-post');
   if (!a1) { alert('Please fill in your address in Step 1 first.'); return; }
-  var full = a1 + (a2 ? ', ' + a2 : '') + (c ? ', ' + c : '') + (p ? ', ' + p : '');
-  _set('prop-addr', full);
+  var prefix = idx === 1 ? 'prop-' : 'prop-' + idx + '-';
+  _set(prefix + 'addr1', a1);
+  _set(prefix + 'addr2', a2);
+  _set(prefix + 'city', c);
+  _set(prefix + 'post', p);
+}
+
+// === Multi-property support ===
+var propertyCount = 1;
+function addProperty() {
+  propertyCount++;
+  var n = propertyCount;
+  var div = document.createElement('div');
+  div.className = 'person-block';
+  div.id = 'prop-block-' + n;
+  div.innerHTML = '<div class="block-title">Property ' + n + ' <button class="quick-fill-btn" type="button" onclick="useHomeAsProp(' + n + ')">Same as my home</button> <button class="remove-btn" type="button" onclick="removeProperty(' + n + ')">✕</button></div>' +
+    '<div class="field"><label>Address Line 1</label><input type="text" id="prop-' + n + '-addr1" placeholder="House number and street"></div>' +
+    '<div class="field"><label>Address Line 2 (optional)</label><input type="text" id="prop-' + n + '-addr2" placeholder="Flat, apartment, etc."></div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>City / Town</label><input type="text" id="prop-' + n + '-city"></div>' +
+      '<div class="field"><label>Postcode</label><input type="text" id="prop-' + n + '-post" placeholder="e.g. SW1A 1AA"></div>' +
+    '</div>' +
+    '<div class="field"><label>How is the property owned?</label><select id="prop-' + n + '-ownership"><option value="">Select...</option><option value="sole">Solely in my name</option><option value="joint-tenants">Joint tenants (with partner/spouse)</option><option value="tenants-in-common">Tenants in common (I own a specific share)</option></select></div>';
+  document.getElementById('properties-list').appendChild(div);
+  // Install postcode lookup on the new property
+  if (typeof window.clInstallPostcodeOn === 'function') {
+    window.clInstallPostcodeOn({ postcode: 'prop-' + n + '-post', addr1: 'prop-' + n + '-addr1', addr2: 'prop-' + n + '-addr2', city: 'prop-' + n + '-city' });
+  }
+}
+function removeProperty(n) {
+  var el = document.getElementById('prop-block-' + n);
+  if (el) el.parentNode.removeChild(el);
 }
 
 // Auto-show partner section in Step 2 when marital status is married/civil-partner
@@ -1311,6 +1356,8 @@ function submitToWorker(payload){
     });
   }
   function run() { installs.forEach(install); }
+  // Expose for dynamic property additions
+  window.clInstallPostcodeOn = install;
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run);
   } else {
