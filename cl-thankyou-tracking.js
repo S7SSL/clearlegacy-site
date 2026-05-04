@@ -114,6 +114,19 @@
       });
     } catch (e) { console.warn('CL: GA4 purchase event failed', e); }
 
+    // Meta Pixel Purchase (mirrors GA4 purchase, uses dynamic value from URL params)
+    try {
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Purchase', {
+          value: p.value,
+          currency: 'GBP',
+          content_ids: [p.product],
+          content_type: 'product',
+          content_name: p.itemName
+        }, { eventID: 'purchase_' + (p.sessionId || p.ref || Date.now()) });
+      }
+    } catch (e) { console.warn('CL: Meta Pixel Purchase event failed', e); }
+
     // === NEW: Fire ads_conversion_purchase event with proper value ===
     // This is the named event that the Google Ads conversion action
     // ('Clearlegacy (web) ads_conversion_purchase') is configured to import.
