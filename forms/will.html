@@ -119,6 +119,9 @@ footer a:hover{text-decoration:underline}
 /* MOBILE */
 @media(max-width:600px){ .field-row{grid-template-columns:1fr} .radio-group.horizontal{flex-direction:column} .form-nav{flex-wrap:wrap} .btn-back{width:100%;max-width:none;order:2} .btn-next{max-width:none;order:1} .step-title{font-size:22px} .review-body dl{grid-template-columns:1fr;gap:2px} .review-body dt{padding-top:8px}
 }
+
+.quick-fill-btn { background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer; margin-left:8px; font-weight:500; transition:all 0.15s; }
+.quick-fill-btn:hover { background:#dbeafe; border-color:#3b82f6; }
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J3GPRFYR2Q"></script>
@@ -189,15 +192,15 @@ fbq('track', 'PageView');
 </div>
 
 <!-- STEP 3: CHILDREN & DEPENDANTS -->
-<div class="step" id="step-3">  <div class="step-header">  <div class="step-num">Step 3 of 7</div>  <h2 class="step-title">Children &amp; Dependants</h2>  <p class="step-sub">Tell us about your children and any other dependants you wish to provide for.</p>  </div>  <div class="field"><label>Do you have children?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-children" value="yes" onchange="toggleSection('children-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-children" value="no" onchange="toggleSection('children-section','no')"> No</label>  </div>  </div>  <div id="children-section" style="display:none">  <div id="children-list"></div>  <button class="add-btn" onclick="addChild()">+ Add a Child</button>  <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>  <select id="child-age">  <option value="18">18 (as soon as legally an adult)</option>  <option value="21">21</option>  <option value="25" selected>25 (recommended)</option>  <option value="30">30</option>  </select>  <div class="hint">Assets will be held in trust by your executors until this age.</div>  </div>  </div>  <div class="field" style="margin-top:10px"><label>Do you wish to appoint a guardian for any children under 18?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-guardian" value="yes" onchange="toggleSection('guardian-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-guardian" value="no" onchange="toggleSection('guardian-section','no')"> No</label>  </div>  </div>  <div id="guardian-section" style="display:none">  <div class="person-block">  <div class="block-title">Guardian Details</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" placeholder="Guardian's first name(s)"></div>  <div class="field"><label>Last Name</label><input type="text" placeholder="Guardian's last name"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Sister, Brother-in-law"></div>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(3)">← Back</button>  <button class="btn-next" onclick="nextStep(3)">Continue →</button>  </div>
+<div class="step" id="step-3">  <div class="step-header">  <div class="step-num">Step 3 of 7</div>  <h2 class="step-title">Children &amp; Dependants</h2>  <p class="step-sub">Tell us about your children and any other dependants you wish to provide for.</p>  </div>  <div class="field"><label>Do you have children?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-children" value="yes" onchange="toggleSection('children-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-children" value="no" onchange="toggleSection('children-section','no')"> No</label>  </div>  </div>  <div id="children-section" style="display:none">  <div id="children-list"></div>  <button class="add-btn" onclick="addChild()">+ Add a Child</button>  <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>  <select id="child-age">  <option value="18">18 (as soon as legally an adult)</option>  <option value="21">21</option>  <option value="25" selected>25 (recommended)</option>  <option value="30">30</option>  </select>  <div class="hint">Assets will be held in trust by your executors until this age.</div>  </div>  </div>  <div class="field" style="margin-top:10px"><label>Do you wish to appoint a guardian for any children under 18?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-guardian" value="yes" onchange="toggleSection('guardian-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-guardian" value="no" onchange="toggleSection('guardian-section','no')"> No</label>  </div>  </div>  <div id="guardian-section" style="display:none">  <div class="person-block">  <div class="block-title">Guardian Details <button class="quick-fill-btn" type="button" onclick="usePartnerAsGuardian()">Use my partner</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="g-first" placeholder="Guardian's first name(s)"></div>  <div class="field"><label>Last Name</label><input type="text" id="g-last" placeholder="Guardian's last name"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" id="g-rel" placeholder="e.g. Sister, Brother-in-law"></div>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(3)">← Back</button>  <button class="btn-next" onclick="nextStep(3)">Continue →</button>  </div>
 </div>
 
 <!-- STEP 4: EXECUTORS -->
-<div class="step" id="step-4">  <div class="step-header">  <div class="step-num">Step 4 of 7</div>  <h2 class="step-title">Your Executors</h2>  <p class="step-sub">Executors are the people who will carry out your wishes and administer your estate after your death. You should appoint at least two.</p>  </div>  <div class="info-box">Choose people you trust who are likely to outlive you and are capable of managing financial and legal matters. They can be beneficiaries of your Will.</div>  <div id="executor-list">  <div class="person-block" id="exec-0">  <div class="block-title">Executor 1 (Primary)</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" placeholder="e.g. Sarah"></div>  <div class="field"><label>Last Name</label><input type="text" placeholder="e.g. Hargreaves"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Spouse, Son, Daughter"></div>  <div class="field"><label>Email Address</label><input type="email" placeholder="For contact purposes"></div>  </div>  </div>  <div class="person-block" id="exec-1">  <div class="block-title">Executor 2 (Substitute)</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" placeholder="e.g. Michael"></div>  <div class="field"><label>Last Name</label><input type="text" placeholder="e.g. Thompson"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Brother, Friend"></div>  <div class="field"><label>Email Address</label><input type="email" placeholder="For contact purposes"></div>  </div>  </div>  </div>  <button class="add-btn" onclick="addExecutor()">+ Add a Third Executor (optional)</button>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(4)">← Back</button>  <button class="btn-next" onclick="nextStep(4)">Continue →</button>  </div>
+<div class="step" id="step-4">  <div class="step-header">  <div class="step-num">Step 4 of 7</div>  <h2 class="step-title">Your Executors</h2>  <p class="step-sub">Executors are the people who will carry out your wishes and administer your estate after your death. You should appoint at least two.</p>  </div>  <div class="info-box">Choose people you trust who are likely to outlive you and are capable of managing financial and legal matters. They can be beneficiaries of your Will.</div>  <div id="executor-list">  <div class="person-block" id="exec-0">  <div class="block-title">Executor 1 (Primary) <button class="quick-fill-btn" type="button" onclick="usePartnerAsExecutor()">Use my partner</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="e1-first" placeholder="e.g. Sarah"></div>  <div class="field"><label>Last Name</label><input type="text" id="e1-last" placeholder="e.g. Hargreaves"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship to you</label><input type="text" id="e1-rel" placeholder="e.g. Spouse, Son, Daughter"></div>  <div class="field"><label>Email Address (optional)</label><input type="email" id="e1-email" placeholder="For contact purposes"></div>  </div>  </div>  <div class="person-block" id="exec-1">  <div class="block-title">Executor 2 (Substitute)</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" placeholder="e.g. Michael"></div>  <div class="field"><label>Last Name</label><input type="text" placeholder="e.g. Thompson"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Brother, Friend"></div>  <div class="field"><label>Email Address</label><input type="email" placeholder="For contact purposes"></div>  </div>  </div>  </div>  <button class="add-btn" onclick="addExecutor()">+ Add a Third Executor (optional)</button>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(4)">← Back</button>  <button class="btn-next" onclick="nextStep(4)">Continue →</button>  </div>
 </div>
 
 <!-- STEP 5: YOUR ESTATE & GIFTS -->
-<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Step 5 of 7</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">  <div class="field"><label>Property Address</label><input type="text" placeholder="Full address of the property"></div>  <div class="field"><label>How is the property owned?</label>  <select>  <option value="">Select...</option>  <option value="sole">Solely in my name</option>  <option value="joint-tenants">Joint tenants (with partner/spouse)</option>  <option value="tenants-in-common">Tenants in common (I own a specific share)</option>  </select>  <div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div>  </div>  </div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
+<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Step 5 of 7</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">  <div class="field"><label>Property Address <button class="quick-fill-btn" type="button" onclick="useHomeAsProperty()">Same as my home</button></label><input type="text" id="prop-addr" placeholder="Full address of the property"></div>  <div class="field"><label>How is the property owned?</label>  <select>  <option value="">Select...</option>  <option value="sole">Solely in my name</option>  <option value="joint-tenants">Joint tenants (with partner/spouse)</option>  <option value="tenants-in-common">Tenants in common (I own a specific share)</option>  </select>  <div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div>  </div>  </div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
 </div>
 
 <!-- STEP 6: FUNERAL & ADDITIONAL WISHES -->
@@ -618,6 +621,117 @@ let execCount = 2;
 function addExecutor(){ execCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'exec-'+execCount; d.innerHTML = `<div class="block-title">Executor ${execCount}<button class="remove-btn" onclick="removeBlock('exec-${execCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text"></div>  <div class="field"><label>Last Name</label><input type="text"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship</label><input type="text"></div>  <div class="field"><label>Email</label><input type="email"></div>  </div>`; document.getElementById('executor-list').appendChild(d); }
 let giftCount = 0;
 function addGift(){ giftCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'gift-'+giftCount; d.innerHTML = `<div class="block-title">Gift ${giftCount}<button class="remove-btn" onclick="removeBlock('gift-${giftCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>Item or Amount</label><input type="text" placeholder="e.g. £10,000 cash / my gold watch / 5 Osidge Lane"></div>  <div class="field"><label>Recipient Name</label><input type="text" placeholder="Full name of recipient"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" placeholder="e.g. Daughter, Friend, Charity name"></div>`; document.getElementById('gifts-list').appendChild(d); }
+
+// === Form speed-up helpers (added 2026-05-04) ===
+function _set(id, val) { var el = document.getElementById(id); if (el && val) { el.value = val; el.dispatchEvent(new Event('input', {bubbles: true})); } }
+function _get(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+
+function usePartnerAsExecutor() {
+  var pf = _get('p-first'), pl = _get('p-last');
+  if (!pf && !pl) { alert('Please fill in your partner details in Step 2 first.'); return; }
+  _set('e1-first', pf);
+  _set('e1-last', pl);
+  _set('e1-rel', 'Spouse');
+}
+
+function usePartnerAsGuardian() {
+  var pf = _get('p-first'), pl = _get('p-last');
+  if (!pf && !pl) { alert('Please fill in your partner details in Step 2 first.'); return; }
+  _set('g-first', pf);
+  _set('g-last', pl);
+  _set('g-rel', 'Spouse');
+}
+
+function useHomeAsProperty() {
+  var a1 = _get('f-addr1'), a2 = _get('f-addr2'), c = _get('f-city'), p = _get('f-post');
+  if (!a1) { alert('Please fill in your address in Step 1 first.'); return; }
+  var full = a1 + (a2 ? ', ' + a2 : '') + (c ? ', ' + c : '') + (p ? ', ' + p : '');
+  _set('prop-addr', full);
+}
+
+// Auto-show partner section in Step 2 when marital status is married/civil-partner
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.name === 'marital') {
+    var v = e.target.value;
+    if (v === 'married' || v === 'civil-partner') {
+      var partnerYes = document.querySelector('input[name="has-partner"][value="yes"]');
+      if (partnerYes && !partnerYes.checked) {
+        partnerYes.checked = true;
+        if (typeof toggleSection === 'function') toggleSection('partner-details', 'yes');
+      }
+    }
+  }
+});
+
+// === localStorage form persistence (resume mid-form) ===
+(function() {
+  var KEY = 'cl_will_form_v1';
+  var DEBOUNCE_MS = 500;
+  var saveTimer;
+
+  function collectForm() {
+    var data = {};
+    document.querySelectorAll('#will-form input, #will-form select, #will-form textarea, .step input, .step select, .step textarea').forEach(function(el) {
+      if (!el.id && !el.name) return;
+      var key = el.id || el.name;
+      if (el.type === 'radio' || el.type === 'checkbox') {
+        if (el.checked) data[key + '__' + el.value] = true;
+      } else if (el.value) {
+        data[key] = el.value;
+      }
+    });
+    return data;
+  }
+
+  function saveForm() {
+    try { localStorage.setItem(KEY, JSON.stringify(collectForm())); } catch (e) {}
+  }
+
+  function restoreForm() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      Object.keys(data).forEach(function(k) {
+        if (k.indexOf('__') > -1) {
+          var parts = k.split('__');
+          var el = document.querySelector('input[type=radio][name="' + parts[0] + '"][value="' + parts[1] + '"], input[type=checkbox][name="' + parts[0] + '"][value="' + parts[1] + '"]');
+          if (el) { el.checked = true; el.dispatchEvent(new Event('change', {bubbles: true})); }
+        } else {
+          var el = document.getElementById(k) || document.querySelector('[name="' + k + '"]');
+          if (el && (el.type === 'text' || el.type === 'email' || el.type === 'tel' || el.type === 'date' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+            el.value = data[k];
+            el.dispatchEvent(new Event('input', {bubbles: true}));
+          }
+        }
+      });
+      var banner = document.createElement('div');
+      banner.style.cssText = 'background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:10px 14px;border-radius:8px;margin:0 0 14px;font-size:14px;display:flex;justify-content:space-between;align-items:center';
+      banner.innerHTML = 'We restored your previous answers so you can carry on. <button onclick="if(confirm(\'Clear saved answers?\')){localStorage.removeItem(\''+KEY+'\');location.reload();}" style="background:none;border:1px solid #0369a1;color:#0369a1;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:13px">Clear &amp; restart</button>';
+      var wrap = document.querySelector('.progress-wrap');
+      if (wrap) wrap.parentNode.insertBefore(banner, wrap);
+    } catch (e) { console.warn('CL form restore failed', e); }
+  }
+
+  document.addEventListener('input', function() { clearTimeout(saveTimer); saveTimer = setTimeout(saveForm, DEBOUNCE_MS); });
+  document.addEventListener('change', function() { clearTimeout(saveTimer); saveTimer = setTimeout(saveForm, DEBOUNCE_MS); });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', restoreForm);
+  } else {
+    setTimeout(restoreForm, 100);
+  }
+
+  // Clear saved data on successful purchase redirect (heuristic: if we leave for stripe)
+  window.addEventListener('beforeunload', function() {
+    if (window.location.href.indexOf('stripe') > -1 || sessionStorage.getItem('cl_purchase_initiated')) {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+    }
+  });
+})();
+// === End form speed-up helpers ===
+
+
 function removeBlock(id){ const el = document.getElementById(id); if(el) el.remove(); }
 function setPrice(type){
   if(type==='single'){
