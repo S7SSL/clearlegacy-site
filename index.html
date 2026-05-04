@@ -382,6 +382,20 @@ footer{background:#fff;border-top:1px solid var(--border);padding:48px 5% 28px}
 }
 @media(max-width:480px){ .steps-grid{grid-template-columns:1fr} .compare-grid{grid-template-columns:1fr 1fr} .footer-grid{grid-template-columns:1fr}
 }
+
+.trust-strip{background:linear-gradient(90deg,#1F3A5F 0%,#102545 100%);color:#fff;padding:13px 20px;text-align:center;font-size:15px;border-bottom:3px solid #C9A961;letter-spacing:.1px;line-height:1.45;position:relative}
+.trust-strip-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.trust-strip-icon{font-size:18px;line-height:1}
+.trust-strip-bold{font-weight:700;color:#fff;letter-spacing:.2px;text-transform:uppercase;font-size:14px}
+.trust-strip-sep{color:#C9A961;font-weight:700;margin:0 4px}
+.trust-strip-tagline{color:rgba(255,255,255,.92)}
+.trust-strip-tagline em{font-style:normal;color:#C9A961;font-weight:600}
+@media(max-width:600px){
+  .trust-strip{font-size:13.5px;padding:11px 14px}
+  .trust-strip-inner{gap:6px;flex-direction:column}
+  .trust-strip-sep{display:none}
+  .trust-strip-bold{font-size:13px}
+}
 </style>
 <!-- Google Analytics -->
 <!-- Google tag (gtag.js) — Google Ads -->
@@ -411,6 +425,16 @@ fbq('track', 'PageView');
 
 <nav>  <div class="nav-inner">  <a href="/" class="logo">Clear<span>Legacy</span></a>  <ul class="nav-links">  <li><a href="/wills/">Wills</a></li>  <li><a href="/lasting-power-of-attorney/">LPA</a></li>  <li><a href="/probate/">Probate</a></li>  <li><a href="/pricing/">Pricing</a></li>  <li><a href="/guides/">Guides</a></li>  </ul>  <a href="/forms/will.html" class="nav-cta">Start Your Will →</a>  </div>
 </nav>
+
+<!-- TRUST BANNER -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <span class="trust-strip-icon" aria-hidden="true">🔒</span>
+    <strong class="trust-strip-bold">We don't collect data.</strong>
+    <span class="trust-strip-sep">·</span>
+    <span class="trust-strip-tagline">Your Will is actioned <em>right here, right now</em>.</span>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">  <div class="hero-inner">  <img src="/images/hero-write-will-online-uk.jpg" alt="Couple writing their Will online with ClearLegacy - legally valid in England and Wales, Single Will from £69, Mirror Wills from £99" width="1536" height="1024" fetchpriority="high" style="width:100%;max-width:1100px;height:auto;display:block;margin:0 auto 28px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.08)" onerror="this.style.display='none'" loading="eager" decoding="sync">  <div class="hero-badge">UK's Most Affordable Estate Planning</div>  <h1>Your Will, Done Right.<br><span class="highlight">From £69.</span></h1>  <p>Professionally drafted online Wills at fixed fees that beat every solicitor in the country.</p>  <div class="hero-btns">  <a href="/forms/will.html" class="btn-primary">Prepare My Will — From £69</a>  <a href="#services" class="btn-secondary">See All Services</a>  </div>  <div class="trust-badges">  <div class="badge"><span class="badge-icon">⚖️</span> Legally valid in England & Wales</div>  <div class="badge"><span class="badge-icon">✅</span> Expert reviewed within 24 hrs</div>  <div class="badge"><span class="badge-icon">🔒</span> Secure & confidential</div>  <div class="badge"><span class="badge-icon">💷</span> Fixed fee — no surprises</div>  </div>  </div>
