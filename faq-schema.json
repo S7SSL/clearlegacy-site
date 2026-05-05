@@ -1,0 +1,118 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much does an online will cost in the UK?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A single online will with Clear Legacy costs £49.99, fully solicitor-verified and legally binding. Mirror wills for couples are £79.99. This is significantly cheaper than high street solicitors who typically charge £300-£600."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a solicitor to write a will in England?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, you do not legally need a solicitor to write a will in England and Wales. A will is valid as long as it meets the requirements of the Wills Act 1837: you must be over 18, of sound mind, and the will must be signed in the presence of two witnesses. Clear Legacy's wills are solicitor-verified for added peace of mind."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if you die without a will in the UK?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you die without a will (intestate), your estate is distributed according to the Rules of Intestacy. Your spouse receives the first £322,000 plus personal belongings, with the remainder split between spouse and children. Unmarried partners receive nothing regardless of how long you've lived together."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a mirror will?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A mirror will is a pair of almost identical wills made by two people (usually married couples or civil partners) that mirror each other's wishes. Typically, each person leaves everything to the other, with the same beneficiaries if both die. Clear Legacy offers mirror wills for £79.99."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many witnesses do I need for a will?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You need exactly two witnesses to sign your will in England and Wales. Witnesses must be over 18, must watch you sign the will, and must not be beneficiaries (or married to beneficiaries) named in the will, otherwise their inheritance becomes void."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the inheritance tax threshold in 2025-2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The inheritance tax nil-rate band is £325,000 per person (frozen until 2028). There's an additional residence nil-rate band of £175,000 if you leave your home to direct descendants, giving a potential combined threshold of £500,000 per person or £1 million for couples."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the 7-year rule for inheritance tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 7-year rule means that gifts made more than 7 years before death are exempt from inheritance tax. Gifts made within 7 years may be taxed on a sliding scale (taper relief): 0-3 years = 40%, 3-4 years = 32%, 4-5 years = 24%, 5-6 years = 16%, 6-7 years = 8%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a property trust will?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A property trust will places your share of a property into a trust upon death, protecting it from care home fees, sideways disinheritance if your partner remarries, and creditors. It ensures your children ultimately inherit your share of the property. Clear Legacy offers property trust wills from £149.99."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is probate and do I need it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Probate is the legal process of proving a will is valid and giving executors authority to deal with the deceased's estate. You typically need probate if the estate includes property, shares, or assets held solely in the deceased's name worth over £5,000-£50,000 (thresholds vary by institution)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a Lasting Power of Attorney (LPA)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Lasting Power of Attorney is a legal document that lets you appoint someone you trust to make decisions on your behalf if you lose mental capacity. There are two types: Health & Welfare (medical and care decisions) and Property & Financial Affairs (managing money and assets). LPAs must be registered with the Office of the Public Guardian."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is an online will legally binding in the UK?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, an online will is legally binding in England and Wales provided it meets the requirements of the Wills Act 1837: the testator is over 18 and of sound mind, the will is in writing, signed by the testator, and witnessed by two independent witnesses who are present at the time of signing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I write a will without my spouse knowing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, you can write a will without your spouse knowing. A will is a personal document and there is no legal requirement to inform your spouse. However, be aware that spouses may have claims under the Inheritance (Provision for Family and Dependants) Act 1975 if they feel inadequately provided for."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should I update my will?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You should review your will every 3-5 years or after any major life event: marriage (which automatically revokes a previous will), divorce, birth of children, death of a beneficiary or executor, significant change in assets, or moving to a new country."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the cheapest way to get a will written UK?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The cheapest options for getting a will written in the UK are: online will services like Clear Legacy (from £49.99, solicitor-verified), will-writing charities during Free Wills Month (October/March, limited availability), or DIY will kits (from £10, but high risk of errors). Solicitors typically charge £300-£600+."
+      }
+    }
+  ]
+}
