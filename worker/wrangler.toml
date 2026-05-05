@@ -20,12 +20,12 @@ rules = [
   { type = "Text", globs = ["**/*.html"], fallthrough = true }
 ]
 
-# # --- Assets ---
-# # Point at the empty placeholder so wrangler 4.x doesn't auto-discover the
-# # parent dir (which contains node_modules and trips "Asset too large").
-# # The directory must exist with at least one file.
-# [assets]
-# directory = "./_empty_assets"
+# --- Assets ---
+# Point at the empty placeholder so wrangler 4.x doesn't auto-discover the
+# parent dir (which contains node_modules and trips "Asset too large").
+# The directory must exist with at least one file (./_empty_assets/.gitkeep).
+[assets]
+directory = "./_empty_assets"
 
 # --- Bindings ---
 
