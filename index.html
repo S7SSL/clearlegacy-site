@@ -309,8 +309,8 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .avatar:first-child{margin-left:0}
 .avatar.tag{background:var(--slate-100);color:var(--slate-500);font-size:12px}
 .hero-trust p{font-size:14px;color:var(--slate-500);font-weight:500}
-.hero-image{position:relative;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-soft)}
-.hero-image img{width:100%;height:520px;object-fit:cover;display:block}
+.hero-image{position:relative;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-soft);max-width:480px;margin-left:auto}
+.hero-image img{width:100%;height:380px;object-fit:cover;display:block}
 .hero-tag{position:absolute;left:24px;bottom:24px;right:24px;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-radius:14px;padding:18px 22px;border:1px solid var(--slate-100);display:flex;align-items:center;gap:14px}
 .hero-tag .icon{width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hero-tag h4{font-family:'Manrope',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px}
@@ -420,7 +420,7 @@ footer.site-footer{background:var(--slate-50);border-top:1px solid var(--slate-2
 @media (max-width:960px){
   .hero{padding:48px 0 64px}
   .hero .row{grid-template-columns:1fr;gap:40px}
-  .hero-image img{height:360px}
+  .hero-image img{height:300px}
   .why{grid-template-columns:1fr;gap:40px}
   .why-image img{height:360px}
   .journey-grid{grid-template-columns:1fr;gap:40px}
@@ -476,8 +476,6 @@ fbq('track', 'PageView');
     </a>
     <ul class="nav-links">
       <li><a href="/forms/will.html" class="active">Wills</a></li>
-      <li><a href="/lasting-power-of-attorney/">LPA</a></li>
-      <li><a href="/probate/">Probate</a></li>
       <li><a href="/pricing/">Pricing</a></li>
       <li><a href="/guides/">Guides</a></li>
     </ul>
@@ -490,8 +488,6 @@ fbq('track', 'PageView');
 <div class="mobile-drawer" id="cl-drawer" aria-hidden="true">
   <div class="mobile-drawer-inner container">
     <a href="/forms/will.html">Wills</a>
-    <a href="/lasting-power-of-attorney/">Lasting Power of Attorney</a>
-    <a href="/probate/">Probate</a>
     <a href="/pricing/">Pricing</a>
     <a href="/guides/">Guides</a>
     <a href="/faq/">FAQs</a>
@@ -760,8 +756,6 @@ fbq('track', 'PageView');
           <ul>
             <li><a href="/forms/will.html?product=single">Single Will — £69</a></li>
             <li><a href="/forms/will.html?product=mirror">Mirror Wills — £99</a></li>
-            <li><a href="/lasting-power-of-attorney/">LPA</a></li>
-            <li><a href="/probate/">Probate</a></li>
           </ul>
         </div>
         <div class="foot-col">
