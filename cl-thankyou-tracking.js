@@ -127,6 +127,17 @@
       }
     } catch (e) { console.warn('CL: Meta Pixel Purchase event failed', e); }
 
+    // Microsoft UET Purchase (mirrors GA4 purchase — for Bing conversion goals)
+    try {
+      if (window.uetq && typeof window.uetq.push === 'function') {
+        window.uetq.push('event', 'purchase', {
+          revenue_value: p.value,
+          currency: 'GBP',
+          transaction_id: p.sessionId || p.ref
+        });
+      }
+    } catch (e) { console.warn('CL: UET Purchase event failed', e); }
+
     // === NEW: Fire ads_conversion_purchase event with proper value ===
     // This is the named event that the Google Ads conversion action
     // ('Clearlegacy (web) ads_conversion_purchase') is configured to import.

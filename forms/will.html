@@ -1415,6 +1415,13 @@ function submitToWorker(payload){
         if (eventName === 'begin_checkout') fbqPayload.num_items = 1;
         window.fbq('track', fbqEvent, fbqPayload);
       }
+      // Mirror to Microsoft UET (event names match GA4 for consistency)
+      if (window.uetq && typeof window.uetq.push === 'function') {
+        window.uetq.push('event', eventName, {
+          revenue_value: t.price,
+          currency: 'GBP'
+        });
+      }
       console.log('CL funnel:', eventName, payload);
     } catch (e) {
       console.warn('CL funnel: failed to fire', eventName, e);
