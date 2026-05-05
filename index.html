@@ -383,18 +383,22 @@ footer{background:#fff;border-top:1px solid var(--border);padding:48px 5% 28px}
 @media(max-width:480px){ .steps-grid{grid-template-columns:1fr} .compare-grid{grid-template-columns:1fr 1fr} .footer-grid{grid-template-columns:1fr}
 }
 
-.trust-strip{background:transparent;padding:14px 20px 0;text-align:center;border:none;box-shadow:none;position:relative}
-.trust-strip-inner{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;max-width:720px;background:linear-gradient(90deg,#DC2626 0%,#991B1B 100%);color:#fff;padding:9px 22px;border-radius:8px;font-size:14px;letter-spacing:.15px;line-height:1.4;box-shadow:0 1px 4px rgba(220,38,38,.2);font-weight:500}
-.trust-strip-icon{font-size:16px;line-height:1}
-.trust-strip-bold{font-weight:700;color:#fff;letter-spacing:.25px;text-transform:uppercase;font-size:13px}
-.trust-strip-sep{color:rgba(255,255,255,.55);font-weight:600;margin:0 4px;font-size:14px}
-.trust-strip-tagline{color:#fff}
-.trust-strip-tagline em{font-style:normal;color:#fff;font-weight:700}
-@media(max-width:600px){
-  .trust-strip{padding:12px 14px 0}
-  .trust-strip-inner{gap:6px;flex-direction:column;font-size:12.5px;padding:9px 18px}
-  .trust-strip-sep{display:none}
-  .trust-strip-bold{font-size:12px}
+
+
+.quick-steps{padding:36px 20px 8px;background:transparent}
+.quick-steps-inner{max-width:1100px;margin:0 auto}
+.quick-steps-title{text-align:center;font-size:24px;font-weight:700;color:#1F3A5F;margin:0 0 24px;letter-spacing:-.2px}
+.quick-steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.quick-step-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px 22px;text-align:left;transition:transform .15s,box-shadow .15s;position:relative}
+.quick-step-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(31,58,95,.08)}
+.quick-step-num{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1F3A5F 0%,#2563eb 100%);color:#fff;font-weight:700;font-size:18px;margin-bottom:14px}
+.quick-step-title{font-size:16px;font-weight:700;color:#1F3A5F;margin:0 0 8px;line-height:1.3}
+.quick-step-desc{font-size:14px;color:#4b5563;line-height:1.5;margin:0}
+@media(max-width:768px){
+.quick-steps{padding:28px 16px 4px}
+.quick-steps-title{font-size:20px;margin-bottom:18px}
+.quick-steps-grid{grid-template-columns:1fr;gap:14px}
+.quick-step-card{padding:18px}
 }
 </style>
 <!-- Google Analytics -->
@@ -426,15 +430,29 @@ fbq('track', 'PageView');
 <nav>  <div class="nav-inner">  <a href="/" class="logo">Clear<span>Legacy</span></a>  <ul class="nav-links">  <li><a href="/wills/">Wills</a></li>  <li><a href="/lasting-power-of-attorney/">LPA</a></li>  <li><a href="/probate/">Probate</a></li>  <li><a href="/pricing/">Pricing</a></li>  <li><a href="/guides/">Guides</a></li>  </ul>  <a href="/forms/will.html" class="nav-cta">Start Your Will →</a>  </div>
 </nav>
 
-<!-- TRUST BANNER -->
-<div class="trust-strip">
-  <div class="trust-strip-inner">
-    <span class="trust-strip-icon" aria-hidden="true">🔒</span>
-    <strong class="trust-strip-bold">No lead lists</strong>
-    <span class="trust-strip-sep">·</span>
-    <strong class="trust-strip-bold">Your Will, drafted and delivered today</strong>
+<!-- QUICK 3-STEP PROCESS -->
+<section class="quick-steps">
+  <div class="quick-steps-inner">
+    <h2 class="quick-steps-title">Your Will in 3 easy steps</h2>
+    <div class="quick-steps-grid">
+      <div class="quick-step-card">
+        <div class="quick-step-num">1</div>
+        <h3 class="quick-step-title">Complete the online questionnaire</h3>
+        <p class="quick-step-desc">Fill in your details and click submit.</p>
+      </div>
+      <div class="quick-step-card">
+        <div class="quick-step-num">2</div>
+        <h3 class="quick-step-title">Make payment securely</h3>
+        <p class="quick-step-desc">Pay via Stripe. Fixed fee, no surprises.</p>
+      </div>
+      <div class="quick-step-card">
+        <div class="quick-step-num">3</div>
+        <h3 class="quick-step-title">Your Will, in your inbox</h3>
+        <p class="quick-step-desc">We review and email it to you to sign and keep safe. We hold a digital copy (unsigned).</p>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- HERO -->
 <section class="hero">  <div class="hero-inner">  <img src="/images/hero-write-will-online-uk.jpg" alt="Couple writing their Will online with ClearLegacy - legally valid in England and Wales, Single Will from £69, Mirror Wills from £99" width="1536" height="1024" fetchpriority="high" style="width:100%;max-width:1100px;height:auto;display:block;margin:0 auto 28px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.08)" onerror="this.style.display='none'" loading="eager" decoding="sync">  <div class="hero-badge">UK's Most Affordable Estate Planning</div>  <h1>Your Will, Done Right.<br><span class="highlight">From £69.</span></h1>  <p>Professionally drafted online Wills at fixed fees that beat every solicitor in the country.</p>  <div class="hero-btns">  <a href="/forms/will.html" class="btn-primary">Prepare My Will — From £69</a>  <a href="#services" class="btn-secondary">See All Services</a>  </div>  <div class="trust-badges">  <div class="badge"><span class="badge-icon">⚖️</span> Legally valid in England & Wales</div>  <div class="badge"><span class="badge-icon">✅</span> Expert reviewed within 24 hrs</div>  <div class="badge"><span class="badge-icon">🔒</span> Secure & confidential</div>  <div class="badge"><span class="badge-icon">💷</span> Fixed fee — no surprises</div>  </div>  </div>
@@ -458,10 +476,6 @@ fbq('track', 'PageView');
 
 <!-- SERVICES -->
 <section class="services" id="services">  <div class="section-header">  <p class="section-tag">What We Do</p>  <h2 class="section-title">Everything You Need,<br>In One Place</h2>  <p class="section-sub">Online. Fixed fees. Reviewed by qualified professionals.</p>  </div>  <div class="services-grid">  <div class="svc-card">  <div class="svc-icon">📜</div>  <div class="svc-name">Wills</div>  <p class="svc-desc">Legally valid Wills for individuals and couples. Covers executors, guardians, specific gifts and residuary estate. Reviewed and returned within 24 hours.</p>  <div class="svc-price-tag">From £69</div>  <a href="/forms/will.html" class="svc-link">Start your Will</a>  </div>  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how">  <div class="how-inner">  <div class="section-header">  <p class="section-tag">Simple Process</p>  <h2 class="section-title">Your Will Ready in 24 Hours</h2>  <p class="section-sub">Four steps. No appointments. No waiting rooms.</p>  </div>  <div class="steps-grid">  <div class="step-item">  <div class="step-num">1</div>  <div class="step-title">Answer the questionnaire</div>  <p class="step-desc">15–20 minutes online. We ask everything your Will needs.</p>  </div>  <div class="step-item">  <div class="step-num">2</div>  <div class="step-title">We draft your Will</div>  <p class="step-desc">Our estate planners prepare your documents within 24 hours.</p>  </div>  <div class="step-item">  <div class="step-num">3</div>  <div class="step-title">Review & approve</div>  <p class="step-desc">Check every detail. Amendments included. Approve when satisfied.</p>  </div>  <div class="step-item">  <div class="step-num">4</div>  <div class="step-title">Sign & store</div>  <p class="step-desc">Print, then sign in wet ink with two adult witnesses present together (UK law requires this). We securely store your digital draft for re-download anytime.</p>  </div>  </div>  </div>
 </section>
 
 <!-- PRICING -->
