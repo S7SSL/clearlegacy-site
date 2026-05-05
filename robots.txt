@@ -59,4 +59,4 @@ Disallow: /admin/
 Disallow: /api/
 
 # Sitemaps & AI context
-Sitemap: https://clearlegacy.co.uk/sitemap.xml
+Sitemap: https://www.clearlegacy.co.uk/sitemap.xml
