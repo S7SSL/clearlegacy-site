@@ -102,6 +102,7 @@ fbq('track', 'PageView');
 
   <div class="err-box" id="err-box" style="display:none"></div>
 
+  <!-- LPA upsell — re-enable once LPA insurance is in place
   <div id="upsell-box" style="display:none;margin-top:28px;padding:24px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:12px;">
     <h3 style="font-size:17px;font-weight:700;margin-bottom:8px;color:#0a0a0a;">While you're here — have you considered an LPA?</h3>
     <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:14px;">A Lasting Power of Attorney lets someone you trust make decisions for you if you ever can't. <strong>70% of adults don't have one</strong> — and without it, your family faces a costly court application.</p>
@@ -110,6 +111,7 @@ fbq('track', 'PageView');
       <a href="/guides/lpa-guide.html" style="display:inline-block;background:#fff;color:#2563eb;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;border:1px solid #bfdbfe;">Learn More</a>
     </div>
   </div>
+  -->
 
   <p class="ref" id="ref-display"></p>
 </div>
@@ -186,8 +188,9 @@ fbq('track', 'PageView');
       btn.setAttribute('target', '_blank');
       btn.setAttribute('rel', 'noopener');
       nextSteps.style.display = 'block';
-      var upsell = document.getElementById('upsell-box');
-      if(upsell) setTimeout(function(){ upsell.style.display = 'block'; }, 2000);
+      // TODO: re-enable LPA upsell once insurance is sorted
+      // var upsell = document.getElementById('upsell-box');
+      // if(upsell) setTimeout(function(){ upsell.style.display = 'block'; }, 2000);
     }
 
     // Worker endpoint (same origin as in will.html; could be proxied via custom domain)
