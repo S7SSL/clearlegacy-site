@@ -71,6 +71,9 @@ ClearLegacy is a fully automated UK online will writing service. **Zero human in
 | GET | /api/account/orders/:ref | Single order detail |
 | POST | /api/account/orders/:ref/pdf | Fresh signed PDF URL |
 | POST | /api/account/order | Start new will purchase |
+| POST | /api/save-progress | Save form progress to KV |
+| POST | /api/save-progress/send-email | Send resume-link email via Resend |
+| GET | /api/resume?token=... | Retrieve saved form progress |
 | GET/POST | /admin | Basic Auth admin dashboard |
 
 #### PDF Pipeline
@@ -170,6 +173,78 @@ All "Start My Will" / "Start Mirror Wills" CTAs should link **directly to the fo
 5. **GitHub Pages deploy** — Push to `main` branch. No build step. Changes go live in ~1 minute.
 6. **Form exit-intent popup** — `forms/will.html` has a mouseout exit-intent modal on steps 2-7. Don't duplicate.
 7. **Watermark** — All generated PDFs have "CLEARLEGACY.CO.UK" diagonal watermark via `worker/src/pdf.ts`.
+
+## Save-and-Resume (Abandoned Form Recovery)
+
+### How It Works
+1. User fills in steps of `/forms/will.html` — after Step 2, a "Save & Continue Later" link appears
+2. Clicking it (or triggered by exit-intent) saves progress to KV via `POST /api/save-progress`
+3. User enters email → `POST /api/save-progress/send-email` sends a resume link via Resend
+4. Resume link: `https://www.clearlegacy.co.uk/forms/will.html?resume=<token>`
+5. `GET /api/resume?token=<token>` returns saved formData + step number
+6. Form auto-populates and jumps to the saved step
+
+### Worker Endpoints
+| Method | Path | Purpose |
+|--------|------|---------|
+| POST | /api/save-progress | Save form data to KV (returns token) |
+| POST | /api/save-progress/send-email | Send resume-link email via Resend |
+| GET | /api/resume?token=... | Retrieve saved progress |
+
+### KV Schema
+- Key: `progress:<token>` (token = random 32-char hex)
+- TTL: 30 days
+- Deduplicated by email (new save overwrites previous for same email)
+- Value: `{ email, firstName, formData, step, savedAt, resumeEmailSent, nurture2SentAt, nurture3SentAt, converted }`
+
+### Source Files
+- Front-end: `forms/will.html` (inline script at bottom)
+- Back-end: `worker/src/handlers/save-progress.ts`
+
+## Nurture Drip Emails (Abandoned Leads)
+
+3-email sequence sent via Resend to users who saved progress but didn't convert. Runs on the existing 2-minute cron (`processNurtureEmails` in `worker/src/handlers/save-progress.ts`).
+
+| Email | Timing | Subject | Content |
+|-------|--------|---------|---------|
+| 1 — Resume | Immediate | Your Will progress is saved — continue when you're ready | Resume link + reassurance |
+| 2 — Social proof | +24 hours | {firstName}, you're closer than you think — finish your Will | 60% stat, social proof, resume CTA |
+| 3 — Price anchor | +72 hours | Last reminder: your {price} Will vs £300+ solicitor — {firstName} | Price comparison table vs solicitor |
+
+- Skips records where `converted: true`
+- Skips records where resume email hasn't been sent yet (user still on form)
+- Processes up to 50 saved-progress keys per cron run
+- Updates KV with `nurture2SentAt` / `nurture3SentAt` timestamps
+
+## Form Step Funnel Tracking
+
+### GA4 Custom Events (fired in `forms/will.html`)
+| Event | Parameters | When |
+|-------|-----------|------|
+| form_start | product (single/mirror) | Page load |
+| form_step_complete | step_number (1-7), step_name, product | Each step advance |
+
+### Mirrored to Meta Pixel & Microsoft UET
+- Meta: `fbq('trackCustom', 'FormStart')`, `fbq('trackCustom', 'FormStepComplete', { step_number, step_name })`
+- UET: `window.uetq.push('event', 'FormStart')`, `window.uetq.push('event', 'FormStepComplete', { event_label: step_name })`
+
+### GA4 Funnel Exploration
+Pre-built 4-step funnel in GA4 (property G-J3GPRFYR2Q):
+1. form_start → 2. form_step_complete → 3. begin_checkout → 4. purchase
+
+Refine with per-step `step_number` parameter filters once event data starts flowing (24-48h after deploy).
+
+### Mid-Form Reassurance Nudges
+`stepNudges` object in `forms/will.html` shows contextual reassurance messages (e.g. "Your details are encrypted & never shared") below the step counter on steps 2-7.
+
+## Schema Markup
+
+### Pricing Page (`/pricing/index.html`)
+- Product + Offer schema for Single Will (£69) and Mirror Wills (£99)
+- Includes `priceCurrency: GBP`, `availability: InStock`, `url`, `seller` (Kaizen Finance Ltd)
+
+### Guide Pages
+- FAQPage schema on all ~55 guide pages
 
 ## Ads Status
 - **Bing Ads:** Primary channel, relaunched 2026-05-03, awaiting domain verification
