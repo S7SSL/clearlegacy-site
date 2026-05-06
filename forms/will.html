@@ -259,10 +259,30 @@ fbq('track', 'PageView');
       <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99</label>
     </div>
   </div>
+  <!-- WHAT HAPPENS NEXT -->
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:22px;margin-bottom:24px">
+    <h3 style="font-size:15px;font-weight:700;color:#166534;margin:0 0 14px;letter-spacing:0.3px">What Happens Next</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:#374151;line-height:1.6">
+      <div style="display:flex;align-items:flex-start;gap:10px"><span style="background:#22c55e;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700">1</span><span><strong>Secure payment via Stripe</strong> — your card details are never stored on our servers</span></div>
+      <div style="display:flex;align-items:flex-start;gap:10px"><span style="background:#22c55e;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700">2</span><span><strong>Your Will is generated automatically</strong> — professionally drafted in plain English</span></div>
+      <div style="display:flex;align-items:flex-start;gap:10px"><span style="background:#22c55e;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700">3</span><span><strong>Delivered to your email within 24 hours</strong> — a PDF ready to print</span></div>
+      <div style="display:flex;align-items:flex-start;gap:10px"><span style="background:#22c55e;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700">4</span><span><strong>Print, sign &amp; witness</strong> — two independent witnesses make it legally binding</span></div>
+    </div>
+  </div>
+
   <div class="info-box">Once you submit and pay, your Will is generated automatically and delivered to your email within 24 hours. You can then print, sign, and witness it to make it legally binding.</div>
   <div class="field">
     <label class="terms-label" for="terms-check"><input type="checkbox" id="terms-check"><span>I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge. I have read and accept the <a href="/legal/terms.html" target="_blank" rel="noopener" style="color:var(--blue)">Terms of Service</a> and <a href="/legal/privacy.html" target="_blank" rel="noopener" style="color:var(--blue)">Privacy Policy</a>.</span></label>
   </div>
+
+  <!-- REASSURANCE BLOCK -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;font-size:13px;color:#374151">
+    <div style="background:var(--soft-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">🔒</span> Secure payment via Stripe</div>
+    <div style="background:var(--soft-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">⚖️</span> Wills Act 1837 compliant</div>
+    <div style="background:var(--soft-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">✏️</span> One free amendment included</div>
+    <div style="background:var(--soft-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">📧</span> Delivered within 24 hours</div>
+  </div>
+
   <div id="form-error" class="form-error" role="alert" aria-live="polite"></div>
   <button type="button" id="btn-submit" class="btn-submit" onclick="submitForm()">Submit &amp; Proceed to Payment →</button>
   <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
