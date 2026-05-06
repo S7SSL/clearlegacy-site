@@ -43,6 +43,10 @@ bucket_name = "clearlegacy-pdfs"
 [browser]
 binding = "BROWSER"
 
+# Workers AI — powers the Clara chat assistant (free on Workers Paid).
+[ai]
+binding = "AI"
+
 # --- Public config (safe in source) ---
 [vars]
 SITE_ORIGIN = "https://www.clearlegacy.co.uk"

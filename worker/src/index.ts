@@ -7,6 +7,7 @@
  *   POST /api/stripe-webhook                Stripe → kicks PDF pipeline
  *   GET  /api/status?ref=...                thank-you page polling
  *   GET  /api/pdf/:token                    signed PDF download
+ *   POST /api/chat                           Clara AI chat assistant
  *   GET  /api/healthz                       liveness
  *
  *   POST /api/auth/request                  send magic-link email
@@ -31,12 +32,14 @@ import { handlePdfDownload } from './handlers/download';
 import { handleAdmin } from './handlers/admin';
 import { handleAuth } from './handlers/auth';
 import { handleAccount } from './handlers/account';
+import { handleChat } from './handlers/chat';
 
 export interface Env {
   // Storage
   CLEARLEGACY_KV: KVNamespace;
   CLEARLEGACY_PDFS: R2Bucket;
   BROWSER: Fetcher; // Browser Rendering API binding
+  AI: any;          // Workers AI binding
 
   // Secrets
   STRIPE_SECRET_KEY: string;
@@ -103,6 +106,8 @@ export default {
         response = await handleStatus(request, env);
       } else if (url.pathname.startsWith('/api/pdf/') && request.method === 'GET') {
         response = await handlePdfDownload(request, env);
+      } else if (url.pathname === '/api/chat' && request.method === 'POST') {
+        response = await handleChat(request, env);
       } else if (url.pathname === '/api/healthz' && request.method === 'GET') {
         response = new Response('ok', { status: 200 });
       } else if (url.pathname.startsWith('/api/auth/')) {

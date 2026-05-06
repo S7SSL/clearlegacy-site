@@ -1,6 +1,6 @@
 /* Clear Legacy — Clara AI Chat Widget */
 (function() {
-  var API = 'https://clearlegacy-chat-api.onrender.com/api/chat';
+  var API = 'https://api.clearlegacy.co.uk/api/chat';
   var WILL_FORM = '/forms/will.html';
   var history = [];
   var open = false;
