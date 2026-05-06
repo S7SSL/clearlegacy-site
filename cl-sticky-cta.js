@@ -6,7 +6,7 @@
   var bar = document.createElement('div');
   bar.id = 'cl-sticky-cta';
   bar.innerHTML = '<div class="cl-sticky-inner">'
-    + '<span class="cl-sticky-text">Wills from <strong>£69</strong> · Legally valid · Ready in 24 hours</span>'
+    + '<span class="cl-sticky-text">Single Will <strong>£69</strong> · Mirror Wills <strong>£99</strong> · Ready in 24 hours</span>'
     + '<a href="/forms/will.html" class="cl-sticky-btn">Start Your Will →</a>'
     + '</div>';
   document.body.appendChild(bar);
