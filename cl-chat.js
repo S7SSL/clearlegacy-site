@@ -1,7 +1,7 @@
 /* Clear Legacy — Clara AI Chat Widget */
 (function() {
   var API = 'https://clearlegacy-chat-api.onrender.com/api/chat';
-  var CALENDLY = 'https://calendly.com/sat-installsmart/15min';
+  var WILL_FORM = '/forms/will.html';
   var history = [];
   var open = false;
   var typing = false;
@@ -84,14 +84,14 @@
     }
     #cl-chat-send:hover{background:#1d4ed8}
     #cl-chat-send svg{width:18px;height:18px;fill:#fff}
-    #cl-cal-btn{
+    #cl-form-btn{
       display:block;margin:4px 0 2px;
       background:#eff6ff;color:#2563eb;border:1.5px solid #bfdbfe;
       padding:8px 14px;border-radius:10px;font-size:13px;font-weight:700;
       text-decoration:none;text-align:center;font-family:'Inter',sans-serif;
       transition:background .2s;
     }
-    #cl-cal-btn:hover{background:#dbeafe}
+    #cl-form-btn:hover{background:#dbeafe}
   `;
 
   var style = document.createElement('style');
@@ -145,12 +145,11 @@
     return div;
   }
 
-  function addCalendly() {
+  function addFormCta() {
     var a = document.createElement('a');
-    a.id = 'cl-cal-btn';
-    a.href = CALENDLY;
-    a.target = '_blank';
-    a.textContent = '📅 Book a free 15-minute call';
+    a.id = 'cl-form-btn';
+    a.href = WILL_FORM;
+    a.textContent = '✍️ Start Your Will — From £69';
     msgs.appendChild(a);
     msgs.scrollTop = msgs.scrollHeight;
   }
@@ -187,13 +186,13 @@
       var reply = d.reply || 'Sorry, something went wrong. Please try again.';
       addMsg(reply, 'bot');
       history.push({ role: 'assistant', content: reply });
-      // Show Calendly button after 2+ exchanges
-      if (history.filter(function(m){return m.role==='user'}).length >= 2 && !document.getElementById('cl-cal-btn')) {
-        addCalendly();
+      // Show form CTA after 2+ exchanges
+      if (history.filter(function(m){return m.role==='user'}).length >= 2 && !document.getElementById('cl-form-btn')) {
+        addFormCta();
       }
     } catch(e) {
       removeTyping();
-      addMsg('Sorry, I\'m having trouble connecting. Please try again or <a href="' + CALENDLY + '" target="_blank">book a call</a>.', 'bot');
+      addMsg('Sorry, I\'m having trouble connecting. Please try again or <a href="' + WILL_FORM + '">start your Will here</a>.', 'bot');
     }
     typing = false;
   }
