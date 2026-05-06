@@ -33,7 +33,7 @@ import { handleAdmin } from './handlers/admin';
 import { handleAuth } from './handlers/auth';
 import { handleAccount } from './handlers/account';
 import { handleChat } from './handlers/chat';
-import { handleSaveProgress, handleSendResumeEmail, handleResume } from './handlers/save-progress';
+import { handleSaveProgress, handleSendResumeEmail, handleResume, processNurtureEmails } from './handlers/save-progress';
 
 export interface Env {
   // Storage
@@ -153,6 +153,7 @@ export default {
    */
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
     ctx.waitUntil(watchdogStuckGenerating(env));
+    ctx.waitUntil(processNurtureEmails(env));
   },
 
 };

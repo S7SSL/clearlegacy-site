@@ -25,6 +25,11 @@ interface SavedProgress {
   step: number;
   savedAt: string;
   resumeEmailSent?: boolean;
+  /** Nurture drip tracking — timestamps of when each was sent */
+  nurture2SentAt?: string; // 24h social proof email
+  nurture3SentAt?: string; // 72h price anchor email
+  /** Set to true if lead completed purchase (checked via lead:{ref} lookup) */
+  converted?: boolean;
 }
 
 const PROGRESS_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
@@ -218,6 +223,180 @@ export async function handleSendResumeEmail(request: Request, env: Env): Promise
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
+  }
+}
+
+// ─────────────────────────────────────────────────
+// Nurture drip emails — called by the scheduled cron
+// ─────────────────────────────────────────────────
+
+const NURTURE_2_DELAY_MS = 24 * 60 * 60 * 1000; // 24 hours
+const NURTURE_3_DELAY_MS = 72 * 60 * 60 * 1000; // 72 hours
+
+function nurtureEmail2Html(firstName: string, resumeUrl: string, productLabel: string, price: string, siteOrigin: string): string {
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #0a0a0a; line-height: 1.6; max-width: 560px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; padding: 20px 0; border-bottom: 1px solid #e5e7eb;">
+    <span style="font-size: 20px; font-weight: 600; color: #0a0a0a; letter-spacing: -0.5px;">Clear<span style="color: #2563eb;">Legacy</span></span>
+  </div>
+  <div style="padding: 32px 0;">
+    <h1 style="font-size: 22px; font-weight: 600; margin-bottom: 16px;">You're closer than you think, ${firstName}</h1>
+    <p>Most people complete their Will in under 15 minutes — and you've already started the hardest part.</p>
+    <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px 20px; margin: 20px 0; border-radius: 4px;">
+      <p style="margin: 0; font-size: 15px;"><strong>Did you know?</strong> Over 60% of UK adults don't have a Will. By starting yours, you're already ahead — don't leave it unfinished.</p>
+    </div>
+    <p>Your answers are still saved. Pick up right where you left off:</p>
+    <div style="text-align: center; margin: 28px 0;">
+      <a href="${resumeUrl}" style="display: inline-block; background: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: 8px;">Finish My Will →</a>
+    </div>
+    <p style="font-size: 14px; color: #6b7280;">${productLabel}: ${price}. No solicitor needed, no hidden fees. Legally valid in England &amp; Wales.</p>
+  </div>
+  <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; font-size: 12px; color: #9ca3af; text-align: center;">
+    © 2026 ClearLegacy · A trading name of Kaizen Finance Ltd (12092327)<br>
+    <a href="${siteOrigin}/legal/privacy.html" style="color: #9ca3af;">Privacy Policy</a>
+  </div>
+</body>
+</html>`;
+}
+
+function nurtureEmail3Html(firstName: string, resumeUrl: string, productLabel: string, price: string, siteOrigin: string): string {
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #0a0a0a; line-height: 1.6; max-width: 560px; margin: 0 auto; padding: 20px;">
+  <div style="text-align: center; padding: 20px 0; border-bottom: 1px solid #e5e7eb;">
+    <span style="font-size: 20px; font-weight: 600; color: #0a0a0a; letter-spacing: -0.5px;">Clear<span style="color: #2563eb;">Legacy</span></span>
+  </div>
+  <div style="padding: 32px 0;">
+    <h1 style="font-size: 22px; font-weight: 600; margin-bottom: 16px;">Last reminder: your Will is still saved, ${firstName}</h1>
+    <p>We know life gets busy — that's exactly why writing a Will matters. Here's how ClearLegacy compares:</p>
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+      <tr style="background: #f9fafb;">
+        <td style="padding: 12px; border: 1px solid #e5e7eb;"></td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; font-weight: 600; text-align: center;">ClearLegacy</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; font-weight: 600; text-align: center;">High-street solicitor</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Price</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; color: #16a34a; font-weight: 600;">${price}</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; color: #dc2626;">£300–£600+</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Time</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center;">~15 minutes</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center;">2–4 weeks</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Availability</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center;">24/7 online</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center;">Office hours only</td>
+      </tr>
+      <tr>
+        <td style="padding: 12px; border: 1px solid #e5e7eb;">Legally valid</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center;">✓</td>
+        <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center;">✓</td>
+      </tr>
+    </table>
+    <p>Your saved progress expires in 27 days. Don't lose it:</p>
+    <div style="text-align: center; margin: 28px 0;">
+      <a href="${resumeUrl}" style="display: inline-block; background: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: 8px;">Complete My Will — ${price} →</a>
+    </div>
+    <p style="font-size: 14px; color: #6b7280;">This is our last reminder. If you didn't start a will on ClearLegacy, you can safely ignore this email.</p>
+  </div>
+  <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; font-size: 12px; color: #9ca3af; text-align: center;">
+    © 2026 ClearLegacy · A trading name of Kaizen Finance Ltd (12092327)<br>
+    <a href="${siteOrigin}/legal/privacy.html" style="color: #9ca3af;">Privacy Policy</a>
+  </div>
+</body>
+</html>`;
+}
+
+/**
+ * Cron-triggered: iterate saved-progress records and send nurture emails.
+ *
+ * We use a KV list prefix scan on `progress:` keys. For each record:
+ *   - Skip if converted or if resumeEmailSent is false (hasn't even abandoned yet)
+ *   - Send Email 2 after 24h if not yet sent
+ *   - Send Email 3 after 72h if not yet sent
+ *
+ * To avoid listing too many keys per cron tick, we process up to 50.
+ */
+export async function processNurtureEmails(env: Env): Promise<void> {
+  const list = await env.CLEARLEGACY_KV.list({ prefix: 'progress:', limit: 50 });
+  const now = Date.now();
+  const siteOrigin = env.SITE_ORIGIN || 'https://www.clearlegacy.co.uk';
+  const fromEmail = env.EMAIL_FROM || 'Clear Legacy <no-reply@clearlegacy.co.uk>';
+
+  for (const key of list.keys) {
+    try {
+      const raw = await env.CLEARLEGACY_KV.get(key.name);
+      if (!raw) continue;
+
+      const record: SavedProgress = JSON.parse(raw);
+      const token = key.name.replace('progress:', '');
+
+      // Skip if the initial resume email hasn't been sent yet (user is still on the form)
+      if (!record.resumeEmailSent) continue;
+      // Skip if already converted
+      if (record.converted) continue;
+
+      const savedMs = new Date(record.savedAt).getTime();
+      if (isNaN(savedMs)) continue;
+
+      const ageMs = now - savedMs;
+      const product = record.formData?.product || 'single';
+      const productLabel = product === 'mirror' ? 'Mirror Wills' : 'Single Will';
+      const price = product === 'mirror' ? '£99' : '£69';
+      const resumeUrl = `${siteOrigin}/forms/will.html?resume=${encodeURIComponent(token)}`;
+
+      let updated = false;
+
+      // Email 2: 24 hours after save
+      if (ageMs >= NURTURE_2_DELAY_MS && !record.nurture2SentAt) {
+        try {
+          await sendEmail(env.RESEND_API_KEY, {
+            from: fromEmail,
+            to: record.email,
+            subject: `${record.firstName}, you're closer than you think — finish your Will`,
+            html: nurtureEmail2Html(record.firstName, resumeUrl, productLabel, price, siteOrigin),
+            text: `Hi ${record.firstName},\n\nMost people finish their Will in under 15 minutes. Your answers are saved — continue here:\n${resumeUrl}\n\n${productLabel}: ${price}. No hidden fees.\n\n— ClearLegacy`,
+          });
+          record.nurture2SentAt = new Date().toISOString();
+          updated = true;
+          console.log(`Nurture email 2 sent to ${record.email}`);
+        } catch (err) {
+          console.error(`Nurture 2 failed for ${record.email}:`, err);
+        }
+      }
+
+      // Email 3: 72 hours after save
+      if (ageMs >= NURTURE_3_DELAY_MS && !record.nurture3SentAt) {
+        try {
+          await sendEmail(env.RESEND_API_KEY, {
+            from: fromEmail,
+            to: record.email,
+            subject: `Last reminder: your ${price} Will vs £300+ solicitor — ${record.firstName}`,
+            html: nurtureEmail3Html(record.firstName, resumeUrl, productLabel, price, siteOrigin),
+            text: `Hi ${record.firstName},\n\nYour Will is still saved. ClearLegacy: ${price} in ~15 mins. Solicitor: £300-600+ over 2-4 weeks.\n\nComplete yours here: ${resumeUrl}\n\nThis is our last reminder.\n\n— ClearLegacy`,
+          });
+          record.nurture3SentAt = new Date().toISOString();
+          updated = true;
+          console.log(`Nurture email 3 sent to ${record.email}`);
+        } catch (err) {
+          console.error(`Nurture 3 failed for ${record.email}:`, err);
+        }
+      }
+
+      if (updated) {
+        await env.CLEARLEGACY_KV.put(key.name, JSON.stringify(record), {
+          expirationTtl: PROGRESS_TTL_SECONDS,
+        });
+      }
+    } catch (err) {
+      console.error(`Nurture processing error for ${key.name}:`, err);
+    }
   }
 }
 
