@@ -1559,7 +1559,7 @@ function submitToWorker(payload){
     <button onclick="document.getElementById('exit-popup').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;color:#9ca3af;cursor:pointer">&times;</button>
     <div style="font-size:40px;margin-bottom:14px">⚖️</div>
     <h3 style="font-size:22px;font-weight:800;color:#0a0a0a;margin-bottom:10px;letter-spacing:-0.5px">Don't Leave Without Your Will</h3>
-    <p style="font-size:15px;color:#6b7280;line-height:1.6;margin-bottom:20px">Your answers have been saved. Come back any time to finish — or complete it now in just a few more minutes.</p>
+    <p style="font-size:15px;color:#6b7280;line-height:1.6;margin-bottom:20px">Your answers have been saved and we'll email you a link to pick up where you left off — or you can finish now in just a few more minutes.</p>
     <a href="#" onclick="document.getElementById('exit-popup').style.display='none';return false;" style="display:inline-block;background:#2563eb;color:#fff;padding:14px 32px;font-size:15px;font-weight:700;text-decoration:none;border-radius:10px;letter-spacing:0.3px">Continue My Will →</a>
     <p style="font-size:12px;color:#9ca3af;margin-top:14px">From £69 · Delivered within 24 hours · Legally valid</p>
   </div>
@@ -1578,7 +1578,181 @@ function submitToWorker(payload){
         if (stepNum >= 2 && stepNum <= 7) {
           document.getElementById('exit-popup').style.display = 'flex';
           shown = true;
+          // Trigger save + resume email
+          if (typeof saveProgress === 'function') try { saveProgress(true); } catch(e){}
         }
+      }
+    }
+  });
+})();
+</script>
+
+<!-- Save & Resume: auto-saves form state to Worker after step 1, sends resume email on abandonment -->
+<script>
+(function(){
+  var SAVE_URL = 'https://api.clearlegacy.co.uk/api/save-progress';
+  var EMAIL_URL = 'https://api.clearlegacy.co.uk/api/save-progress/send-email';
+  var savedToken = null;
+  var emailSent = false;
+  var lastSavedStep = 0;
+
+  // Check if this is a resume visit
+  var resumeToken = new URLSearchParams(window.location.search).get('resume');
+  if (resumeToken) {
+    fetch('https://api.clearlegacy.co.uk/api/resume?token=' + encodeURIComponent(resumeToken), { cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (data.ok && data.formData) {
+          restoreForm(data.formData, data.step || 1);
+        }
+      })
+      .catch(function(e){ console.warn('Resume restore failed:', e); });
+  }
+
+  function restoreForm(formData, step) {
+    // Restore input values
+    if (formData.fields) {
+      Object.keys(formData.fields).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.type !== 'radio' && el.type !== 'checkbox') {
+          el.value = formData.fields[id];
+        }
+      });
+    }
+    // Restore radios
+    if (formData.radios) {
+      Object.keys(formData.radios).forEach(function(name) {
+        var radio = document.querySelector('input[name="' + name + '"][value="' + formData.radios[name] + '"]');
+        if (radio) {
+          radio.checked = true;
+          // Trigger onchange to show/hide sections
+          if (radio.onchange) radio.onchange();
+          var evt = new Event('change', {bubbles:true});
+          radio.dispatchEvent(evt);
+        }
+      });
+    }
+    // Restore checkboxes
+    if (formData.checkboxes) {
+      Object.keys(formData.checkboxes).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.checked = formData.checkboxes[id];
+      });
+    }
+    // Jump to saved step
+    if (step > 1 && typeof showStep === 'function') {
+      currentStep = step;
+      showStep(step);
+    }
+    // Show a small banner
+    var wrap = document.querySelector('.form-wrap');
+    if (wrap) {
+      var banner = document.createElement('div');
+      banner.style.cssText = 'background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:14px;color:#166534;font-family:Inter,sans-serif;text-align:center;';
+      banner.innerHTML = '✅ Welcome back! Your answers have been restored. Pick up where you left off.';
+      wrap.insertBefore(banner, wrap.firstChild);
+      setTimeout(function(){ banner.style.opacity = '0'; banner.style.transition = 'opacity 0.5s'; setTimeout(function(){ banner.remove(); }, 600); }, 5000);
+    }
+  }
+
+  function captureFormState() {
+    var fields = {};
+    var radios = {};
+    var checkboxes = {};
+    var product = 'single';
+
+    document.querySelectorAll('.form-wrap input, .form-wrap select, .form-wrap textarea').forEach(function(el) {
+      if (el.type === 'radio') {
+        if (el.checked && el.name) radios[el.name] = el.value;
+      } else if (el.type === 'checkbox') {
+        if (el.id) checkboxes[el.id] = el.checked;
+      } else {
+        if (el.id && el.value) fields[el.id] = el.value;
+      }
+    });
+
+    // Detect product
+    var productRadio = document.querySelector('input[name="will-type"]:checked');
+    if (productRadio) product = productRadio.value;
+    else if (sessionStorage.getItem('cl_product')) product = sessionStorage.getItem('cl_product');
+
+    return { fields: fields, radios: radios, checkboxes: checkboxes, product: product };
+  }
+
+  function getCurrentStep() {
+    var active = document.querySelector('.step.active');
+    if (!active) return 1;
+    var id = active.id || '';
+    return parseInt(id.replace('step-',''), 10) || 1;
+  }
+
+  window.saveProgress = saveProgress;
+  function saveProgress(triggerEmail) {
+    var email = (document.getElementById('f-email') || {}).value || '';
+    var firstName = (document.getElementById('f-first') || {}).value || '';
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return; // can't save without email
+
+    var step = getCurrentStep();
+    var formData = captureFormState();
+
+    fetch(SAVE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, firstName: firstName, step: step, formData: formData })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data.ok && data.token) {
+        savedToken = data.token;
+        lastSavedStep = step;
+        if (triggerEmail && !emailSent) {
+          sendResumeEmail();
+        }
+      }
+    })
+    .catch(function(e){ console.warn('Save progress failed:', e); });
+  }
+
+  function sendResumeEmail() {
+    if (!savedToken || emailSent) return;
+    emailSent = true;
+    fetch(EMAIL_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: savedToken })
+    }).catch(function(e){ console.warn('Resume email failed:', e); });
+  }
+
+  // Auto-save after each step advance (hook into nextStep)
+  var _origNextStep = window.nextStep;
+  window.nextStep = function(n) {
+    _origNextStep(n);
+    // Save after step 1 (when we have email) and on every subsequent step
+    if (n >= 1) {
+      setTimeout(function(){ saveProgress(false); }, 500);
+    }
+  };
+
+  // Send resume email on abandonment signals (only if step 2+)
+  // 1. Tab visibility change (user switches away)
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'hidden' && getCurrentStep() >= 2) {
+      saveProgress(true);
+    }
+  });
+
+  // 2. Before unload (tab close / navigate away)
+  window.addEventListener('beforeunload', function(){
+    if (getCurrentStep() >= 2) {
+      // Use sendBeacon for reliability
+      var email = (document.getElementById('f-email') || {}).value || '';
+      var firstName = (document.getElementById('f-first') || {}).value || '';
+      if (email && savedToken && !emailSent) {
+        navigator.sendBeacon(EMAIL_URL, JSON.stringify({ token: savedToken }));
+      } else if (email && !savedToken) {
+        // Last-ditch save via sendBeacon
+        var formData = captureFormState();
+        navigator.sendBeacon(SAVE_URL, JSON.stringify({ email: email, firstName: firstName, step: getCurrentStep(), formData: formData }));
       }
     }
   });

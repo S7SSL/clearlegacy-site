@@ -33,6 +33,7 @@ import { handleAdmin } from './handlers/admin';
 import { handleAuth } from './handlers/auth';
 import { handleAccount } from './handlers/account';
 import { handleChat } from './handlers/chat';
+import { handleSaveProgress, handleSendResumeEmail, handleResume } from './handlers/save-progress';
 
 export interface Env {
   // Storage
@@ -108,6 +109,12 @@ export default {
         response = await handlePdfDownload(request, env);
       } else if (url.pathname === '/api/chat' && request.method === 'POST') {
         response = await handleChat(request, env);
+      } else if (url.pathname === '/api/save-progress' && request.method === 'POST') {
+        response = await handleSaveProgress(request, env);
+      } else if (url.pathname === '/api/save-progress/send-email' && request.method === 'POST') {
+        response = await handleSendResumeEmail(request, env);
+      } else if (url.pathname === '/api/resume' && request.method === 'GET') {
+        response = await handleResume(request, env);
       } else if (url.pathname === '/api/healthz' && request.method === 'GET') {
         response = new Response('ok', { status: 200 });
       } else if (url.pathname.startsWith('/api/auth/')) {
