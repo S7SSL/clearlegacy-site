@@ -340,7 +340,7 @@ const stepNudges = {
   1: '',
   2: '🔒 Your data is encrypted and never shared with third parties.',
   3: '⏱ Most people complete this in under 20 minutes.',
-  4: 'Executors can also be beneficiaries — that's perfectly normal.',
+  4: "Executors can also be beneficiaries — that’s perfectly normal.",
   5: '📝 You can update your Will at any time if your circumstances change.',
   6: '⚖️ Nearly done — just your wishes and a final review to go.',
   7: '✅ Review everything below, then pay securely via Stripe.'
@@ -419,7 +419,7 @@ function validateStep(n){
     const hasPartner = document.querySelector('input[name="has-partner"]:checked');
     if (product === 'mirror') {
       if (!hasPartner || hasPartner.value !== 'yes') {
-        showFormError('Mirror Wills cover both partners. Please tick "Yes" and add your partner’s details, or change to Single Will at the final step.');
+        showFormError("Mirror Wills cover both partners. Please tick ‘Yes’ and add your partner’s details, or change to Single Will at the final step.");
         return false;
       }
     }
@@ -428,9 +428,9 @@ function validateStep(n){
       return false;
     }
     if (hasPartner.value === 'yes') {
-      if (!need('p-first', 'your partner’s first name')) return false;
-      if (!need('p-last', 'your partner’s last name')) return false;
-      if (!need('p-dob', 'your partner’s date of birth')) return false;
+      if (!need(‘p-first’, "your partner’s first name")) return false;
+      if (!need(‘p-last’, "your partner’s last name")) return false;
+      if (!need(‘p-dob’, "your partner’s date of birth")) return false;
       if (!needRadio('partner-primary', 'how you wish to leave your estate to your partner')) return false;
     }
     return true;
@@ -446,7 +446,7 @@ function validateStep(n){
         if (txts.filter(Boolean).length >= 2) validChildren++;
       });
       if (validChildren < 1) {
-        showFormError('You said you have children — please add at least one child’s details, or change your answer above.');
+        showFormError("You said you have children — please add at least one child’s details, or change your answer above.");
         return false;
       }
     }
