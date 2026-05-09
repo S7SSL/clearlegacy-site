@@ -432,7 +432,7 @@ const stepLabels = ['About You','Your Partner','Children & Dependants','Your Exe
 try {
   var _fsParams = { form_name: 'will_questionnaire', step_number: 1, step_name: 'about_you' };
   if(typeof gtag==='function') gtag('event', 'form_start', _fsParams);
-  if(typeof fbq==='function') fbq('trackCustom', 'FormStart', _fsParams);
+  if(typeof fbq==='function') fbq('track', 'Lead', _fsParams);
   if(window.uetq) window.uetq.push('event', 'form_start', _fsParams);
 } catch(e){}
 
@@ -492,7 +492,7 @@ function nextStep(n){
     var evName = 'form_step_complete';
     var params = { step_number: n, step_name: stepNames[n-1] || ('step_'+n), form_name: 'will_questionnaire' };
     if(typeof gtag==='function') gtag('event', evName, params);
-    if(typeof fbq==='function') fbq('trackCustom', 'FormStepComplete', params);
+    if(typeof fbq==='function') fbq('track', 'CompleteRegistration', params);
     if(window.uetq) window.uetq.push('event', evName, params);
   } catch(e){}
 }
