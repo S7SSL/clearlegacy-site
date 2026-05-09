@@ -122,6 +122,29 @@ footer a:hover{text-decoration:underline}
 
 .quick-fill-btn { background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer; margin-left:8px; font-weight:500; transition:all 0.15s; }
 .quick-fill-btn:hover { background:#dbeafe; border-color:#3b82f6; }
+/* PRE-QUALIFYING FLOW (Farewill-style screening, 6 yes/no questions) */
+#qualify-wrap{max-width:680px;margin:0 auto;padding:32px 4% 60px;display:none}
+.qualify-progress{padding:0 0 32px}
+.qualify-progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--grey);letter-spacing:0.5px;margin-bottom:12px;text-transform:uppercase;font-weight:500}
+.qualify-step{display:none}
+.qualify-step.active{display:block}
+.qualify-step-num{font-size:12px;color:var(--blue);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.qualify-title{font-size:30px;color:var(--dark);margin-bottom:28px;line-height:1.3;font-weight:600;letter-spacing:-0.5px}
+.qualify-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.qualify-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:32px 24px;cursor:pointer;transition:all .18s;text-align:left;font-family:'Inter',sans-serif;color:inherit;display:block;width:100%;min-height:140px}
+.qualify-card:hover{border-color:var(--blue);background:var(--light-blue);transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,0.12)}
+.qualify-card.selected{border-color:var(--blue);background:var(--light-blue);box-shadow:0 0 0 3px rgba(37,99,235,0.18)}
+.qualify-card-answer{font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:-0.3px}
+.qualify-card-sub{font-size:13px;color:var(--grey);line-height:1.5;min-height:36px}
+.qualify-nav{display:flex;align-items:center;margin-top:6px}
+.qualify-back{background:none;border:none;color:var(--grey);font-size:13px;cursor:pointer;padding:8px 12px;border-radius:6px;font-weight:600;transition:all .15s;letter-spacing:0.3px;text-transform:uppercase}
+.qualify-back:hover{color:var(--blue);background:var(--light-blue)}
+@media(max-width:600px){
+  .qualify-cards{grid-template-columns:1fr}
+  .qualify-title{font-size:24px}
+  .qualify-card{min-height:auto;padding:22px 18px}
+  .qualify-card-sub{min-height:0}
+}
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J3GPRFYR2Q"></script>
@@ -186,11 +209,111 @@ fbq('track', 'PageView');
   <span id="trust-price">💷 Single Will — £69 · Mirror Wills — £99</span>
 </div>
 
-<div class="progress-wrap">  <div class="progress-bar">  <div class="steps-label">  <span id="step-label">Part 1 — About You</span>  <span id="step-pct">14%</span>  </div>  <div class="bar-track"><div class="bar-fill" id="bar" style="width:14%"></div></div>  </div>
+<!-- PRE-QUALIFYING FLOW (shown first; transitions into the existing form after Q6) -->
+<div id="qualify-wrap">
+  <div class="qualify-progress">
+    <div class="qualify-progress-label">
+      <span id="q-step-label">Step 1 of 6</span>
+      <span id="q-step-pct">17%</span>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="q-bar" style="width:17%"></div></div>
+  </div>
+  <div class="qualify-step active" data-q="1">
+    <div class="qualify-step-num">Step 1 of 6</div>
+    <h2 class="qualify-title">Do you have a partner?</h2>
+    <div class="qualify-cards">
+      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(1,'no')">
+        <div class="qualify-card-answer">No</div>
+        <div class="qualify-card-sub">Including separated, divorced or widowed</div>
+      </button>
+      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(1,'yes')">
+        <div class="qualify-card-answer">Yes</div>
+        <div class="qualify-card-sub">Including engaged or living with a partner</div>
+      </button>
+    </div>
+  </div>
+  <div class="qualify-step" data-q="2">
+    <div class="qualify-step-num">Step 2 of 6</div>
+    <h2 class="qualify-title">Do you have any children?</h2>
+    <div class="qualify-cards">
+      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(2,'no')">
+        <div class="qualify-card-answer">No</div>
+        <div class="qualify-card-sub">Including if you only have step children</div>
+      </button>
+      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(2,'yes')">
+        <div class="qualify-card-answer">Yes</div>
+        <div class="qualify-card-sub">&nbsp;</div>
+      </button>
+    </div>
+    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(2)">← Back</button></div>
+  </div>
+  <div class="qualify-step" data-q="3">
+    <div class="qualify-step-num">Step 3 of 6</div>
+    <h2 class="qualify-title">Do you own your home?</h2>
+    <div class="qualify-cards">
+      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(3,'no')">
+        <div class="qualify-card-answer">No</div>
+        <div class="qualify-card-sub">&nbsp;</div>
+      </button>
+      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(3,'yes')">
+        <div class="qualify-card-answer">Yes</div>
+        <div class="qualify-card-sub">Including with a mortgage or jointly</div>
+      </button>
+    </div>
+    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(3)">← Back</button></div>
+  </div>
+  <div class="qualify-step" data-q="4">
+    <div class="qualify-step-num">Step 4 of 6</div>
+    <h2 class="qualify-title">Do you live in England or Wales?</h2>
+    <div class="qualify-cards">
+      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(4,'no')">
+        <div class="qualify-card-answer">No</div>
+        <div class="qualify-card-sub">&nbsp;</div>
+      </button>
+      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(4,'yes')">
+        <div class="qualify-card-answer">Yes</div>
+        <div class="qualify-card-sub">&nbsp;</div>
+      </button>
+    </div>
+    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(4)">← Back</button></div>
+  </div>
+  <div class="qualify-step" data-q="5">
+    <div class="qualify-step-num">Step 5 of 6</div>
+    <h2 class="qualify-title">Is everything you own in the UK?</h2>
+    <div class="qualify-cards">
+      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(5,'no')">
+        <div class="qualify-card-answer">No</div>
+        <div class="qualify-card-sub">Including bank accounts, property, stocks and shares</div>
+      </button>
+      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(5,'yes')">
+        <div class="qualify-card-answer">Yes</div>
+        <div class="qualify-card-sub">&nbsp;</div>
+      </button>
+    </div>
+    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(5)">← Back</button></div>
+  </div>
+  <div class="qualify-step" data-q="6">
+    <div class="qualify-step-num">Step 6 of 6</div>
+    <h2 class="qualify-title">Do you own a business?</h2>
+    <div class="qualify-cards">
+      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(6,'no')">
+        <div class="qualify-card-answer">No</div>
+        <div class="qualify-card-sub">&nbsp;</div>
+      </button>
+      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(6,'yes')">
+        <div class="qualify-card-answer">Yes</div>
+        <div class="qualify-card-sub">Either as a sole trader, a partnership, limited liability partnership or as a limited company</div>
+      </button>
+    </div>
+    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(6)">← Back</button></div>
+  </div>
+</div>
+
+<div class="progress-wrap" style="display:none">  <div class="progress-bar">  <div class="steps-label">  <span id="step-label">Part 1 — About You</span>  <span id="step-pct">14%</span>  </div>  <div class="bar-track"><div class="bar-fill" id="bar" style="width:14%"></div></div>  </div>
 </div>
 <div id="step-nudge" style="display:none;text-align:center;padding:10px 5%;font-size:13px;color:#374151;font-family:'Inter',sans-serif;background:#f0fdf4;border-bottom:1px solid #bbf7d0;font-weight:500;"></div>
 
-<div class="form-wrap">
+<div class="form-wrap" style="display:none">
 
 <!-- STEP 1: ABOUT YOU -->
 <div class="step active" id="step-1">  <div class="step-header">  <div class="step-num">Part 1</div>  <h2 class="step-title">About You</h2>  <p class="step-sub">A few quick details to identify you as the person making this Will. Takes about 2 minutes.</p>  </div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="f-first" placeholder="e.g. James" required></div>  <div class="field"><label>Last Name</label><input type="text" id="f-last" placeholder="e.g. Hargreaves" required></div>  </div>  <div class="field"><label>Email Address</label><input type="email" id="f-email" placeholder="We'll send your completed Will here" required></div>  <div class="field"><label>Date of Birth</label><input type="date" id="f-dob" required></div>  <div class="field"><label>Marital Status</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="marital" value="single"> Single</label>  <label class="radio-opt"><input type="radio" name="marital" value="married"> Married</label>  <label class="radio-opt"><input type="radio" name="marital" value="civil-partner"> Civil Partner</label>  <label class="radio-opt"><input type="radio" name="marital" value="divorced"> Divorced</label>  <label class="radio-opt"><input type="radio" name="marital" value="widowed"> Widowed</label>  <label class="radio-opt"><input type="radio" name="marital" value="cohabiting"> Cohabiting</label>  </div>  </div>  <div class="field"><label>Address Line 1</label><input type="text" id="f-addr1" placeholder="House number and street" required></div>  <div class="field"><label>Address Line 2 (optional)</label><input type="text" id="f-addr2" placeholder="Flat, apartment, etc."></div>  <div class="field-row">  <div class="field"><label>City / Town</label><input type="text" id="f-city" required></div>  <div class="field"><label>Postcode</label><input type="text" id="f-post" placeholder="e.g. SW1A 1AA" required></div>  </div>  <div class="field"><label>Phone Number (optional)</label><input type="tel" id="f-phone" placeholder="In case we need to clarify anything"></div>  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
@@ -889,7 +1012,89 @@ function applyPayFirstMode(){
     if(btn){ btn.textContent = 'Submit Questionnaire →'; }
   } catch(e) { /* ignore */ }
 }
-function bootstrapForm(){ applyStoredProduct(); applyPayFirstMode(); updateResiduaryVisibility(); }
+// === Pre-qualifying questions (Farewill-style screening) ===
+var qualifyAnswers = {};
+var qualifyCurrent = 1;
+var qualifyTotal = 6;
+var qualifyKeys = {1:'has_partner',2:'has_children',3:'owns_home',4:'lives_in_england_wales',5:'all_assets_in_uk',6:'owns_business'};
+var QUALIFY_KEY = 'cl_qualify_v1';
+
+function showQualifyStep(n){
+  document.querySelectorAll('.qualify-step').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.querySelector('.qualify-step[data-q="' + n + '"]');
+  if(el) el.classList.add('active');
+  var pct = Math.round((n / qualifyTotal) * 100);
+  var bar = document.getElementById('q-bar');     if(bar) bar.style.width = pct + '%';
+  var lbl = document.getElementById('q-step-label'); if(lbl) lbl.textContent = 'Step ' + n + ' of ' + qualifyTotal;
+  var pe  = document.getElementById('q-step-pct');   if(pe)  pe.textContent  = pct + '%';
+  window.scrollTo(0, 0);
+}
+
+function selectQualify(qNum, value){
+  qualifyAnswers[qualifyKeys[qNum]] = value;
+  try { localStorage.setItem(QUALIFY_KEY, JSON.stringify(qualifyAnswers)); } catch(e){}
+  document.querySelectorAll('.qualify-step[data-q="' + qNum + '"] .qualify-card').forEach(function(c){ c.classList.remove('selected'); });
+  var card = document.querySelector('.qualify-step[data-q="' + qNum + '"] .qualify-card[data-value="' + value + '"]');
+  if(card) card.classList.add('selected');
+  // Funnel telemetry
+  try {
+    if(typeof gtag === 'function') gtag('event', 'qualify_answer', { question: qualifyKeys[qNum], answer: value, step_number: qNum, form_name: 'will_questionnaire' });
+  } catch(e){}
+  if(qNum < qualifyTotal){
+    setTimeout(function(){ qualifyCurrent = qNum + 1; showQualifyStep(qualifyCurrent); }, 220);
+  } else {
+    setTimeout(finishQualify, 220);
+  }
+}
+
+function prevQualify(qNum){
+  if(qNum <= 1) return;
+  qualifyCurrent = qNum - 1;
+  showQualifyStep(qualifyCurrent);
+}
+
+function applyQualifyHints(){
+  function setRadio(name, value){
+    var r = document.querySelector('input[name="' + name + '"][value="' + value + '"]');
+    if(r){ r.checked = true; r.dispatchEvent(new Event('change', {bubbles:true})); }
+  }
+  if(qualifyAnswers.has_partner === 'yes' || qualifyAnswers.has_partner === 'no') setRadio('has-partner', qualifyAnswers.has_partner);
+  if(qualifyAnswers.has_children === 'yes' || qualifyAnswers.has_children === 'no') setRadio('has-children', qualifyAnswers.has_children);
+  if(qualifyAnswers.owns_home === 'yes' || qualifyAnswers.owns_home === 'no') setRadio('has-property', qualifyAnswers.owns_home);
+}
+
+function finishQualify(){
+  var qw = document.getElementById('qualify-wrap');
+  if(qw) qw.style.display = 'none';
+  document.querySelectorAll('.progress-wrap, .form-wrap').forEach(function(el){ el.style.display = ''; });
+  applyQualifyHints();
+  if(typeof showStep === 'function') showStep(1);
+  try {
+    if(typeof gtag === 'function') gtag('event', 'qualify_complete', { form_name: 'will_questionnaire' });
+  } catch(e){}
+}
+
+function bootstrapQualify(){
+  var params = new URLSearchParams(window.location.search);
+  var ref = params.get('ref');
+  var resume = params.get('resume');
+  var saved = null;
+  try { var raw = localStorage.getItem(QUALIFY_KEY); if(raw){ saved = JSON.parse(raw); } } catch(e){}
+  var allAnswered = saved && Object.keys(qualifyKeys).every(function(k){ return saved[qualifyKeys[k]]; });
+  if(ref || resume || allAnswered){
+    if(saved){ qualifyAnswers = saved; applyQualifyHints(); }
+    var qw = document.getElementById('qualify-wrap');
+    if(qw) qw.style.display = 'none';
+    document.querySelectorAll('.progress-wrap, .form-wrap').forEach(function(el){ el.style.display = ''; });
+    return;
+  }
+  document.querySelectorAll('.progress-wrap, .form-wrap').forEach(function(el){ el.style.display = 'none'; });
+  var qw2 = document.getElementById('qualify-wrap');
+  if(qw2) qw2.style.display = 'block';
+  showQualifyStep(1);
+}
+
+function bootstrapForm(){ bootstrapQualify(); applyStoredProduct(); applyPayFirstMode(); updateResiduaryVisibility(); }
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', bootstrapForm);
 } else {
@@ -1020,6 +1225,13 @@ function buildNotes(residuaryDetail){
   const funeralWishes = document.querySelector('#step-6 textarea');
   const additional = document.querySelectorAll('#step-6 textarea')[1];
 
+  // Pre-qualifying answers (always include if present)
+  try {
+    var qLabels = {has_partner:'Has partner',has_children:'Has children',owns_home:'Owns home',lives_in_england_wales:'Lives in England/Wales',all_assets_in_uk:'All assets in UK',owns_business:'Owns business'};
+    var qLines = Object.keys(qualifyKeys).map(function(k){ var key = qualifyKeys[k]; var v = qualifyAnswers[key]; return v ? (qLabels[key] + ': ' + v) : null; }).filter(Boolean);
+    if(qLines.length) parts.push('QUALIFYING: ' + qLines.join(' · '));
+  } catch(e){}
+
   if(residuaryDetail){
     parts.push('RESIDUARY DETAIL: ' + residuaryDetail);
   }
@@ -1072,7 +1284,8 @@ function buildWorkerPayload(){
     residuary: buildResiduary(children),
     funeralWishes: funeralWishes,
     notes: [buildNotes(residDetail), additional].filter(Boolean).join('\n\n'),
-    marketingOptIn: false
+    marketingOptIn: false,
+    qualifying: (typeof qualifyAnswers === 'object' && qualifyAnswers) ? qualifyAnswers : {}
   };
 
   // Mirror wills: include partner
@@ -1149,6 +1362,12 @@ function fireLegacyBackup(){
       if(el.type === 'radio' || el.type === 'checkbox'){ if(el.checked) legacy[key] = el.value; }
       else if(el.value != null && el.value !== ''){ legacy[key] = el.value; }
     });
+    // Pre-qualifying answers — flatten as qualify_<key>=value so Formspree captures them
+    try {
+      if(typeof qualifyAnswers === 'object' && qualifyAnswers){
+        Object.keys(qualifyAnswers).forEach(function(k){ legacy['qualify_' + k] = qualifyAnswers[k]; });
+      }
+    } catch(e) {}
     const opts = {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
