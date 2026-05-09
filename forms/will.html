@@ -536,6 +536,13 @@ function validateStep(n){
     if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       showFormError('Please enter a valid email address.'); return false;
     }
+    // UK postcode check — ClearLegacy only writes Wills under the Wills Act 1837
+    // (England & Wales). Reject non-UK postcodes here so they don't reach Stripe.
+    const post = (document.getElementById('f-post').value || '').trim().toUpperCase().replace(/\s+/g,'');
+    const UK_POSTCODE_RE = /^(GIR0AA|[A-PR-UWYZ](?:\d{1,2}|[A-HK-Y]\d|[A-HK-Y]\d\d|\d[A-HJKSTUW]|[A-HK-Y]\d[ABEHMNPRV-Y])\d[ABD-HJLNP-UW-Z]{2})$/;
+    if (!UK_POSTCODE_RE.test(post)) {
+      showFormError('ClearLegacy serves England & Wales only. Please enter a valid UK postcode (e.g. SW1A 1AA).'); return false;
+    }
     return true;
   }
   if (n === 2) {

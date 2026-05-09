@@ -46,6 +46,15 @@ function normaliseArray<T>(v: unknown, mapper: (item: any) => T, max = 20): T[] 
   return v.slice(0, max).map(mapper);
 }
 
+
+// UK postcode regex — full-format match anywhere within an address string.
+// Source: standard UK government postcode pattern.
+const UK_POSTCODE_RE = /\b(GIR\s?0AA|[A-PR-UWYZ](?:\d{1,2}|[A-HK-Y]\d|[A-HK-Y]\d\d|\d[A-HJKSTUW]|[A-HK-Y]\d[ABEHMNPRV-Y])\s?\d[ABD-HJLNP-UW-Z]{2})\b/i;
+function hasUkPostcode(addr: string): boolean {
+  if (!addr) return false;
+  return UK_POSTCODE_RE.test(addr.toUpperCase());
+}
+
 function validate(body: any): { ok: true; data: Omit<QuestionnaireData, 'ref' | 'createdAt'> } | { ok: false; error: string } {
   if (!body || typeof body !== 'object') return { ok: false, error: 'Body must be an object' };
 
@@ -55,11 +64,16 @@ function validate(body: any): { ok: true; data: Omit<QuestionnaireData, 'ref' | 
   if (!isNonEmptyString(testator.fullName)) return { ok: false, error: 'testator.fullName required' };
   if (!isNonEmptyString(testator.address)) return { ok: false, error: 'testator.address required' };
   if (!testator.email || !isEmail(testator.email)) return { ok: false, error: 'testator.email required and must be valid' };
+  // Jurisdiction check: ClearLegacy services England & Wales only (Wills Act 1837).
+  // Reject any address that doesn't contain a recognisable UK postcode so that
+  // fraud / wrong-jurisdiction leads never proceed to PDF generation.
+  if (!hasUkPostcode(testator.address)) return { ok: false, error: 'testator.address must contain a UK postcode (England & Wales only)' };
 
   const partner = product === 'mirror' ? normalisePerson(body.partner) : undefined;
   if (product === 'mirror' && partner) {
     if (!isNonEmptyString(partner.fullName)) return { ok: false, error: 'partner.fullName required for mirror wills' };
     if (!isNonEmptyString(partner.address)) return { ok: false, error: 'partner.address required for mirror wills' };
+    if (!hasUkPostcode(partner.address)) return { ok: false, error: 'partner.address must contain a UK postcode (England & Wales only)' };
   }
 
   const executors = normaliseArray(body.executors, (e) => ({
