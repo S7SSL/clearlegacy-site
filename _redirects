@@ -19,3 +19,12 @@
 /probate                 /probate/                     301
 /pricing                 /pricing/                     301
 /guides                  /guides/                      301
+
+# Consolidate duplicate flat .html SEO pages -> canonical directory versions
+/online-will-uk.html                     /online-will-uk/                         301
+/cheap-will-uk.html                      /cheap-will-uk/                          301
+/legally-valid-will-uk.html              /legally-valid-will-uk/                  301
+/mirror-wills-uk.html                    /mirror-wills-uk/                        301
+/fixed-fee-will-uk.html                  /fixed-fee-wills-uk/                     301
+/best-online-will-service-uk.html        /best-online-will-uk/                    301
+/make-a-will-online-uk.html              /make-a-will-online-uk/                  301
