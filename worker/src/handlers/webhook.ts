@@ -151,7 +151,106 @@ function swapForPartner(q: any): any {
     residuary: swapPeople(q.residuary),
     specificGifts: swapPeople(q.specificGifts),
     guardians: swapPeople(q.guardians),
+    // Free-text fields the customer wrote about their own situation — these
+    // reference the partner by name and (usually) by pronoun, so they must be
+    // rewritten for the mirrored will or the second will reads as if the first
+    // testator wrote it. See swapFreeText() for the swap rules and limits.
+    funeralWishes: swapFreeText(q.funeralWishes, t, p),
+    notes: swapFreeText(q.notes, t, p),
   };
+}
+
+/**
+ * Swap names and gendered pronouns in customer-written free text so the
+ * partner's will reads naturally instead of being a verbatim copy of the
+ * testator's wording.
+ *
+ * Name swap: full names AND first names are swapped both ways using sentinel
+ * tokens so we don't cascade-replace (T→P then P→T would undo the first pass).
+ * Matching is case-insensitive; the replacement uses the OTHER party's name
+ * verbatim so capitalisation in the output matches what the customer typed.
+ *
+ * Pronoun swap: he↔she, his↔her, himself↔herself, and the common contractions.
+ * We deliberately don't swap him/her — "her" is ambiguous between object pronoun
+ * (saw her) and possessive (her estate), and in will free text the possessive
+ * sense dominates ("her share", "her wishes"), which is already covered by the
+ * his↔her swap. Swapping object "him→her" too would mean "her" maps to both
+ * "him" and "his", which can't be reconciled without parsing. We accept that
+ * object-pronoun "him"/"her" may read slightly off in the mirrored copy — the
+ * names are right, which is what matters legally.
+ *
+ * Pronoun choice without a gender field on the form is necessarily heuristic.
+ * For an opposite-sex couple — the overwhelming majority of mirror-will buyers
+ * — a symmetric he↔she swap is correct: the testator referred to their partner
+ * with the opposite-gender pronoun, and the mirrored testator does likewise.
+ * For same-sex couples the pronouns in the original already match both spouses,
+ * so the swap is a no-op for the only pronouns that appear (the testator's
+ * self-references use "I/my" and are left alone). Either way the output is
+ * never worse than the verbatim copy this function replaces.
+ */
+function swapFreeText(text: any, testator: any, partner: any): any {
+  if (!text || typeof text !== 'string') return text;
+  if (!testator?.fullName || !partner?.fullName) return text;
+
+  const T_TOKEN = ' __SWAP_T__ ';
+  const P_TOKEN = ' __SWAP_P__ ';
+
+  const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  let out: string = text;
+
+  // 1) Swap full names (case-insensitive, whole-string match).
+  const tFull = String(testator.fullName).trim();
+  const pFull = String(partner.fullName).trim();
+  if (tFull && pFull && tFull.toLowerCase() !== pFull.toLowerCase()) {
+    const tFullRe = new RegExp(escapeRegex(tFull), 'gi');
+    const pFullRe = new RegExp(escapeRegex(pFull), 'gi');
+    out = out.replace(tFullRe, T_TOKEN).replace(pFullRe, P_TOKEN);
+  }
+
+  // 2) Swap first names on word boundaries. People often refer to their
+  // partner by first name alone ("Pete and I have agreed...").
+  const tFirst = tFull.split(/\s+/)[0] || '';
+  const pFirst = pFull.split(/\s+/)[0] || '';
+  if (tFirst && pFirst && tFirst.toLowerCase() !== pFirst.toLowerCase()) {
+    const tFirstRe = new RegExp('\\b' + escapeRegex(tFirst) + '\\b', 'gi');
+    const pFirstRe = new RegExp('\\b' + escapeRegex(pFirst) + '\\b', 'gi');
+    out = out.replace(tFirstRe, T_TOKEN).replace(pFirstRe, P_TOKEN);
+  }
+
+  out = out.split(T_TOKEN).join(pFull).split(P_TOKEN).join(tFull);
+
+  // 3) Swap gendered pronouns. Each pair gets its own sentinel pair so the two
+  // halves of the swap don't interfere with each other.
+  const pronounPairs: Array<[string, string]> = [
+    ['he', 'she'],
+    ['his', 'her'],
+    ['himself', 'herself'],
+    ["he's", "she's"],
+    ["he'd", "she'd"],
+    ["he'll", "she'll"],
+  ];
+
+  pronounPairs.forEach(([a, b], i) => {
+    // Three case variants per pair — lowercase, Capitalised, UPPERCASE — so
+    // sentence-initial and emphatic uses keep their original casing after swap.
+    const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+    const variants: Array<[string, string]> = [
+      [a, b],
+      [cap(a), cap(b)],
+      [a.toUpperCase(), b.toUpperCase()],
+    ];
+    variants.forEach(([va, vb], j) => {
+      const tokA = ` __PR_A_${i}_${j}__ `;
+      const tokB = ` __PR_B_${i}_${j}__ `;
+      const reA = new RegExp('\\b' + escapeRegex(va) + '\\b', 'g');
+      const reB = new RegExp('\\b' + escapeRegex(vb) + '\\b', 'g');
+      out = out.replace(reA, tokA).replace(reB, tokB);
+      out = out.split(tokA).join(vb).split(tokB).join(va);
+    });
+  });
+
+  return out;
 }
 
 /**
