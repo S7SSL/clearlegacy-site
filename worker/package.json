@@ -4,8 +4,8 @@
   "private": true,
   "description": "Cloudflare Worker — questionnaire intake, Stripe webhook, Will PDF generation and delivery.",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --config wrangler.toml --x-autoconfig=false",
+    "deploy": "wrangler deploy --config wrangler.toml --x-autoconfig=false",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
