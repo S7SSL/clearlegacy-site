@@ -60,3 +60,22 @@ EMAIL_FROM = "Clear Legacy <no-reply@clearlegacy.co.uk>"
 # Cron — watchdog runs every 2 minutes (auto-fails stuck-generating leads)
 [triggers]
 crons = ["*/2 * * * *"]
+
+# --- Observability ---
+# Mirrors what's enabled in the Cloudflare dashboard so config stays consistent
+# across deployments. The top-level `enabled = false` is intentional: each
+# sub-section (logs, traces) controls itself independently.
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = true
+persist = true
+head_sampling_rate = 1
