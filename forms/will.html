@@ -219,94 +219,58 @@ fbq('track', 'PageView');
     <div class="bar-track"><div class="bar-fill" id="q-bar" style="width:17%"></div></div>
   </div>
   <div class="qualify-step active" data-q="1">
-    <div class="qualify-step-num">Step 1 of 6</div>
-    <h2 class="qualify-title">Do you have a partner?</h2>
-    <div class="qualify-cards">
-      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(1,'no')">
-        <div class="qualify-card-answer">No</div>
-        <div class="qualify-card-sub">Including separated, divorced or widowed</div>
-      </button>
-      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(1,'yes')">
-        <div class="qualify-card-answer">Yes</div>
-        <div class="qualify-card-sub">Including engaged or living with a partner</div>
-      </button>
+    <div class="qualify-step-num">A few quick questions</div>
+    <h2 class="qualify-title" style="font-size:24px;margin-bottom:8px">A few quick questions to tailor your will</h2>
+    <p style="color:var(--grey);font-size:14px;margin-bottom:24px;line-height:1.5">Takes 30 seconds. We use these to pre-fill the rest of the form and make sure ClearLegacy is the right fit for your situation.</p>
+    <div class="qualify-inline-list">
+      <style>
+        .qualify-inline-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+        .qualify-inline-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:10px}
+        .qualify-inline-q{font-size:14.5px;color:var(--dark);font-weight:500;line-height:1.4}
+        .qualify-inline-q small{display:block;color:var(--grey);font-size:12px;font-weight:400;margin-top:2px}
+        .qualify-inline-btn{background:#fff;color:var(--grey);border:1px solid var(--border);padding:8px 18px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;transition:all .15s;font-family:'Inter',sans-serif;min-width:60px}
+        .qualify-inline-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--light-blue)}
+        .qualify-inline-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff}
+        @media(max-width:600px){
+          .qualify-inline-row{grid-template-columns:1fr 60px 60px;gap:6px;padding:12px}
+          .qualify-inline-q{font-size:13.5px}
+        }
+      </style>
+      <div class="qualify-inline-row">
+        <div class="qualify-inline-q">Do you have a partner?<small>Including engaged or cohabiting</small></div>
+        <button type="button" class="qualify-inline-btn" data-q="1" data-v="no" onclick="setInlineQualify(1,'no',this)">No</button>
+        <button type="button" class="qualify-inline-btn" data-q="1" data-v="yes" onclick="setInlineQualify(1,'yes',this)">Yes</button>
+      </div>
+      <div class="qualify-inline-row">
+        <div class="qualify-inline-q">Do you have any children?<small>Including step-children if you wish to include them</small></div>
+        <button type="button" class="qualify-inline-btn" data-q="2" data-v="no" onclick="setInlineQualify(2,'no',this)">No</button>
+        <button type="button" class="qualify-inline-btn" data-q="2" data-v="yes" onclick="setInlineQualify(2,'yes',this)">Yes</button>
+      </div>
+      <div class="qualify-inline-row">
+        <div class="qualify-inline-q">Do you own your home?<small>Including a mortgaged property</small></div>
+        <button type="button" class="qualify-inline-btn" data-q="3" data-v="no" onclick="setInlineQualify(3,'no',this)">No</button>
+        <button type="button" class="qualify-inline-btn" data-q="3" data-v="yes" onclick="setInlineQualify(3,'yes',this)">Yes</button>
+      </div>
+      <div class="qualify-inline-row">
+        <div class="qualify-inline-q">Do you live in England or Wales?<small>ClearLegacy serves England & Wales only</small></div>
+        <button type="button" class="qualify-inline-btn" data-q="4" data-v="no" onclick="setInlineQualify(4,'no',this)">No</button>
+        <button type="button" class="qualify-inline-btn" data-q="4" data-v="yes" onclick="setInlineQualify(4,'yes',this)">Yes</button>
+      </div>
+      <div class="qualify-inline-row">
+        <div class="qualify-inline-q">Is everything you own in the UK?<small>No foreign property or assets</small></div>
+        <button type="button" class="qualify-inline-btn" data-q="5" data-v="no" onclick="setInlineQualify(5,'no',this)">No</button>
+        <button type="button" class="qualify-inline-btn" data-q="5" data-v="yes" onclick="setInlineQualify(5,'yes',this)">Yes</button>
+      </div>
+      <div class="qualify-inline-row">
+        <div class="qualify-inline-q">Do you own a business?<small>Sole traders OK · limited companies may need solicitor advice</small></div>
+        <button type="button" class="qualify-inline-btn" data-q="6" data-v="no" onclick="setInlineQualify(6,'no',this)">No</button>
+        <button type="button" class="qualify-inline-btn" data-q="6" data-v="yes" onclick="setInlineQualify(6,'yes',this)">Yes</button>
+      </div>
     </div>
-  </div>
-  <div class="qualify-step" data-q="2">
-    <div class="qualify-step-num">Step 2 of 6</div>
-    <h2 class="qualify-title">Do you have any children?</h2>
-    <div class="qualify-cards">
-      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(2,'no')">
-        <div class="qualify-card-answer">No</div>
-        <div class="qualify-card-sub">Including if you only have step children</div>
-      </button>
-      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(2,'yes')">
-        <div class="qualify-card-answer">Yes</div>
-        <div class="qualify-card-sub">&nbsp;</div>
-      </button>
-    </div>
-    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(2)">← Back</button></div>
-  </div>
-  <div class="qualify-step" data-q="3">
-    <div class="qualify-step-num">Step 3 of 6</div>
-    <h2 class="qualify-title">Do you own your home?</h2>
-    <div class="qualify-cards">
-      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(3,'no')">
-        <div class="qualify-card-answer">No</div>
-        <div class="qualify-card-sub">&nbsp;</div>
-      </button>
-      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(3,'yes')">
-        <div class="qualify-card-answer">Yes</div>
-        <div class="qualify-card-sub">Including with a mortgage or jointly</div>
-      </button>
-    </div>
-    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(3)">← Back</button></div>
-  </div>
-  <div class="qualify-step" data-q="4">
-    <div class="qualify-step-num">Step 4 of 6</div>
-    <h2 class="qualify-title">Do you live in England or Wales?</h2>
-    <div class="qualify-cards">
-      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(4,'no')">
-        <div class="qualify-card-answer">No</div>
-        <div class="qualify-card-sub">&nbsp;</div>
-      </button>
-      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(4,'yes')">
-        <div class="qualify-card-answer">Yes</div>
-        <div class="qualify-card-sub">&nbsp;</div>
-      </button>
-    </div>
-    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(4)">← Back</button></div>
-  </div>
-  <div class="qualify-step" data-q="5">
-    <div class="qualify-step-num">Step 5 of 6</div>
-    <h2 class="qualify-title">Is everything you own in the UK?</h2>
-    <div class="qualify-cards">
-      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(5,'no')">
-        <div class="qualify-card-answer">No</div>
-        <div class="qualify-card-sub">Including bank accounts, property, stocks and shares</div>
-      </button>
-      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(5,'yes')">
-        <div class="qualify-card-answer">Yes</div>
-        <div class="qualify-card-sub">&nbsp;</div>
-      </button>
-    </div>
-    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(5)">← Back</button></div>
-  </div>
-  <div class="qualify-step" data-q="6">
-    <div class="qualify-step-num">Step 6 of 6</div>
-    <h2 class="qualify-title">Do you own a business?</h2>
-    <div class="qualify-cards">
-      <button type="button" class="qualify-card" data-value="no" onclick="selectQualify(6,'no')">
-        <div class="qualify-card-answer">No</div>
-        <div class="qualify-card-sub">&nbsp;</div>
-      </button>
-      <button type="button" class="qualify-card" data-value="yes" onclick="selectQualify(6,'yes')">
-        <div class="qualify-card-answer">Yes</div>
-        <div class="qualify-card-sub">Either as a sole trader, a partnership, limited liability partnership or as a limited company</div>
-      </button>
-    </div>
-    <div class="qualify-nav"><button type="button" class="qualify-back" onclick="prevQualify(6)">← Back</button></div>
-  </div>
+    <button type="button" id="qualify-continue-btn" onclick="finishQualifyInline()" disabled style="width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;opacity:.5;transition:opacity .15s;font-family:'Inter',sans-serif">Continue to your will →</button>
+    <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--grey)">
+      <a href="#" onclick="event.preventDefault();skipQualifyInline()" style="color:var(--grey);text-decoration:underline">Skip and start my will</a>
+    </p>
 </div>
 
 <div class="progress-wrap" style="display:none">  <div class="progress-bar">  <div class="steps-label">  <span id="step-label">Part 1 — About You</span>  <span id="step-pct">14%</span>  </div>  <div class="bar-track"><div class="bar-fill" id="bar" style="width:14%"></div></div>  </div>
@@ -1068,6 +1032,32 @@ function applyQualifyHints(){
   if(qualifyAnswers.has_partner === 'yes' || qualifyAnswers.has_partner === 'no') setRadio('has-partner', qualifyAnswers.has_partner);
   if(qualifyAnswers.has_children === 'yes' || qualifyAnswers.has_children === 'no') setRadio('has-children', qualifyAnswers.has_children);
   if(qualifyAnswers.owns_home === 'yes' || qualifyAnswers.owns_home === 'no') setRadio('has-property', qualifyAnswers.owns_home);
+}
+
+function setInlineQualify(q, v, btn){
+  var key = qualifyKeys[q];
+  if(!key) return;
+  qualifyAnswers[key] = v;
+  // Toggle visual selection for the pair
+  var row = btn.closest('.qualify-inline-row');
+  if(row){
+    row.querySelectorAll('.qualify-inline-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+  }
+  try { localStorage.setItem(QUALIFY_KEY, JSON.stringify(qualifyAnswers)); } catch(e){}
+  // Enable continue if all 6 answered
+  var allAnswered = Object.keys(qualifyKeys).every(function(k){ return qualifyAnswers[qualifyKeys[k]]; });
+  var cb = document.getElementById('qualify-continue-btn');
+  if(cb){
+    cb.disabled = !allAnswered;
+    cb.style.opacity = allAnswered ? '1' : '.5';
+  }
+  try { if(typeof gtag === 'function') gtag('event', 'qualify_answer', { question: key, answer: v, step_number: q, form_name: 'will_questionnaire' }); } catch(e){}
+}
+function finishQualifyInline(){ finishQualify(); }
+function skipQualifyInline(){
+  try { if(typeof gtag === 'function') gtag('event', 'qualify_skipped', { form_name: 'will_questionnaire' }); } catch(e){}
+  finishQualify();
 }
 
 function finishQualify(){
