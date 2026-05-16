@@ -540,6 +540,51 @@ async function handleDetailHtml(request: Request, env: Env): Promise<Response> {
       .join('');
   };
 
+  // Source / attribution panel — built from the data forms/will.html captures
+  // on landing (UTMs, click ids, referrer, landing URL). Older leads (created
+  // before this capture rolled out) won't have it — we show a friendly note.
+  const renderAttribution = (): string => {
+    const a = lead.attribution;
+    if (!a) {
+      return '<p class="meta">No attribution captured for this lead. (Older lead, or customer arrived directly.)</p>';
+    }
+    // Derive a one-line summary at the top so the source is obvious at a glance
+    let badge = 'Direct / unknown';
+    let badgeColor = '#6b7280';
+    if (a.gclid) { badge = 'Google Ads (gclid)'; badgeColor = '#1a73e8'; }
+    else if (a.fbclid) { badge = 'Meta Ads (fbclid)'; badgeColor = '#1877f2'; }
+    else if (a.ttclid) { badge = 'TikTok Ads (ttclid)'; badgeColor = '#000'; }
+    else if (a.msclkid) { badge = 'Microsoft Ads (msclkid)'; badgeColor = '#00a4ef'; }
+    else if (a.utmSource) { badge = `${a.utmSource}${a.utmMedium ? ' · ' + a.utmMedium : ''}`; badgeColor = '#7c3aed'; }
+    else if (a.referrer) {
+      try {
+        const host = new URL(a.referrer).hostname;
+        badge = `Referral: ${host}`;
+        badgeColor = '#059669';
+      } catch { /* invalid referrer URL — fall through */ }
+    }
+    const row = (label: string, value?: string): string =>
+      value ? `<div><label>${escapeHtml(label)}</label>${escapeHtml(value)}</div>` : '';
+    return `<div style="margin-bottom:12px">
+        <span style="background:${badgeColor};color:#fff;padding:4px 10px;border-radius:4px;font-size:12px;font-weight:600">${escapeHtml(badge)}</span>
+      </div>
+      <div class="grid grid-2">
+        ${row('utm_source', a.utmSource)}
+        ${row('utm_medium', a.utmMedium)}
+        ${row('utm_campaign', a.utmCampaign)}
+        ${row('utm_content', a.utmContent)}
+        ${row('utm_term', a.utmTerm)}
+        ${row('gclid', a.gclid)}
+        ${row('fbclid', a.fbclid)}
+        ${row('ttclid', a.ttclid)}
+        ${row('msclkid', a.msclkid)}
+        ${a.referrer ? `<div><label>referrer</label><a href="${escapeHtml(a.referrer)}" target="_blank" rel="noopener noreferrer">${escapeHtml(a.referrer)}</a></div>` : ''}
+        ${a.landingUrl ? `<div style="grid-column:1 / -1"><label>landing URL</label><code style="font-size:11px;word-break:break-all">${escapeHtml(a.landingUrl)}</code></div>` : ''}
+        ${a.userAgent ? `<div style="grid-column:1 / -1"><label>user agent</label><span class="meta">${escapeHtml(a.userAgent)}</span></div>` : ''}
+        ${a.capturedAt ? `<div><label>captured at</label><span class="meta">${escapeHtml(fmtDate(a.capturedAt))}</span></div>` : ''}
+      </div>`;
+  };
+
   const summaryFacts = `
 <div class="card">
   <div class="grid grid-3">
@@ -581,7 +626,8 @@ async function handleDetailHtml(request: Request, env: Env): Promise<Response> {
   const actions = `
 <div style="display:flex;gap:10px;flex-wrap:wrap">
   ${lead.pdfStatus === 'ready' && lead.pdfKey ? `<a class="btn" href="/admin/pdf?ref=${encodeURIComponent(ref)}" target="_blank">View PDF</a>` : ''}
-  ${(lead.pdfStatus === 'failed' || lead.pdfStatus === 'ready') ? `<form class="inline" method="POST" action="/admin/regenerate?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Regenerate PDF and re-send email?')"><button class="btn secondary" type="submit">Regenerate PDF</button></form>` : ''}
+  ${lead.pdfError ? `<div style="background:#fef2f2;border:1px solid #fca5a5;color:#7f1d1d;padding:12px 14px;margin:12px 0;border-radius:6px;font-family:system-ui;font-size:13px;line-height:1.5"><div style="font-weight:700;margin-bottom:6px">⚠ PDF generation error</div><code style="background:#fff;padding:6px 10px;border-radius:4px;display:block;font-family:ui-monospace,monospace;font-size:12px;color:#111;border:1px solid #fca5a5;white-space:pre-wrap;word-break:break-word">${escapeHtml(lead.pdfError)}</code></div>` : ''}
+  ${(lead.pdfStatus === 'failed' || lead.pdfStatus === 'ready' || lead.pdfStatus === 'pending') ? `<form class="inline" method="POST" action="/admin/regenerate?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Regenerate PDF and re-send email?')"><button class="btn secondary" type="submit">Regenerate PDF</button></form>` : ''}
   ${lead.pdfStatus === 'awaiting_questionnaire' ? `<form class="inline" method="POST" action="/admin/resend-onboarding?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Re-send questionnaire email?')"><button class="btn secondary" type="submit">Resend questionnaire email</button></form>` : ''}
   <a class="btn secondary" href="/admin/lead?ref=${encodeURIComponent(ref)}" target="_blank">Raw JSON</a>
   <form class="inline" method="POST" action="/admin/delete?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('PERMANENTLY DELETE this lead?\\n\\nThis removes:\\n  • the questionnaire and notes from KV\\n  • the generated PDF from R2 (if any)\\n\\nThis cannot be undone.')"><button class="btn danger" type="submit">Delete lead</button></form>
@@ -593,6 +639,8 @@ async function handleDetailHtml(request: Request, env: Env): Promise<Response> {
 ${summaryFacts}
 <h3>Actions</h3>
 <div class="card">${actions}</div>
+<h3>Source / attribution</h3>
+<div class="card">${renderAttribution()}</div>
 <h3>Activity timeline</h3>
 <div class="card">${renderActivity(lead.activity || [])}</div>
 <h3>Private admin notes</h3>

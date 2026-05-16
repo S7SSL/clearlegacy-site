@@ -28,3 +28,4 @@ worker/.dev.vars
 
 # Claude Code internal tooling — never commit
 .claude/
+node_modules/
