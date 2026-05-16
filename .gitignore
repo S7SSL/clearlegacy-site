@@ -29,3 +29,13 @@ worker/.dev.vars
 # Claude Code internal tooling — never commit
 .claude/
 node_modules/
+
+# Block unsolicited agent skill bundles — see incident 2026-05-16 (higgsfield)
+.agents/
+skills-lock.json
+
+# Git internal file that should NEVER be in the working tree
+FETCH_HEAD
+
+# Worker timestamped backups (e.g. admin.ts.bak.20260512T173749)
+*.bak.*
