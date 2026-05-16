@@ -11,7 +11,7 @@
   window.__clHelpButtonLoaded = true;
   if (!/\/forms\/will/i.test(window.location.pathname)) return;
 
-  var WHATSAPP_NUM = '447360683690';  // +44 7360 683690 — update to real ClearLegacy WhatsApp Business number
+  var WHATSAPP_NUM = '447707071984';  // +44 7707 071984 — ClearLegacy WhatsApp Business
   var EMAIL = 'hello@clearlegacy.co.uk';
 
   function inject() {
