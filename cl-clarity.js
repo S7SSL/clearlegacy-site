@@ -7,7 +7,7 @@
  *      account or create one — free).
  *   2. Add a new project, hostname = clearlegacy.co.uk.
  *   3. Copy the project ID (looks like 'a1b2c3d4e5').
- *   4. Replace ws6jw6yrl7 below with that ID.
+ *   4. Replace the value of CLARITY_ID below with that ID.
  *   5. Commit + push. Within 30 seconds Clarity starts recording.
  *
  * Stays silent (does nothing) until you swap the placeholder.
@@ -18,7 +18,9 @@
   window.__clClarityLoaded = true;
 
   var CLARITY_ID = 'ws6jw6yrl7';
-  if (CLARITY_ID === 'ws6jw6yrl7') return; // not yet configured — exit silently
+  // Robust guard: only block if CLARITY_ID looks like an obvious placeholder.
+  // Real Clarity project IDs are 9-12 char lowercase alphanumeric (no underscores).
+  if (!CLARITY_ID || /paste|here|todo|placeholder|x{3,}/i.test(CLARITY_ID) || CLARITY_ID.length < 8) return;
 
   (function (c, l, a, r, i, t, y) {
     c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
