@@ -18,7 +18,7 @@ import { verifyStripeSignature } from '../stripe';
 import { getLead, putLead, updateLead, markEventProcessed, appendActivity } from '../kv';
 import { render } from '../template';
 import { renderPdf } from '../pdf';
-import { sendEmail, sendOnboardingEmail, bytesToBase64 } from '../email';
+import { sendEmail, sendOnboardingEmail, sendCancellationRecoveryEmail, bytesToBase64 } from '../email';
 import { mintDownloadToken } from '../tokens';
 // Template is bundled at build time via wrangler's text module support.
 // @ts-ignore — wrangler rule handles .html as text
@@ -557,6 +557,104 @@ export async function handleStripeWebhook(
     }
     // Non-checkout events with no ref (subscription events, refunds, etc.)
     return new Response(JSON.stringify({ received: true, ignored: event.type }), { status: 200 });
+  }
+
+
+  // ----------------------------------------------------------------------
+  // checkout.session.expired — customer reached Stripe but didn't complete
+  // payment (clicked cancel, closed tab, or Stripe declared the session
+  // expired after the 24h window). Send a one-time recovery email with a
+  // retry link, idempotent via cancelledEmailSentAt.
+  // ----------------------------------------------------------------------
+  if (event.type === 'checkout.session.expired' && session) {
+    if (!isClearLegacySession(session)) {
+      return new Response(
+        JSON.stringify({ received: true, ignored: 'non_clearlegacy_business' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    const expiredRef: string | undefined =
+      session.client_reference_id || session.metadata?.ref || session.metadata?.client_reference_id;
+    if (!expiredRef) {
+      // Pay-first abandonment with no questionnaire — nothing to recover.
+      return new Response(
+        JSON.stringify({ received: true, ignored: 'no_ref_on_expired_session' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    const lead = await getLead(env, expiredRef);
+    if (!lead) {
+      return new Response(
+        JSON.stringify({ received: true, ignored: 'no_lead_for_expired_session' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    // Skip if already paid/processed
+    if (lead.paidAt || lead.pdfStatus === 'ready' || lead.pdfStatus === 'generating') {
+      return new Response(
+        JSON.stringify({ received: true, ignored: 'lead_already_paid_or_processing' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    // Skip if we've already sent the recovery email (idempotency)
+    if (lead.cancelledEmailSentAt) {
+      return new Response(
+        JSON.stringify({ received: true, ignored: 'recovery_email_already_sent' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    // Pull the customer email from the lead's questionnaire (preferred) or session
+    const customerEmail: string | undefined =
+      lead.questionnaire?.testator?.email
+      || lead.stripeCustomerEmail
+      || session?.customer_details?.email
+      || session?.customer_email
+      || undefined;
+    if (!customerEmail) {
+      await updateLead(env, expiredRef, { cancelledAt: new Date().toISOString() });
+      return new Response(
+        JSON.stringify({ received: true, recorded: true, ignored: 'no_customer_email' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    }
+    // Reconstruct the retry checkout URL
+    const product = (lead.product || lead.questionnaire?.product || 'single') as Product;
+    const baseUrl = product === 'mirror' ? env.STRIPE_URL_MIRROR : env.STRIPE_URL_SINGLE;
+    const retryUrl = new URL(baseUrl);
+    retryUrl.searchParams.set('client_reference_id', expiredRef);
+    if (customerEmail) retryUrl.searchParams.set('prefilled_email', customerEmail);
+    const price = product === 'mirror' ? '\u00a399' : '\u00a369';
+    const customerName: string | undefined =
+      lead.questionnaire?.testator?.fullName || session?.customer_details?.name || undefined;
+    // Send the recovery email (background — return 200 quickly to Stripe)
+    ctx.waitUntil((async () => {
+      try {
+        await sendCancellationRecoveryEmail({
+          apiKey: env.RESEND_API_KEY,
+          from: env.EMAIL_FROM,
+          to: customerEmail!,
+          bcc: env.ADMIN_NOTIFICATION_EMAIL || undefined,
+          customerName,
+          retryUrl: retryUrl.toString(),
+          product,
+          price,
+        });
+        await updateLead(env, expiredRef, {
+          cancelledAt: new Date().toISOString(),
+          cancelledEmailSentAt: new Date().toISOString(),
+        });
+      } catch (err: any) {
+        console.error(`Webhook cancellation recovery email failed for ref=${expiredRef}:`, err);
+        await updateLead(env, expiredRef, {
+          cancelledAt: new Date().toISOString(),
+          cancelledEmailError: err?.message || String(err),
+        });
+      }
+    })());
+    return new Response(
+      JSON.stringify({ received: true, cancellation_recovery_queued: true, ref: expiredRef }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
   }
 
   // Record payment info immediately so /api/status can reflect "paid" while PDF renders.

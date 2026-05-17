@@ -165,6 +165,12 @@ export interface LeadRecord {
   onboardingEmailSentAt?: string;
   onboardingEmailError?: string;
 
+  // Cancellation-recovery tracking (when customer reaches Stripe but abandons
+  // checkout; populated when Stripe fires checkout.session.expired).
+  cancelledAt?: string; // ISO — when Stripe declared the session expired
+  cancelledEmailSentAt?: string; // ISO — when we sent the recovery email
+  cancelledEmailError?: string;
+
   // PDF status
   // awaiting_questionnaire — paid, but the customer has not yet submitted the form
   // pending                — questionnaire submitted, PDF not yet started

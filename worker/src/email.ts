@@ -173,3 +173,72 @@ export function bytesToBase64(bytes: Uint8Array): string {
   }
   return btoa(binary);
 }
+
+
+export interface CancellationRecoveryEmailArgs {
+  apiKey: string;
+  from: string;
+  to: string;
+  bcc?: string;
+  customerName?: string;
+  retryUrl: string;
+  product: 'single' | 'mirror';
+  price: string; // formatted, e.g. "£69" or "£99"
+}
+
+/**
+ * Sent when Stripe fires checkout.session.expired for a Clear Legacy session
+ * that was never paid. Friendly nudge with a one-click link back to checkout.
+ * Idempotency is enforced at the webhook layer (cancelledEmailSentAt check)
+ * so this function only fires once per cancelled session.
+ */
+export async function sendCancellationRecoveryEmail(args: CancellationRecoveryEmailArgs): Promise<void> {
+  const greeting = args.customerName
+    ? `Hi ${escapeHtmlForEmail(args.customerName)},`
+    : 'Hi,';
+  const productLabel = args.product === 'mirror' ? 'Mirror Wills' : 'Will';
+  const subject = `Your ${productLabel} is waiting — finish in 60 seconds`;
+  const safeUrl = escapeHtmlForEmail(args.retryUrl);
+  const html = `
+<p>${greeting}</p>
+<p>We noticed you started your ${escapeHtmlForEmail(productLabel)} with ClearLegacy but didn't get to the payment step.</p>
+<p>No worries — your answers are saved. You can finish from where you left off:</p>
+<p><a href="${safeUrl}" style="display:inline-block;padding:12px 22px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-family:Inter,system-ui,sans-serif">Complete checkout — ${escapeHtmlForEmail(args.price)}</a></p>
+<p>Or paste this link into your browser:<br><a href="${safeUrl}">${safeUrl}</a></p>
+<p style="color:#475569;font-size:14px">A few reminders about your ${escapeHtmlForEmail(productLabel)}:</p>
+<ul style="color:#475569;font-size:14px;line-height:1.6">
+  <li>Reviewed by a qualified estate planner before release</li>
+  <li>Delivered within 24 hours</li>
+  <li>Legally valid under the Wills Act 1837</li>
+  <li>No subscription, no hidden fees — one fixed price</li>
+</ul>
+<p style="color:#475569;font-size:14px">Not sure if a will is right for your situation? Just reply to this email and we'll help you figure it out before you pay.</p>
+<p>— ClearLegacy</p>
+`;
+  const text = `${args.customerName ? 'Hi ' + args.customerName + ',' : 'Hi,'}
+
+We noticed you started your ${productLabel} with ClearLegacy but didn't get to the payment step.
+
+No worries — your answers are saved. You can finish from where you left off here:
+${args.retryUrl}
+
+Reminders:
+  • Reviewed by a qualified estate planner before release
+  • Delivered within 24 hours
+  • Legally valid under the Wills Act 1837
+  • No subscription, no hidden fees
+
+Not sure if a will is right for your situation? Just reply to this email.
+
+— ClearLegacy`;
+
+  await sendEmail(args.apiKey, {
+    from: args.from,
+    to: args.to,
+    bcc: args.bcc,
+    subject,
+    html,
+    text,
+  });
+}
+
