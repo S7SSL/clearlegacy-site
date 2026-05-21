@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Inheritance Tax Calculator 2026 — Free, Instant, No Sign-Up | ClearLegacy</title>
+<meta name="description" content="Free UK Inheritance Tax calculator. Estimate your IHT liability in 60 seconds. Includes the £325,000 nil-rate band, £175,000 residence allowance, and married-couple transfers. No sign-up.">
+<link rel="canonical" href="https://clearlegacy.co.uk/tools/uk-inheritance-tax-calculator/">
+<meta property="og:title" content="UK Inheritance Tax Calculator 2026 — Free & Instant">
+<meta property="og:description" content="Work out your UK IHT liability in 60 seconds. Includes all current 2026 HMRC thresholds.">
+<meta property="og:url" content="https://clearlegacy.co.uk/tools/uk-inheritance-tax-calculator/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "UK Inheritance Tax Calculator",
+  "description": "Free calculator for UK Inheritance Tax liability using current HMRC thresholds.",
+  "url": "https://clearlegacy.co.uk/tools/uk-inheritance-tax-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the UK Inheritance Tax threshold in 2026?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The standard nil-rate band is £325,000. An additional £175,000 residence nil-rate band applies when leaving the main home to direct descendants. Married couples and civil partners can combine and transfer allowances, taking the total up to £1,000,000 in some cases." }},
+    { "@type": "Question", "name": "What rate is UK Inheritance Tax charged at?",
+      "acceptedAnswer": { "@type": "Answer", "text": "40% on the value of the estate above the available allowances. The rate can fall to 36% if 10% or more of the estate is left to charity." }},
+    { "@type": "Question", "name": "Is this calculator accurate?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It uses the current HMRC 2026 thresholds and standard rules to produce an estimate. It does not account for trusts, business reliefs, agricultural reliefs, gifts within the 7-year rule, or non-domicile rules. For complex estates, take qualified estate planning advice." }}
+  ]
+}
+</script>
+
+<style>
+:root { --navy:#0F2342; --sage:#4A6B57; --cream:#FAF8F4; --muted:#AA9682; --hairline:#DCD2C3; --warn:#cc6633; }
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background:var(--cream); color:var(--navy); -webkit-font-smoothing:antialiased; }
+body { font-family:"Inter","Helvetica Neue",Arial,sans-serif; line-height:1.65; font-size:18px; }
+h1,h2,h3 { font-family:"Playfair Display","Cormorant Garamond",Georgia,serif; font-weight:700; line-height:1.2; margin:0 0 0.5em; }
+h1 { font-size:clamp(2.2rem,5vw,3.4rem); }
+h2 { font-size:clamp(1.6rem,3.5vw,2.2rem); margin-top:2em; }
+h3 { font-size:clamp(1.15rem,2.4vw,1.35rem); margin-top:1.4em; color:var(--sage); }
+.container { max-width:760px; margin:0 auto; padding:60px 24px 100px; }
+.eyebrow { font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--sage); font-weight:600; margin-bottom:1em; }
+.lede { font-size:1.15rem; margin:1.2em 0 2em; color:var(--navy); line-height:1.55; }
+p, li { margin:0 0 1em; }
+ul, ol { padding-left:1.2em; margin:0 0 1.4em; }
+a { color:var(--sage); text-decoration:underline; text-underline-offset:3px; }
+.accent-line { width:60px; height:3px; background:var(--sage); margin:2em 0; border:0; }
+.nav-breadcrumbs { font-size:0.85rem; color:var(--muted); margin-bottom:2em; }
+.nav-breadcrumbs a { color:var(--muted); }
+
+.calc { background:white; padding:32px 32px; border-radius:10px; margin:1em 0 2em; box-shadow:0 2px 12px rgba(15,35,66,0.06); }
+.field { margin-bottom: 22px; }
+.field label { display:block; font-size:0.92rem; font-weight:600; margin-bottom:8px; color:var(--navy); }
+.field .hint { display:block; font-size:0.82rem; color:var(--muted); margin-top:4px; }
+.field input[type=number], .field select {
+  width:100%; padding:12px 14px; border:1px solid var(--hairline); border-radius:6px;
+  font-size:1.05rem; color:var(--navy); background:var(--cream); font-family:inherit;
+}
+.field input[type=number]:focus, .field select:focus { outline:2px solid var(--sage); outline-offset:1px; border-color:var(--sage); }
+.field-row { display:flex; gap:14px; }
+.field-row .field { flex:1; }
+
+.radio-group { display:flex; gap:8px; flex-wrap:wrap; }
+.radio-group label {
+  flex:1; min-width:130px; padding:12px 14px; border:1px solid var(--hairline); border-radius:6px;
+  cursor:pointer; text-align:center; font-weight:500; background:var(--cream); font-size:0.95rem;
+}
+.radio-group input { display:none; }
+.radio-group input:checked + span { color: var(--sage); font-weight:600; }
+.radio-group label:has(input:checked) { border-color:var(--sage); background:#f0efe9; }
+
+.result { background:var(--navy); color:var(--cream); padding:32px 30px; border-radius:10px; margin:2em 0; }
+.result h2 { color:var(--cream); margin-top:0; font-size:1.8rem; }
+.result .big { font-family:"Playfair Display",Georgia,serif; font-size:3.2rem; font-weight:700; margin:0.2em 0; }
+.result .label { font-size:0.92rem; opacity:0.75; text-transform:uppercase; letter-spacing:0.08em; }
+.result .breakdown { background:rgba(255,255,255,0.06); padding:18px 20px; border-radius:6px; margin-top:1.4em; font-size:0.95rem; }
+.result .breakdown div { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.12); }
+.result .breakdown div:last-child { border-bottom:0; }
+.result .breakdown .em { font-weight:600; color:#e4d9a8; }
+
+.callout { background:#f0efe9; border-left:4px solid var(--sage); padding:20px 24px; margin:2em 0; border-radius:0 6px 6px 0; font-size:0.97rem; }
+.warning { background:#fff7ed; border-left:4px solid var(--warn); padding:20px 24px; margin:2em 0; border-radius:0 6px 6px 0; font-size:0.97rem; }
+
+.cta-block { background:var(--navy); color:var(--cream); padding:32px 30px; border-radius:10px; margin:3em 0; text-align:center; }
+.cta-block h2 { color:var(--cream); margin-top:0; }
+.cta-block .btn { display:inline-block; background:var(--cream); color:var(--navy); padding:14px 28px; border-radius:6px; font-weight:600; text-decoration:none; }
+.cta-block .pricing { font-size:0.92rem; opacity:0.85; margin-top:1em; }
+
+.sources { font-size:0.92rem; color:var(--muted); border-top:1px solid var(--hairline); padding-top:1.4em; margin-top:3em; }
+.sources a { color:var(--muted); }
+.faq dt { font-weight:600; margin-top:1.4em; color:var(--navy); }
+.faq dd { margin:0.4em 0 0; padding:0; }
+
+button.recalc {
+  background:var(--sage); color:white; border:0; padding:14px 24px; border-radius:6px; cursor:pointer;
+  font-weight:600; font-size:1rem; margin-top:8px; font-family:inherit;
+}
+button.recalc:hover { background:var(--navy); }
+</style>
+</head>
+<body>
+<main class="container">
+
+<div class="nav-breadcrumbs">
+  <a href="/">Home</a> · <a href="/tools/">Tools</a> · UK Inheritance Tax Calculator
+</div>
+
+<div class="eyebrow">Free Tool · UK Inheritance Tax · 2026 Thresholds</div>
+<h1>UK Inheritance Tax Calculator</h1>
+<p class="lede">Estimate your UK Inheritance Tax liability in 60 seconds, using the current HMRC thresholds for the 2026/27 tax year. No sign-up. No email. The figures are recalculated as you change the inputs.</p>
+
+<form class="calc" id="ihtForm" onsubmit="return false;">
+
+<div class="field">
+  <label for="estateValue">Total estate value (£)</label>
+  <input type="number" id="estateValue" min="0" step="1000" value="600000" inputmode="numeric">
+  <span class="hint">Include the home, savings, investments, ISAs, pensions paid into the estate, personal possessions. Use round figures.</span>
+</div>
+
+<div class="field">
+  <label for="homeValue">Of which, value of your main home (£)</label>
+  <input type="number" id="homeValue" min="0" step="1000" value="400000" inputmode="numeric">
+  <span class="hint">Just the home — your half if jointly owned. Used to calculate the £175,000 residence nil-rate band.</span>
+</div>
+
+<div class="field">
+  <label>Marital status</label>
+  <div class="radio-group">
+    <label><input type="radio" name="status" value="single" checked><span>Single / divorced / widowed</span></label>
+    <label><input type="radio" name="status" value="married"><span>Married or civil partner</span></label>
+    <label><input type="radio" name="status" value="cohabiting"><span>Cohabiting (unmarried)</span></label>
+  </div>
+</div>
+
+<div class="field">
+  <label>Leaving the home to children, grandchildren, or direct descendants?</label>
+  <div class="radio-group">
+    <label><input type="radio" name="hasDescendants" value="yes" checked><span>Yes</span></label>
+    <label><input type="radio" name="hasDescendants" value="no"><span>No</span></label>
+  </div>
+  <span class="hint">Required for the £175,000 residence nil-rate band. Partners and siblings don't count as direct descendants.</span>
+</div>
+
+<div class="field" id="transferField" style="display:none;">
+  <label>Deceased spouse's unused allowance available?</label>
+  <div class="radio-group">
+    <label><input type="radio" name="transfer" value="yes"><span>Yes — fully unused</span></label>
+    <label><input type="radio" name="transfer" value="partial"><span>Partially used</span></label>
+    <label><input type="radio" name="transfer" value="no" checked><span>No / N/A</span></label>
+  </div>
+  <span class="hint">If a previous spouse / civil partner died and didn't use their full £325,000 nil-rate band, the unused portion transfers to you.</span>
+</div>
+
+</form>
+
+<div class="result" id="result">
+  <div class="label">Estimated UK Inheritance Tax</div>
+  <div class="big" id="iht">£0</div>
+  <div class="breakdown" id="breakdown"></div>
+</div>
+
+<p style="font-size:0.88rem; color:var(--muted); margin-top:-1em;">
+  Estimate based on the 2026/27 thresholds: £325,000 nil-rate band, £175,000 residence nil-rate band, 40% IHT rate above allowances. The residence nil-rate band tapers if your estate exceeds £2 million. This calculator applies that taper. It does not account for business or agricultural reliefs, gifts made within seven years before death, trusts, or non-domicile rules.
+</p>
+
+<hr class="accent-line">
+
+<h2>How the calculation works</h2>
+
+<h3>The nil-rate band — £325,000</h3>
+<p>Every UK estate gets a basic allowance of £325,000 free of Inheritance Tax. This figure is frozen until at least April 2030 (per <a href="https://www.gov.uk/government/publications/autumn-statement-2022-overview" rel="noopener">HM Treasury</a>). Estates below £325,000 pay no IHT.</p>
+
+<h3>The residence nil-rate band — £175,000</h3>
+<p>An additional allowance applies when the main home is left to a "direct descendant" — children (including step, adopted, fostered), grandchildren, or great-grandchildren. The exact amount is the lower of (a) £175,000 or (b) the value of the home being passed on. <a href="https://www.gov.uk/guidance/inheritance-tax-residence-nil-rate-band" rel="noopener">HMRC guidance</a> sets out the conditions in detail.</p>
+
+<h3>The taper</h3>
+<p>For estates above £2,000,000, the residence nil-rate band tapers by £1 for every £2 above the threshold. An estate worth £2.35m loses the residence allowance entirely.</p>
+
+<h3>The transferable nil-rate band (married couples only)</h3>
+<p>When a married person or civil partner dies, any unused portion of their nil-rate band transfers to the surviving spouse. A widow or widower can therefore have up to £650,000 of nil-rate band, plus £350,000 of residence nil-rate band — £1m in total. This transfer is unavailable to unmarried couples.</p>
+
+<h3>The 40% rate</h3>
+<p>IHT is charged at 40% on the value of the estate above the available allowances. The rate falls to 36% if at least 10% of the estate is left to charity.</p>
+
+<div class="callout">
+<strong>What this calculator does not include:</strong> trusts, business property relief, agricultural property relief, gifts made within the 7 years before death (the "potentially exempt transfer" rules), non-UK domicile rules, pensions in trust (which usually sit outside the estate), and life insurance policies written in trust. For estates approaching or above £1m, get qualified advice — the savings available with proper estate planning are typically five figures.
+</div>
+
+<h2>How a will reduces your IHT exposure</h2>
+<p>A properly structured will doesn't avoid IHT — it makes sure your estate uses every allowance you're entitled to. The most common avoidable IHT costs come from:</p>
+
+<ul>
+<li><strong>Not leaving the home to direct descendants.</strong> Bypassing the £175,000 residence nil-rate band costs up to £70,000 in unnecessary IHT for a single person, or £140,000 for a married couple.</li>
+<li><strong>Failing to claim the transferable nil-rate band</strong> on the second death of a married couple. Common when the executor doesn't know to claim it.</li>
+<li><strong>Leaving everything to a non-spouse partner without IHT planning.</strong> An unmarried partner inherits with no spousal exemption — the full IHT becomes payable.</li>
+<li><strong>Holding pensions and life insurance inside the estate</strong> rather than in trust — both can usually be moved outside the estate with paperwork.</li>
+</ul>
+
+<div class="cta-block">
+<h2>Make sure your estate uses every allowance.</h2>
+<p>A ClearLegacy will is drafted by you online, then reviewed by a qualified UK estate planner who checks your allowances are properly structured. Twenty minutes online. Single will £69, mirror wills £99.</p>
+<a class="btn" href="/?utm_source=internal&utm_medium=calculator&utm_campaign=iht">Start your will</a>
+<div class="pricing">Single will £69 · Mirror wills £99 · Human reviewed</div>
+</div>
+
+<h2 id="faq">Frequently asked questions</h2>
+<dl class="faq">
+
+<dt>What is the UK Inheritance Tax threshold in 2026?</dt>
+<dd>£325,000 standard nil-rate band, plus £175,000 residence nil-rate band when leaving the main home to direct descendants. Married couples can combine and transfer allowances, taking the maximum to £1,000,000.</dd>
+
+<dt>What rate is UK Inheritance Tax charged at?</dt>
+<dd>40% on the value of the estate above the available allowances. Reduced to 36% if 10%+ of the estate is left to charity.</dd>
+
+<dt>Is this calculator accurate?</dt>
+<dd>It uses current HMRC 2026/27 thresholds and the standard rules. It produces an estimate. It does not account for trusts, reliefs, gifts within the 7-year rule, or non-domicile rules.</dd>
+
+<dt>Why does the residence nil-rate band only apply to direct descendants?</dt>
+<dd>The £175,000 RNRB was introduced in 2017 specifically to protect family homes passed to children and grandchildren. It does not apply when the home is left to a sibling, partner (unmarried), niece, nephew, or unrelated person.</dd>
+
+<dt>Does this calculator work for Scotland and Northern Ireland?</dt>
+<dd>IHT is a UK-wide tax administered by HMRC, so the thresholds and rates are the same across England, Wales, Scotland, and Northern Ireland. Inheritance rules under intestacy and confirmation/probate processes differ — but the IHT calculation does not.</dd>
+
+</dl>
+
+<div class="sources">
+<strong>Sources & references</strong><br>
+HMRC — Inheritance Tax rates and allowances · <a href="https://www.gov.uk/inheritance-tax" rel="noopener">gov.uk/inheritance-tax</a><br>
+HMRC — Residence nil-rate band guidance · <a href="https://www.gov.uk/guidance/inheritance-tax-residence-nil-rate-band" rel="noopener">gov.uk/guidance/inheritance-tax-residence-nil-rate-band</a><br>
+HMRC — Transferring an unused IHT allowance · <a href="https://www.gov.uk/inheritance-tax/passing-on-home" rel="noopener">gov.uk</a><br>
+Inheritance Tax Act 1984 · <a href="https://www.legislation.gov.uk/ukpga/1984/51/contents" rel="noopener">legislation.gov.uk</a><br>
+Autumn Statement 2022 (IHT threshold freeze until April 2030) · <a href="https://www.gov.uk/government/publications/autumn-statement-2022-overview" rel="noopener">gov.uk</a><br>
+<em>Last reviewed: 21 May 2026. This is a free estimation tool and is not financial or legal advice. For complex estates, consult a qualified UK estate planner or tax adviser.</em>
+</div>
+
+</main>
+
+<script>
+(function() {
+  const NRB = 325000;
+  const RNRB = 175000;
+  const RNRB_TAPER_THRESHOLD = 2000000;
+  const IHT_RATE = 0.40;
+
+  const fmt = (n) => '£' + Math.max(0, Math.round(n)).toLocaleString('en-GB');
+
+  function getRadio(name) {
+    const r = document.querySelector(`input[name="${name}"]:checked`);
+    return r ? r.value : null;
+  }
+
+  function calculate() {
+    const estate = Math.max(0, parseFloat(document.getElementById('estateValue').value) || 0);
+    const home = Math.max(0, parseFloat(document.getElementById('homeValue').value) || 0);
+    const status = getRadio('status');
+    const descendants = getRadio('hasDescendants') === 'yes';
+    const transfer = getRadio('transfer');
+
+    // Show/hide spouse transfer field
+    document.getElementById('transferField').style.display =
+      (status === 'married' || status === 'single') ? 'block' : 'none';
+    // Cohabiting cannot use transferable NRB
+    let usableTransfer = 'no';
+    if (status === 'married' || status === 'single') {
+      usableTransfer = transfer || 'no';
+    }
+
+    // Base nil-rate band
+    let availableNRB = NRB;
+    if (usableTransfer === 'yes') availableNRB += NRB;
+    else if (usableTransfer === 'partial') availableNRB += NRB / 2;
+
+    // Residence nil-rate band - requires home left to descendants
+    let availableRNRB = 0;
+    if (descendants && home > 0) {
+      availableRNRB = Math.min(RNRB, home);
+      // Taper for estates > £2m
+      if (estate > RNRB_TAPER_THRESHOLD) {
+        const reduction = (estate - RNRB_TAPER_THRESHOLD) / 2;
+        availableRNRB = Math.max(0, availableRNRB - reduction);
+      }
+      // Married with transfer can double the RNRB
+      if (usableTransfer === 'yes') availableRNRB += Math.min(RNRB, home);
+      else if (usableTransfer === 'partial') availableRNRB += Math.min(RNRB, home) / 2;
+      // Cap the doubled RNRB at the home value
+      availableRNRB = Math.min(availableRNRB, home);
+    }
+
+    const totalAllowance = availableNRB + availableRNRB;
+    const taxable = Math.max(0, estate - totalAllowance);
+    const ihtDue = taxable * IHT_RATE;
+
+    // For married couples, the spousal exemption can defer the entire IHT
+    let displayNote = '';
+    if (status === 'married' && ihtDue > 0) {
+      displayNote = '<div style="margin-top:14px; padding:12px; background:rgba(228,217,168,0.18); border-radius:4px; font-size:0.9rem; line-height:1.45;"><strong>Note:</strong> If your estate passes to your spouse first, the unlimited spousal exemption means no IHT is payable on first death. The figure shown is the projected liability on second death.</div>';
+    }
+    if (status === 'cohabiting') {
+      displayNote = '<div style="margin-top:14px; padding:12px; background:rgba(204,102,51,0.18); border-radius:4px; font-size:0.9rem; line-height:1.45;"><strong>Important:</strong> Unmarried partners cannot use the spousal exemption or the transferable nil-rate band. A £600,000 home left to a cohabiting partner triggers the full IHT immediately. <a href="/wills-for-unmarried-couples-uk/" style="color:#e4d9a8;">See guide for unmarried couples →</a></div>';
+    }
+
+    document.getElementById('iht').textContent = fmt(ihtDue);
+    document.getElementById('breakdown').innerHTML = `
+      <div><span>Estate value</span><span class="em">${fmt(estate)}</span></div>
+      <div><span>Nil-rate band</span><span>${fmt(availableNRB)}</span></div>
+      <div><span>Residence nil-rate band</span><span>${fmt(availableRNRB)}</span></div>
+      <div><span>Total allowances</span><span class="em">${fmt(totalAllowance)}</span></div>
+      <div><span>Taxable amount</span><span>${fmt(taxable)}</span></div>
+      <div><span>IHT at 40%</span><span class="em">${fmt(ihtDue)}</span></div>
+      ${displayNote}
+    `;
+  }
+
+  // Bind all inputs
+  document.querySelectorAll('#ihtForm input, #ihtForm select').forEach(el => {
+    el.addEventListener('input', calculate);
+    el.addEventListener('change', calculate);
+  });
+
+  // Initial render
+  calculate();
+})();
+</script>
+
+</body>
+</html>
