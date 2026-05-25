@@ -274,6 +274,8 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .headline{font-family:'Manrope',sans-serif;letter-spacing:-0.01em;color:var(--navy);font-weight:700}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--primary);background:var(--primary-50);padding:6px 14px;border-radius:999px;border:1px solid var(--primary-100)}
 .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--primary)}
+a.eyebrow{cursor:pointer;transition:background .15s,border-color .15s,transform .15s,box-shadow .15s}
+a.eyebrow:hover{background:var(--primary-100);border-color:var(--primary);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(37,99,235,0.3)}
 
 /* HEADER */
 .site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--slate-100)}
@@ -303,7 +305,10 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .hero h1{font-family:'Manrope',sans-serif;font-weight:700;font-size:clamp(40px,5vw,56px);line-height:1.08;letter-spacing:-0.02em;color:var(--navy);margin:24px 0 20px;text-wrap:balance}
 .hero p.lead{font-size:18px;line-height:1.65;color:var(--slate-600);margin-bottom:32px;max-width:520px}
 .hero-actions{display:flex;flex-wrap:wrap;gap:16px}
-.hero-trust{display:flex;align-items:center;gap:16px;margin-top:40px;padding-top:32px;border-top:1px solid var(--slate-100)}
+.hero-trust-bar{display:flex;flex-wrap:wrap;gap:10px 22px;margin:24px 0 0;padding:0;list-style:none}
+.hero-trust-bar li{display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:var(--slate-600)}
+.hero-trust-bar li svg{flex-shrink:0;color:var(--primary)}
+.hero-trust{display:flex;align-items:center;gap:16px;margin-top:32px;padding-top:28px;border-top:1px solid var(--slate-100)}
 .avatar-stack{display:flex}
 .avatar{width:40px;height:40px;border-radius:50%;border:2px solid #fff;background:var(--slate-200);display:flex;align-items:center;justify-content:center;color:var(--slate-600);font-weight:700;font-size:13px;font-family:'Manrope',sans-serif;margin-left:-8px;box-shadow:0 2px 6px rgba(15,23,42,0.08)}
 .avatar:first-child{margin-left:0}
@@ -502,7 +507,7 @@ fbq('track', 'PageView');
   <section class="hero">
     <div class="container row">
       <div class="hero-copy">
-        <span class="eyebrow"><span class="dot"></span>Wills from £69 · Done in 15 minutes</span>
+        <a href="/forms/will.html" class="eyebrow" data-cta="hero_eyebrow_pricing" aria-label="Start your Will — from £69, done in 15 minutes"><span class="dot"></span>Wills from £69 · Done in 15 minutes</a>
         <h1>Write Your Will Online Today — From Just £69</h1>
         <p class="lead">Answer a few simple questions, pay securely, and receive your legally valid Will by email within 24 hours. Trusted by 100+ UK families — and growing every week.</p>
         <div class="hero-actions">
@@ -512,6 +517,20 @@ fbq('track', 'PageView');
           </a>
           <a href="/forms/will.html?product=mirror" class="btn btn-ghost" data-cta="hero_mirror_wills">Mirror Wills — £99</a>
         </div>
+        <ul class="hero-trust-bar" aria-label="Trust signals">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Legally valid in England &amp; Wales
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Fixed fees, no hidden costs
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Free updates for 12 months
+          </li>
+        </ul>
         <div class="hero-trust">
           <div class="avatar-stack" aria-hidden="true">
             <div class="avatar">SJ</div>
