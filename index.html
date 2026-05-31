@@ -528,15 +528,23 @@ fbq('track', 'PageView');
         <ul class="hero-trust-bar" aria-label="Trust signals">
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Legally valid in England &amp; Wales
+            Human-reviewed wills
           </li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Fixed fees, no hidden costs
+            Fixed transparent pricing
           </li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Free updates for 12 months
+            UK-focused service
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Secure online process
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            No hidden upsells
           </li>
         </ul>
         <div class="hero-trust">
@@ -990,6 +998,30 @@ fbq('track', 'PageView');
     </div>
   </section>
 
+  <!-- WHAT HAPPENS NEXT — reassurance block before final CTA -->
+  <section class="band gray" id="reassurance-next" aria-labelledby="reassurance-next-h">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="reassurance-next-h">What happens next?</h2>
+        <p>Five steps from the moment you start to your family being protected.</p>
+      </div>
+      <ol class="cl-next-list">
+        <li><span class="cl-next-num">1</span><div><strong>Complete questionnaire</strong><span>About 5 minutes of plain-English questions.</span></div></li>
+        <li><span class="cl-next-num">2</span><div><strong>Human review by our team</strong><span>Every will is checked before release.</span></div></li>
+        <li><span class="cl-next-num">3</span><div><strong>Receive your documents</strong><span>Emailed as a PDF within 24 hours.</span></div></li>
+        <li><span class="cl-next-num">4</span><div><strong>Print, sign &amp; witness</strong><span>Two independent witnesses. We include a signing guide.</span></div></li>
+        <li><span class="cl-next-num">5</span><div><strong>Your family is protected</strong><span>Legally valid under the Wills Act 1837.</span></div></li>
+      </ol>
+    </div>
+    <style>
+      #reassurance-next .cl-next-list{list-style:none;padding:0;margin:0 auto;max-width:780px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+      #reassurance-next .cl-next-list li{display:flex;align-items:flex-start;gap:14px;background:#fff;border:1px solid var(--slate-200);border-radius:14px;padding:18px 18px 18px 16px}
+      #reassurance-next .cl-next-num{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Manrope',sans-serif;font-weight:700;font-size:14px}
+      #reassurance-next .cl-next-list strong{display:block;font-family:'Manrope',sans-serif;font-weight:700;color:var(--navy);font-size:15px;margin-bottom:3px}
+      #reassurance-next .cl-next-list span{font-size:13.5px;color:var(--slate-600);line-height:1.55}
+    </style>
+  </section>
+
   <!-- FINAL CTA -->
   <section class="cta-band">
     <div class="container">
@@ -1083,7 +1115,7 @@ document.addEventListener('click',function(e){
   <button onclick="document.getElementById('cl-cookie').style.display='none';localStorage.setItem('cl_ok','1');window.uetq=window.uetq||[];window.uetq.push('consent','update',{'ad_storage':'granted'})" style="background:#2563eb;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;">Accept</button>
 </div>
 <script>if(!localStorage.getItem('cl_ok'))document.getElementById('cl-cookie').style.display='flex';</script>
-<script src="/cl-funnel-tracking.js?v=2" defer></script>
+<script src="/cl-funnel-tracking.js?v=3" defer></script>
 <script src="/cl-sticky-mobile-cta.js?v=2" defer></script>
 <script src="/cl-clarity.js?v=2" defer></script>
 <script src="/cl-how-it-works.js?v=2" defer></script>
