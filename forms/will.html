@@ -49,7 +49,7 @@ nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 .field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--white);padding:12px 14px;font-size:16px;font-family:'Inter',sans-serif;color:var(--dark);transition:border .2s;outline:none;appearance:none;-webkit-appearance:none}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
 /* Checkbox/radio: restore native rendering so the tick/dot is visible on iOS */
-.field input[type="checkbox"],.field input[type="radio"]{width:auto;height:auto;padding:0;border:none;background:transparent;appearance:auto;-webkit-appearance:auto;accent-color:var(--blue);box-shadow:none}
+.field input[type="checkbox"],.field input[type="radio"]{width:22px;height:22px;padding:0;border:none;background:transparent;appearance:auto;-webkit-appearance:auto;accent-color:var(--blue);box-shadow:none;flex-shrink:0}
 .terms-label{display:flex;align-items:flex-start;gap:12px;text-transform:none;font-weight:500;font-size:14px;cursor:pointer;color:var(--dark);letter-spacing:0;line-height:1.5;padding:14px;border:1px solid var(--border);border-radius:6px;background:var(--white);transition:all .2s}
 .terms-label:hover{border-color:var(--blue);background:var(--light-blue)}
 .terms-label input{width:22px;height:22px;flex-shrink:0;margin-top:0}
@@ -61,9 +61,9 @@ body.pay-first .hide-on-paid{display:none !important}
 /* RADIO / CHECK GROUPS */
 .radio-group,.check-group{display:flex;flex-direction:column;gap:12px;margin-top:8px}
 .radio-group.horizontal,.check-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:12px}
-.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px;min-height:44px}
 .radio-opt:hover,.check-opt:hover{border-color:var(--blue);background:var(--light-blue)}
-.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0;pointer-events:none}
+.radio-opt input,.check-opt input{width:22px;height:22px;accent-color:var(--blue);flex-shrink:0;pointer-events:none}
 .radio-opt.selected,.check-opt.selected{border-color:var(--blue);background:var(--light-blue)}
 /* REPEATABLE PERSON */
 .person-block{background:var(--soft-bg);border:1px solid var(--border);padding:20px;margin-bottom:16px;border-radius:8px;position:relative}

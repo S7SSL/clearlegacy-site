@@ -22,7 +22,7 @@
     wrap.innerHTML = ''
       + '<style>'
       + '#cl-help-button{position:fixed;right:18px;bottom:80px;z-index:9998;font-family:Inter,system-ui,sans-serif}'
-      + '@media(max-width:720px){#cl-help-button{bottom:78px;right:12px}}'
+      + '@media(max-width:720px){#cl-help-button{display:none}}'
       + '#cl-help-bubble{background:#2563eb;color:#fff;border:none;border-radius:999px;padding:13px 18px;'
       + 'font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 10px 24px -8px rgba(15,23,42,.35);'
       + 'display:flex;align-items:center;gap:8px;transition:transform .15s,box-shadow .15s}'
