@@ -94,6 +94,12 @@ main .callout strong{color:var(--blue)}
 .step h3{font-size:16px;font-weight:600;margin-bottom:6px}
 .step p{color:var(--grey);font-size:14px}
 
+/* Quick Answer (AEO/GEO answer block) */
+.quick-answer{max-width:880px;margin:0 auto 8px;padding:22px 28px;background:var(--blue-light);border-left:4px solid var(--blue);border-radius:12px}
+.quick-answer h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin:0 0 8px;line-height:1.2}
+.quick-answer p{font-size:17px;line-height:1.6;color:var(--dark);margin:0}
+.quick-answer-wrap{padding:24px 5% 0}
+
 /* FAQ */
 .faq{background:var(--bg-soft);padding:72px 5%}
 .faq-inner{max-width:760px;margin:0 auto}
