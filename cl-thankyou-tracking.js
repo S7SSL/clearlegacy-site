@@ -99,7 +99,8 @@
     }
 
     // GA4 ecommerce purchase. Imports automatically into Google Ads via
-    // the GA4 → Google Ads link.
+    // the GA4 → Google Ads link. transport_type:'beacon' so the request
+    // survives navigation (uses navigator.sendBeacon under the hood).
     try {
       gtag('event', 'purchase', {
         transaction_id: p.sessionId || p.ref,
@@ -110,7 +111,8 @@
           item_name: p.itemName,
           price: p.value,
           quantity: 1
-        }]
+        }],
+        transport_type: 'beacon'
       });
     } catch (e) { console.warn('CL: GA4 purchase event failed', e); }
 
@@ -149,7 +151,8 @@
         value: p.value,
         currency: 'GBP',
         product: p.product,
-        item_name: p.itemName
+        item_name: p.itemName,
+        transport_type: 'beacon'
       });
     } catch (e) { console.warn('CL: ads_conversion_purchase event failed', e); }
 
@@ -160,7 +163,8 @@
           send_to: AW_ID + '/' + AW_PURCHASE_LABEL,
           value: p.value,
           currency: 'GBP',
-          transaction_id: p.sessionId || p.ref
+          transaction_id: p.sessionId || p.ref,
+          transport_type: 'beacon'
         });
       } catch (e) { console.warn('CL: AW conversion event failed', e); }
     } else {
@@ -168,11 +172,10 @@
     }
   }
 
-  // Fire after gtag has had a tick to initialise. Setting a tiny delay
-  // ensures both `config` calls have flushed before `event`.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { setTimeout(fireConversions, 50); });
-  } else {
-    setTimeout(fireConversions, 50);
-  }
+  // Fire immediately — dataLayer.push is synchronous and queued events are
+  // flushed once gtag.js loads. Any setTimeout delay risks the user closing
+  // the tab before the event is queued. The sessionStorage dedupe inside
+  // fireConversions guarantees we don't double-count if the inline head
+  // version of this firing has already run.
+  fireConversions();
 })();
