@@ -1,3 +1,6 @@
+> ⚠️ **For day-to-day redeploys, run `./deploy-worker.sh` from the `worker/` directory** (see `DEPLOY.md` Quick deploy section). The detailed instructions below are kept for reference but the script handles the wrangler 4.x asset-too-large workaround automatically.
+
+
 # Clear Legacy — Morning Deploy Playbook
 
 **Goal:** finish the Clear Legacy auto-PDF pipeline deploy from where we left off last night. Budget ~20 minutes if nothing snags.

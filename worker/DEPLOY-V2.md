@@ -1,3 +1,6 @@
+> ⚠️ **For day-to-day redeploys, run `./deploy-worker.sh` from the `worker/` directory** (see `DEPLOY.md` Quick deploy section). The detailed instructions below are kept for reference but the script handles the wrangler 4.x asset-too-large workaround automatically.
+
+
 # Clear Legacy — V2 Deploy Runbook
 
 This runbook walks you through deploying the V2 backend (admin dashboard rewrite + customer portal at `/account` + magic-link auth) to Cloudflare Workers, plus the GitHub-Pages re-publish of the customer portal SPA.

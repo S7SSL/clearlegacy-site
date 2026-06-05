@@ -2,6 +2,29 @@
 
 End-to-end auto-PDF pipeline. Follow these steps in order. Total time: ~30–45 minutes.
 
+## Quick deploy (existing setup)
+
+Once the worker is set up (KV namespace, R2 bucket, secrets, etc.), redeploy with:
+
+```bash
+cd ~/clearlegacy-site/worker
+./deploy-worker.sh
+```
+
+This wraps the rsync isolation + wrangler.toml patching needed to work around the wrangler 4.x asset-too-large bug. Running `npx wrangler deploy` directly fails because wrangler walks up to the site repo root and treats all 49k+ static HTML files as assets.
+
+The script:
+1. Syncs `worker/` to `/tmp/cl-deploy/` (no .git above, no parent for wrangler to misread)
+2. Patches the copy of wrangler.toml to use absolute asset paths
+3. Runs `npm install` and `npx wrangler deploy`
+
+Your local `worker/wrangler.toml` is never modified.
+
+If you're setting the worker up for the first time, follow the detailed steps below.
+
+---
+
+
 ## Scope
 
 - **Will products** (£69 Single, £99 Mirror): fully automated. Customer pays → PDF generated → emailed and available to download immediately.
