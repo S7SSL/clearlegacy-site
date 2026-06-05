@@ -109,6 +109,24 @@ main.content strong{color:var(--navy)}
 .soft-cta p{color:rgba(255,255,255,0.85);margin-bottom:20px;font-size:15px}
 .soft-cta .btn{background:#fff;color:var(--primary)}
 .soft-cta .btn:hover{background:var(--primary-50)}
+.trust-pills{display:flex;flex-wrap:wrap;gap:8px 10px;margin:18px 0 4px;padding:0;list-style:none}
+.trust-pills li{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--slate-700);background:#fff;border:1px solid var(--slate-200);border-radius:999px;padding:6px 12px;line-height:1}
+.trust-pills li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0}
+.hero-cta-row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:18px}
+.hero-cta-row .btn{padding:14px 22px}
+.hero-cta-row .meta{font-size:13px;color:var(--slate-500);font-weight:500}
+.inline-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid var(--primary-100);border-left:4px solid var(--primary);border-radius:12px;padding:18px 22px;margin:28px 0}
+.inline-cta .text{flex:1 1 280px;min-width:0}
+.inline-cta .text strong{font-family:'Manrope',sans-serif;font-weight:700;color:var(--navy);font-size:16px;display:block;margin-bottom:2px}
+.inline-cta .text span{font-size:14px;color:var(--slate-600)}
+.inline-cta .btn{flex-shrink:0}
+.what-next{background:#fff;border:1px solid var(--slate-200);border-radius:16px;padding:28px;margin:32px 0}
+.what-next h3{font-family:'Manrope',sans-serif;font-weight:700;font-size:20px;color:var(--navy);margin:0 0 18px}
+.what-next ol{counter-reset:wn-counter;list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.what-next ol li{counter-increment:wn-counter;position:relative;padding:14px 16px 14px 50px;background:var(--slate-50);border-radius:10px;font-size:14.5px;line-height:1.55;color:var(--slate-700);margin:0}
+.what-next ol li::before{content:counter(wn-counter);position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;background-image:none}
+.what-next ol li strong{display:block;font-family:'Manrope',sans-serif;color:var(--navy);font-size:14.5px;margin-bottom:2px}
+@media(max-width:720px){.what-next ol{grid-template-columns:1fr}}
 footer.site-footer{background:#fff;border-top:1px solid var(--slate-200);padding:40px 0 24px;font-size:13px;color:var(--slate-500)}
 footer.site-footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;margin-bottom:16px}
 footer.site-footer a{color:var(--slate-500)}
@@ -162,6 +180,17 @@ fbq('track', 'PageView');
       <span class="answer-tag">Quick answer</span>
       <p><strong>Co-op Legal Services is an SRA-regulated firm offering standard wills from around £150 single / £245 mirror with phone consultation, 2–3 week turnaround.</strong> Reviewed online services like ClearLegacy (£69 / £99, 24 hours) and Farewill (£100 / £165, 5 working days) produce the same legally valid Wills Act 1837 will at lower cost and faster delivery. Both routes are legitimate; the choice depends on whether you want SRA regulation and phone time, or fixed-price speed.</p>
     </div>
+    <ul class="trust-pills" aria-label="Trust signals">
+      <li>Specialist-reviewed</li>
+      <li>Fixed pricing — £69 single / £99 mirror</li>
+      <li>UK-focused (England &amp; Wales)</li>
+      <li>Wills Act 1837 compliant</li>
+      <li>No hidden upsells</li>
+    </ul>
+    <div class="hero-cta-row">
+      <a href="/forms/will.html" class="btn" data-cta="money_coop-vs-online_hero">Start Your Will — £69 →</a>
+      <span class="meta">Reviewed &amp; delivered within 24 hours</span>
+    </div>
     <p class="byline">Written by: <a href="/authors/sl/">SL</a> · Reviewed by: <a href="/reviewers/sl/">SL, Estate Planning Specialist</a> · Last updated: May 2026</p>
   </div>
 </section>
@@ -184,6 +213,14 @@ fbq('track', 'PageView');
       </table>
     </div>
     <p style="font-size:13px;color:#64748b">Prices are typical published rates at time of writing (May 2026). Source: provider websites.</p>
+
+    <div class="inline-cta">
+      <div class="text">
+        <strong>ClearLegacy — £69 single / £99 mirror</strong>
+        <span>Specialist-reviewed, drafted to the Wills Act 1837, delivered within 24 hours.</span>
+      </div>
+      <a href="/forms/will.html" class="btn" data-cta="money_coop-vs-online_mid">Start Your Will — £69</a>
+    </div>
 
     <h2>Who is Co-op Legal Services?</h2>
     <p>Co-op Legal Services is the legal-services arm of the Co-operative Group, operating in England and Wales. It is authorised and regulated by the Solicitors Regulation Authority (SRA) as an Alternative Business Structure, which means it can offer legal services using non-solicitor staff under partner supervision. It writes wills, runs probate cases, and offers family-law services.</p>
@@ -289,6 +326,16 @@ fbq('track', 'PageView');
 
     <div class="sources">
       <strong>Sources:</strong> Co-op Legal Services pricing page; Farewill pricing page; ClearLegacy pricing; Law Society guidance on will-writing; Wills Act 1837 (legislation.gov.uk); SRA Standards and Regulations. All figures verified May 2026.
+    </div>
+
+    <div class="what-next">
+      <h3>What happens next when you choose ClearLegacy</h3>
+      <ol>
+        <li><strong>Answer the questionnaire</strong>About 15 minutes online. Plain English questions about your estate, executors and beneficiaries.</li>
+        <li><strong>Pay securely — £69 / £99</strong>One fixed fee via Stripe. No surcharges, no upsells, no subscription.</li>
+        <li><strong>Specialist review</strong>A qualified estate planner reviews your draft against the Wills Act 1837 — usually within hours.</li>
+        <li><strong>Sign &amp; store</strong>You receive a signable PDF by email within 24 hours, with a one-page witnessing checklist.</li>
+      </ol>
     </div>
 
     <h2>Frequently asked questions</h2>

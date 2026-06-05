@@ -8,6 +8,7 @@
  *   GET  /api/status?ref=...                thank-you page polling
  *   GET  /api/pdf/:token                    signed PDF download
  *   POST /api/chat                           Clara AI chat assistant
+ *   POST /api/post-purchase-survey          life-event trigger survey (thank-you page)
  *   GET  /api/healthz                       liveness
  *
  *   POST /api/auth/request                  send magic-link email
@@ -33,6 +34,7 @@ import { handleAdmin } from './handlers/admin';
 import { handleAuth } from './handlers/auth';
 import { handleAccount } from './handlers/account';
 import { handleChat } from './handlers/chat';
+import { handlePostPurchaseSurvey } from './handlers/survey';
 import { handleSaveProgress, handleSendResumeEmail, handleResume, processNurtureEmails } from './handlers/save-progress';
 
 export interface Env {
@@ -109,6 +111,8 @@ export default {
         response = await handlePdfDownload(request, env);
       } else if (url.pathname === '/api/chat' && request.method === 'POST') {
         response = await handleChat(request, env);
+      } else if (url.pathname === '/api/post-purchase-survey' && request.method === 'POST') {
+        response = await handlePostPurchaseSurvey(request, env);
       } else if (url.pathname === '/api/save-progress' && request.method === 'POST') {
         response = await handleSaveProgress(request, env);
       } else if (url.pathname === '/api/save-progress/send-email' && request.method === 'POST') {

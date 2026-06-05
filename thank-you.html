@@ -109,6 +109,24 @@
   footer{background:var(--soft);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey);margin-top:60px}
   footer a{color:var(--blue);text-decoration:none}
   .ref{font-family:monospace;font-size:12px;color:var(--grey);text-align:center;margin-top:16px;word-break:break-all}
+
+  /* --- Patch 0042: post-purchase trigger survey --- */
+  .survey-block{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:24px 22px;margin:24px 0 28px;box-shadow:0 1px 2px rgba(15,35,66,0.04)}
+  .survey-block h2{font-size:18px;font-weight:600;color:#0F2342;margin-bottom:6px;line-height:1.35}
+  .survey-block .survey-sub{font-size:14px;color:#6b7280;margin-bottom:16px}
+  .survey-options{list-style:none;padding:0;margin:0 0 18px 0}
+  .survey-options li{padding:6px 0}
+  .survey-options label{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px;color:#0a0a0a;line-height:1.45}
+  .survey-options input[type=checkbox]{flex-shrink:0;margin-top:3px;width:16px;height:16px;accent-color:#4A6B57;cursor:pointer}
+  .survey-other-input{display:none;margin:8px 0 0 26px;width:calc(100% - 26px);padding:8px 10px;border:1px solid #e5e7eb;border-radius:6px;font-family:inherit;font-size:14px;color:#0a0a0a;background:#fafaf7}
+  .survey-other-input:focus{outline:none;border-color:#4A6B57}
+  .survey-other-input.is-visible{display:block}
+  .survey-submit{display:block;width:100%;background:#0F2342;color:#fff;border:0;padding:13px 20px;font-size:15px;font-weight:600;border-radius:8px;cursor:pointer;font-family:inherit;transition:background .15s}
+  .survey-submit:hover{background:#1a345d}
+  .survey-submit:disabled{background:#9ca3af;cursor:not-allowed}
+  .survey-skip{display:block;text-align:center;margin-top:12px;font-size:13px;color:#6b7280;text-decoration:underline;background:none;border:0;cursor:pointer;font-family:inherit;width:100%;padding:4px}
+  .survey-skip:hover{color:#0F2342}
+  .survey-thanks{background:#f0f7f3;border:1px solid #d4e5dc;border-radius:10px;padding:14px 18px;margin:20px 0 24px;font-size:14px;color:#4A6B57;text-align:center}
 </style>
 <!-- Microsoft UET tag (Bing Ads / clearlegacy-prod, ti=187249506) -->
 <script>(function(w, d, t, u, o) {w[u] = w[u] || [], o.ts = (new Date).getTime();var n = d.createElement(t);n.src = "https://bat.bing.net/bat.js?ti=" + o.ti + ("uetq" != u ? "&q=" + u : ""),n.async = 1, n.onload = n.onreadystatechange = function() {var s = this.readyState;s && "loaded" !== s && "complete" !== s ||(o.q = w[u], w[u] = new UET(o), w[u].push("pageLoad"),n.onload = n.onreadystatechange = null)};var i = d.getElementsByTagName(t)[0];i.parentNode.insertBefore(n, i);})(window, document, "script", "uetq", {ti: "187249506",enableAutoSpaTracking: true});</script>
@@ -135,6 +153,30 @@ fbq('track', 'PageView');
 <p class="byline">Written by: <a href="/authors/sl/">SL</a> Written by: <a href="/authors/sl/">SL</a> &middot; Last updated:middot; Reviewed by: <a href="/reviewers/sl/">SL, Estate Planning Specialist</a> Written by: <a href="/authors/sl/">SL</a> &middot; Last updated:middot; Last updated: May 2026</p>
 
   <p class="sub" id="sub">This usually takes about 30 seconds. Please keep this page open.</p>
+
+  <!-- Patch 0042: post-purchase trigger survey -->
+  <div class="survey-block" id="survey-block">
+    <h2>One quick question &mdash; what prompted you to make your will today?</h2>
+    <p class="survey-sub">Helps us help other families in your situation. Tick all that apply.</p>
+    <ul class="survey-options" id="survey-options">
+      <li><label><input type="checkbox" value="Had a child"> Had a child</label></li>
+      <li><label><input type="checkbox" value="Bought a property"> Bought a property</label></li>
+      <li><label><input type="checkbox" value="Getting married"> Getting married</label></li>
+      <li><label><input type="checkbox" value="Recently divorced"> Recently divorced</label></li>
+      <li><label><input type="checkbox" value="Parent passed away"> Parent passed away</label></li>
+      <li><label><input type="checkbox" value="Holiday or travel concerns"> Holiday or travel concerns</label></li>
+      <li><label><input type="checkbox" value="Inheritance tax concerns"> Inheritance tax concerns</label></li>
+      <li><label><input type="checkbox" value="General life admin"> General life admin</label></li>
+      <li><label><input type="checkbox" value="Found you via Google search"> Found you via Google search</label></li>
+      <li><label><input type="checkbox" value="Personal recommendation"> Personal recommendation</label></li>
+      <li>
+        <label><input type="checkbox" value="Other" id="survey-other-toggle"> Other</label>
+        <input type="text" class="survey-other-input" id="survey-other-input" maxlength="500" placeholder="Tell us briefly…" autocomplete="off">
+      </li>
+    </ul>
+    <button type="button" class="survey-submit" id="survey-submit">Submit</button>
+    <button type="button" class="survey-skip" id="survey-skip">Skip for now</button>
+  </div>
 
   <div class="card" id="status-card">
     <div class="status-row">
@@ -313,5 +355,86 @@ fbq('track', 'PageView');
 
 <script src="/cl-funnel-tracking.js?v=3" defer></script>
 <script src="/cl-clarity.js?v=2" defer></script>
+<script>
+  // Patch 0042: post-purchase trigger survey wiring
+  (function(){
+    var block = document.getElementById('survey-block');
+    if(!block) return;
+    var submitBtn = document.getElementById('survey-submit');
+    var skipBtn = document.getElementById('survey-skip');
+    var otherToggle = document.getElementById('survey-other-toggle');
+    var otherInput = document.getElementById('survey-other-input');
+    var optionsList = document.getElementById('survey-options');
+
+    // Read ref from URL — falls back to null
+    var params = new URLSearchParams(window.location.search);
+    var surveyRef = params.get('ref') || null;
+
+    var SURVEY_ENDPOINT = 'https://api.clearlegacy.co.uk/api/post-purchase-survey';
+
+    if(otherToggle && otherInput){
+      otherToggle.addEventListener('change', function(){
+        if(otherToggle.checked){
+          otherInput.classList.add('is-visible');
+          setTimeout(function(){ otherInput.focus(); }, 30);
+        } else {
+          otherInput.classList.remove('is-visible');
+          otherInput.value = '';
+        }
+      });
+    }
+
+    function collectTriggers(){
+      var boxes = optionsList.querySelectorAll('input[type=checkbox]:checked');
+      var out = [];
+      for(var i=0;i<boxes.length;i++) out.push(boxes[i].value);
+      return out;
+    }
+
+    function hideBlock(){ block.style.display = 'none'; }
+
+    function showThanks(){
+      var thanks = document.createElement('div');
+      thanks.className = 'survey-thanks';
+      thanks.textContent = 'Thanks — that helps us a lot.';
+      block.parentNode.insertBefore(thanks, block);
+      hideBlock();
+    }
+
+    function postSurvey(payload, onDone){
+      try {
+        fetch(SURVEY_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          keepalive: true
+        })
+          .then(function(r){
+            if(r.ok) onDone(true);
+            else onDone(false);
+          })
+          .catch(function(){ onDone(false); });
+      } catch(e){ onDone(false); }
+    }
+
+    submitBtn.addEventListener('click', function(){
+      var triggers = collectTriggers();
+      var other = (otherInput && otherInput.value || '').trim();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      var payload = { ref: surveyRef, triggers: triggers };
+      if(other) payload.other = other.slice(0, 500);
+      postSurvey(payload, function(ok){
+        if(ok) showThanks();
+        else hideBlock();
+      });
+    });
+
+    skipBtn.addEventListener('click', function(){
+      // Still POST so we get skip-rate analytics
+      postSurvey({ ref: surveyRef, skipped: true }, function(){ hideBlock(); });
+    });
+  })();
+</script>
 <script src="/cl-trust-strip.js?v=1" defer></script></body>
 </html>

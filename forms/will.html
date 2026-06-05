@@ -49,7 +49,7 @@ nav a{color:var(--grey);font-size:14px;text-decoration:none;margin-left:20px}
 .field input,.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--white);padding:12px 14px;font-size:16px;font-family:'Inter',sans-serif;color:var(--dark);transition:border .2s;outline:none;appearance:none;-webkit-appearance:none}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
 /* Checkbox/radio: restore native rendering so the tick/dot is visible on iOS */
-.field input[type="checkbox"],.field input[type="radio"]{width:auto;height:auto;padding:0;border:none;background:transparent;appearance:auto;-webkit-appearance:auto;accent-color:var(--blue);box-shadow:none}
+.field input[type="checkbox"],.field input[type="radio"]{width:22px;height:22px;padding:0;border:none;background:transparent;appearance:auto;-webkit-appearance:auto;accent-color:var(--blue);box-shadow:none;flex-shrink:0}
 .terms-label{display:flex;align-items:flex-start;gap:12px;text-transform:none;font-weight:500;font-size:14px;cursor:pointer;color:var(--dark);letter-spacing:0;line-height:1.5;padding:14px;border:1px solid var(--border);border-radius:6px;background:var(--white);transition:all .2s}
 .terms-label:hover{border-color:var(--blue);background:var(--light-blue)}
 .terms-label input{width:22px;height:22px;flex-shrink:0;margin-top:0}
@@ -61,9 +61,9 @@ body.pay-first .hide-on-paid{display:none !important}
 /* RADIO / CHECK GROUPS */
 .radio-group,.check-group{display:flex;flex-direction:column;gap:12px;margin-top:8px}
 .radio-group.horizontal,.check-group.horizontal{flex-direction:row;flex-wrap:wrap;gap:12px}
-.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px}
+.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);padding:12px 14px;cursor:pointer;transition:all .2s;font-size:14px;font-weight:500;border-radius:6px;min-height:44px}
 .radio-opt:hover,.check-opt:hover{border-color:var(--blue);background:var(--light-blue)}
-.radio-opt input,.check-opt input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0;pointer-events:none}
+.radio-opt input,.check-opt input{width:22px;height:22px;accent-color:var(--blue);flex-shrink:0;pointer-events:none}
 .radio-opt.selected,.check-opt.selected{border-color:var(--blue);background:var(--light-blue)}
 /* REPEATABLE PERSON */
 .person-block{background:var(--soft-bg);border:1px solid var(--border);padding:20px;margin-bottom:16px;border-radius:8px;position:relative}
@@ -291,7 +291,7 @@ fbq('track', 'PageView');
 </div>
 
 <!-- STEP 3: CHILDREN & DEPENDANTS -->
-<div class="step" id="step-3">  <div class="step-header">  <div class="step-num">Part 3</div>  <h2 class="step-title">Children &amp; Dependants</h2>  <p class="step-sub">Tell us about your children and any other dependants you wish to provide for.</p>  </div>  <div class="field"><label>Do you have children?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-children" value="yes" onchange="toggleSection('children-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-children" value="no" onchange="toggleSection('children-section','no')"> No</label>  </div>  </div>  <div id="children-section" style="display:none">  <div id="children-list"></div>  <button class="add-btn" onclick="addChild()">+ Add a Child</button>  <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>  <select id="child-age">  <option value="18">18 (as soon as legally an adult)</option>  <option value="21">21</option>  <option value="25" selected>25 (recommended)</option>  <option value="30">30</option>  </select>  <div class="hint">Assets will be held in trust by your executors until this age.</div>  </div>  </div>  <div class="field" style="margin-top:10px"><label>Do you wish to appoint a guardian for any children under 18?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-guardian" value="yes" onchange="toggleSection('guardian-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-guardian" value="no" onchange="toggleSection('guardian-section','no')"> No</label>  </div>  </div>  <div id="guardian-section" style="display:none">  <div class="person-block">  <div class="block-title">Guardian Details <button class="quick-fill-btn" type="button" onclick="usePartnerAsGuardian()">Use my partner</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="g-first" autocomplete="off" placeholder="Guardian's first name(s)"></div>  <div class="field"><label>Last Name</label><input type="text" id="g-last" autocomplete="off" placeholder="Guardian's last name"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" id="g-rel" autocomplete="off" placeholder="e.g. Sister, Brother-in-law"></div>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(3)">← Back</button>  <button class="btn-next" onclick="nextStep(3)">Continue →</button>  </div>
+<div class="step" id="step-3">  <div class="step-header">  <div class="step-num">Part 3</div>  <h2 class="step-title">Children &amp; Dependants</h2>  <p class="step-sub">Tell us about your children and any other dependants you wish to provide for.</p>  </div>  <div class="field"><label>Do you have children?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-children" value="yes" onchange="toggleSection('children-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-children" value="no" onchange="toggleSection('children-section','no')"> No</label>  </div>  </div>  <div id="children-section" style="display:none">  <div id="children-list"></div>  <button class="add-btn" onclick="addChild()">+ Add a Child</button>  <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>  <select id="child-age">  <option value="18">18 (as soon as legally an adult)</option>  <option value="21">21</option>  <option value="25" selected>25 (recommended)</option>  <option value="30">30</option>  </select>  <div class="hint">Assets will be held in trust by your executors until this age.</div>  </div>  </div>  <div class="field" style="margin-top:10px"><label>If both you and your partner were no longer here, who should care for your children?</label><p class="hint" style="margin:6px 0 10px">A guardian only steps in when both parents are gone. While one parent is alive they keep parental responsibility automatically, so this should be a third person — a sibling, parent, godparent, or close friend — not your spouse or partner.</p>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-guardian" value="yes" onchange="toggleSection('guardian-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-guardian" value="no" onchange="toggleSection('guardian-section','no')"> No</label>  </div>  </div>  <div id="guardian-section" style="display:none">  <div class="person-block">  <div class="block-title">Guardian Details</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="g-first" autocomplete="off" onblur="checkGuardianMatch()" placeholder="Guardian's first name(s)"></div>  <div class="field"><label>Last Name</label><input type="text" id="g-last" autocomplete="off" onblur="checkGuardianMatch()" placeholder="Guardian's last name"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" id="g-rel" autocomplete="off" placeholder="e.g. Sister, Brother-in-law"></div>  </div>  <div id="guardian-warn" style="display:none;margin-top:10px;padding:12px;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;font-size:14px;color:#92400e;line-height:1.5"><strong>Heads up:</strong> The name you've entered matches your partner. A guardian only steps in when both parents are gone, so naming your partner here has no effect. Did you mean to name someone else?</div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(3)">← Back</button>  <button class="btn-next" onclick="nextStep(3)">Continue →</button>  </div>
 </div>
 
 <!-- STEP 4: EXECUTORS -->
@@ -811,12 +811,18 @@ function usePartnerAsExecutor() {
   _set('e1-rel', 'Spouse');
 }
 
-function usePartnerAsGuardian() {
-  var pf = _get('p-first'), pl = _get('p-last');
-  if (!pf && !pl) { alert('Please fill in your partner details in Step 2 first.'); return; }
-  _set('g-first', pf);
-  _set('g-last', pl);
-  _set('g-rel', 'Spouse');
+function checkGuardianMatch() {
+  const gf = (document.getElementById('g-first')?.value || '').trim().toLowerCase();
+  const gl = (document.getElementById('g-last')?.value || '').trim().toLowerCase();
+  const pf = (document.getElementById('p-first')?.value || '').trim().toLowerCase();
+  const pl = (document.getElementById('p-last')?.value || '').trim().toLowerCase();
+  const warn = document.getElementById('guardian-warn');
+  if (!warn) return;
+  if (gf && gl && pf && pl && gf === pf && gl === pl) {
+    warn.style.display = 'block';
+  } else {
+    warn.style.display = 'none';
+  }
 }
 
 function useHomeAsProperty() { useHomeAsProp(1); } // legacy — keep for old callers
