@@ -2,13 +2,69 @@
 <html lang="en">
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17990502106"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J3GPRFYR2Q"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-J3GPRFYR2Q');
   gtag('config', 'AW-17990502106');
+
+  // Purchase conversion — fired inline (synchronous dataLayer push) so events
+  // are queued before gtag.js finishes loading and before the user can close
+  // the tab. transport_type:'beacon' makes the actual request go via
+  // navigator.sendBeacon so it survives page navigation.
+  // Once the direct Google Ads conversion action is created, paste the label
+  // after the slash (e.g. 'abc123XYZ' from 'AW-17990502106/abc123XYZ') into
+  // AW_PURCHASE_LABEL below — until then, attribution flows via the GA4
+  // 'purchase' / 'ads_conversion_purchase' events imported into Google Ads.
+  (function(){
+    try {
+      var AW_PURCHASE_LABEL = '';
+      var params = new URLSearchParams(window.location.search);
+      var product = (params.get('product') || '').toLowerCase();
+      if (product !== 'mirror' && product !== 'single') product = 'single';
+      var sessionId = params.get('session_id') || '';
+      var ref = params.get('ref') || '';
+      var txnId = sessionId || ref;
+      if (!txnId) return; // bookmark / test load — don't pollute Ads with junk
+
+      try {
+        var dedupeKey = 'cl_purchase_fired_' + txnId;
+        if (sessionStorage.getItem(dedupeKey)) return;
+        sessionStorage.setItem(dedupeKey, '1');
+      } catch (e) { /* sessionStorage blocked — fire anyway */ }
+
+      var value = product === 'mirror' ? 99 : 69;
+      var itemName = product === 'mirror' ? 'Mirror Wills' : 'Single Will';
+
+      gtag('event', 'purchase', {
+        transaction_id: txnId,
+        value: value,
+        currency: 'GBP',
+        items: [{ item_id: product, item_name: itemName, price: value, quantity: 1 }],
+        transport_type: 'beacon'
+      });
+
+      gtag('event', 'ads_conversion_purchase', {
+        transaction_id: txnId,
+        value: value,
+        currency: 'GBP',
+        product: product,
+        item_name: itemName,
+        transport_type: 'beacon'
+      });
+
+      if (AW_PURCHASE_LABEL) {
+        gtag('event', 'conversion', {
+          send_to: 'AW-17990502106/' + AW_PURCHASE_LABEL,
+          value: value,
+          currency: 'GBP',
+          transaction_id: txnId,
+          transport_type: 'beacon'
+        });
+      }
+    } catch (e) {}
+  })();
 </script>
 <meta charset="UTF-8">
 <title>Thank You — ClearLegacy</title>
