@@ -583,6 +583,7 @@ async function handleDetailHtml(request: Request, env: Env): Promise<Response> {
   ${lead.pdfStatus === 'ready' && lead.pdfKey ? `<a class="btn" href="/admin/pdf?ref=${encodeURIComponent(ref)}" target="_blank">View PDF</a>` : ''}
   ${(lead.pdfStatus === 'failed' || lead.pdfStatus === 'ready') ? `<form class="inline" method="POST" action="/admin/regenerate?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Regenerate PDF and re-send email?')"><button class="btn secondary" type="submit">Regenerate PDF</button></form>` : ''}
   ${lead.pdfStatus === 'awaiting_questionnaire' ? `<form class="inline" method="POST" action="/admin/resend-onboarding?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('Re-send questionnaire email?')"><button class="btn secondary" type="submit">Resend questionnaire email</button></form>` : ''}
+  <a class="btn secondary" href="/admin/edit?ref=${encodeURIComponent(ref)}">Edit questionnaire</a>
   <a class="btn secondary" href="/admin/lead?ref=${encodeURIComponent(ref)}" target="_blank">Raw JSON</a>
   <form class="inline" method="POST" action="/admin/delete?ref=${encodeURIComponent(ref)}" onsubmit="return confirm('PERMANENTLY DELETE this lead?\\n\\nThis removes:\\n  • the questionnaire and notes from KV\\n  • the generated PDF from R2 (if any)\\n\\nThis cannot be undone.')"><button class="btn danger" type="submit">Delete lead</button></form>
 </div>`;
@@ -976,6 +977,133 @@ async function handleBulk(request: Request, env: Env): Promise<Response> {
   return new Response(null, { status: 303, headers: { Location: location, 'X-Bulk-Applied': String(applied), 'X-Bulk-Skipped': String(skipped) } });
 }
 
+// ---------- /admin/edit (questionnaire JSON editor) ----------
+//
+// Patch 0044: lets admins amend the questionnaire JSON of an existing paid
+// lead (guardians, residuary, etc.) without manual `wrangler kv put` calls.
+// The JSON is shown pretty-printed in a textarea; on Save we re-parse,
+// sanity-check that the will template's required fields are still present
+// (testator + executors), persist back to KV, append an audit-trail note,
+// and optionally kick off a PDF regenerate.
+
+function escapeAttr(v: unknown): string { return escapeHtml(v); }
+
+async function handleEditQuestionnaireGet(request: Request, env: Env): Promise<Response> {
+  const url = new URL(request.url);
+  const ref = url.searchParams.get('ref') || '';
+  if (!REF_RE.test(ref)) return new Response('Bad ref', { status: 400 });
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+
+  const name = lead.questionnaire?.testator?.fullName || lead.stripeCustomerEmail || ref;
+  const pretty = lead.questionnaire ? JSON.stringify(lead.questionnaire, null, 2) : '{}';
+
+  const body = `
+<a href="/admin/detail?ref=${encodeURIComponent(ref)}" class="meta">&larr; back to detail</a>
+<h2 style="margin-top:8px">Edit JSON &mdash; ${escapeHtml(name)}</h2>
+<div class="card">
+  <div class="grid grid-3">
+    <div><label>Ref</label><code>${escapeHtml(ref)}</code></div>
+    <div><label>Customer</label>${escapeHtml(name)}</div>
+    <div><label>PDF status</label>${statusBadge(lead.pdfStatus)}</div>
+  </div>
+  <p class="meta" style="margin-top:10px">Edit the underlying <code>questionnaire</code> JSON. Save writes back to KV; Save + Regenerate also re-runs the PDF pipeline and re-emails the customer. Every edit is logged as an admin note.</p>
+</div>
+<form method="POST" action="/admin/edit?ref=${encodeURIComponent(ref)}">
+  <textarea name="questionnaire" rows="35" style="width:100%;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.45">${escapeHtml(pretty)}</textarea>
+  <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn" name="action" value="save" type="submit">Save changes</button>
+    <button class="btn" name="action" value="save_and_regenerate" type="submit" style="background:#10b981">Save + Regenerate PDF</button>
+    <a class="btn secondary" href="/admin/detail?ref=${encodeURIComponent(ref)}">Cancel</a>
+  </div>
+</form>`;
+
+  return new Response(shell('Edit JSON', body), {
+    status: 200,
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+  });
+}
+
+async function handleEditQuestionnairePost(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const url = new URL(request.url);
+  const ref = url.searchParams.get('ref') || '';
+  if (!REF_RE.test(ref)) return new Response('Bad ref', { status: 400 });
+
+  const form = await request.formData();
+  const action = (form.get('action') || '').toString();
+  const raw = (form.get('questionnaire') || '').toString();
+  if (action !== 'save' && action !== 'save_and_regenerate') {
+    return new Response('Bad action', { status: 400 });
+  }
+
+  // 1) Parse the JSON string. Surface the parse error to the admin so they
+  //    can fix it without losing their pasted edits (we link them back).
+  let parsed: any;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    const body = `
+<a href="/admin/edit?ref=${encodeURIComponent(ref)}" class="meta">&larr; back to editor (retry)</a>
+<h2 style="margin-top:8px">Invalid JSON</h2>
+<div class="card" style="border-left:4px solid #dc2626">
+  <p><strong>Could not parse the questionnaire JSON.</strong> Nothing was saved.</p>
+  <pre class="json" style="color:#991b1b">${escapeHtml(msg)}</pre>
+  <p><a class="btn secondary" href="/admin/edit?ref=${encodeURIComponent(ref)}">Retry edit</a></p>
+</div>`;
+    return new Response(shell('Edit JSON &mdash; parse error', body), {
+      status: 400,
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+    });
+  }
+
+  // 2) Sanity-check required fields for the will template renderer.
+  if (!parsed || typeof parsed !== 'object' || !parsed.testator || !parsed.executors) {
+    const body = `
+<a href="/admin/edit?ref=${encodeURIComponent(ref)}" class="meta">&larr; back to editor (retry)</a>
+<h2 style="margin-top:8px">Required fields missing</h2>
+<div class="card" style="border-left:4px solid #dc2626">
+  <p><strong>Required fields missing: testator and/or executors.</strong> Nothing was saved.</p>
+  <p>The will template cannot render without both <code>testator</code> and <code>executors</code>. Please add them and retry.</p>
+  <p><a class="btn secondary" href="/admin/edit?ref=${encodeURIComponent(ref)}">Retry edit</a></p>
+</div>`;
+    return new Response(shell('Edit JSON &mdash; validation', body), {
+      status: 400,
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+    });
+  }
+
+  // 3) Load + patch the lead in place.
+  const lead = await getLead(env, ref);
+  if (!lead) return new Response('Lead not found', { status: 404 });
+
+  const now = new Date().toISOString();
+  const patch: Partial<LeadRecord> & { lastEditedAt?: string } = {
+    questionnaire: parsed,
+    lastEditedAt: now,
+  } as any;
+  if (action === 'save_and_regenerate') {
+    patch.pdfStatus = 'generating';
+    patch.pdfError = undefined;
+  }
+  await updateLead(env, ref, patch as Partial<LeadRecord>);
+
+  // 4) Audit-trail note (same convention as handleAddNote).
+  const auditText = `Admin edited questionnaire JSON at ${now}. Action: ${action}.`;
+  await appendNote(env, ref, { text: auditText, createdAt: now });
+  await appendActivity(env, ref, { type: 'note_added', at: now, detail: auditText.slice(0, 80) });
+
+  // 5) Kick off regenerate if requested.
+  if (action === 'save_and_regenerate') {
+    ctx.waitUntil(regenerateForRef(env, ref));
+  }
+
+  return new Response(null, {
+    status: 303,
+    headers: { Location: `/admin/detail?ref=${encodeURIComponent(ref)}` },
+  });
+}
+
 // ---------- Router ----------
 
 export async function handleAdmin(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -994,5 +1122,7 @@ export async function handleAdmin(request: Request, env: Env, ctx: ExecutionCont
   if (path === '/admin/pdf' && request.method === 'GET') return handleViewPdf(request, env);
   if (path === '/admin/delete' && request.method === 'POST') return handleDeleteLead(request, env);
   if (path === '/admin/bulk' && request.method === 'POST') return handleBulk(request, env);
+  if (path === '/admin/edit' && request.method === 'GET') return handleEditQuestionnaireGet(request, env);
+  if (path === '/admin/edit' && request.method === 'POST') return handleEditQuestionnairePost(request, env, ctx);
   return new Response('Not found', { status: 404 });
 }
