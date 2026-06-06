@@ -1007,12 +1007,13 @@ async function handleEditQuestionnaireGet(request: Request, env: Env): Promise<R
     <div><label>Customer</label>${escapeHtml(name)}</div>
     <div><label>PDF status</label>${statusBadge(lead.pdfStatus)}</div>
   </div>
-  <p class="meta" style="margin-top:10px">Edit the underlying <code>questionnaire</code> JSON. Save writes back to KV; Save + Regenerate also re-runs the PDF pipeline and re-emails the customer. Every edit is logged as an admin note.</p>
+  <p class="meta" style="margin-top:10px">Edit the underlying <code>questionnaire</code> JSON. Save writes back to KV; Save + Render rebuilds the PDF (stored in R2) without emailing the customer (use it to preview template fixes); Save + Regenerate also re-runs the PDF pipeline and re-emails the customer. Every edit is logged as an admin note.</p>
 </div>
 <form method="POST" action="/admin/edit?ref=${encodeURIComponent(ref)}">
   <textarea name="questionnaire" rows="35" style="width:100%;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.45">${escapeHtml(pretty)}</textarea>
   <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
     <button class="btn" name="action" value="save" type="submit">Save changes</button>
+    <button class="btn secondary" name="action" value="save_and_render_only" type="submit">Save + Render (no email)</button>
     <button class="btn" name="action" value="save_and_regenerate" type="submit" style="background:#10b981">Save + Regenerate PDF</button>
     <a class="btn secondary" href="/admin/detail?ref=${encodeURIComponent(ref)}">Cancel</a>
   </div>
@@ -1032,7 +1033,7 @@ async function handleEditQuestionnairePost(request: Request, env: Env, ctx: Exec
   const form = await request.formData();
   const action = (form.get('action') || '').toString();
   const raw = (form.get('questionnaire') || '').toString();
-  if (action !== 'save' && action !== 'save_and_regenerate') {
+  if (action !== 'save' && action !== 'save_and_regenerate' && action !== 'save_and_render_only') {
     return new Response('Bad action', { status: 400 });
   }
 
@@ -1082,7 +1083,7 @@ async function handleEditQuestionnairePost(request: Request, env: Env, ctx: Exec
     questionnaire: parsed,
     lastEditedAt: now,
   } as any;
-  if (action === 'save_and_regenerate') {
+  if (action === 'save_and_regenerate' || action === 'save_and_render_only') {
     patch.pdfStatus = 'generating';
     patch.pdfError = undefined;
   }
@@ -1093,9 +1094,12 @@ async function handleEditQuestionnairePost(request: Request, env: Env, ctx: Exec
   await appendNote(env, ref, { text: auditText, createdAt: now });
   await appendActivity(env, ref, { type: 'note_added', at: now, detail: auditText.slice(0, 80) });
 
-  // 5) Kick off regenerate if requested.
+  // 5) Kick off regenerate if requested. save_and_render_only rebuilds + stores
+  //    the PDF but skips the customer email (preview-only).
   if (action === 'save_and_regenerate') {
     ctx.waitUntil(regenerateForRef(env, ref));
+  } else if (action === 'save_and_render_only') {
+    ctx.waitUntil(regenerateForRef(env, ref, true));
   }
 
   return new Response(null, {

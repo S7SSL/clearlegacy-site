@@ -78,9 +78,14 @@ function formatDate(d: Date): string {
 /**
  * Public entry point used by the admin "Regenerate" button. Thin wrapper so we
  * don't leak the private implementation name from this module.
+ *
+ * skipEmail (optional): when true, the customer (and BCC admin) email send is
+ * skipped. The PDF is still re-rendered and stored in R2 and pdfGeneratedAt is
+ * still updated. Used by the admin "Save + Render (no email)" button so we can
+ * preview template fixes without spamming the customer.
  */
-export async function regenerateForRef(env: Env, ref: string): Promise<void> {
-  return generateAndDeliver(env, ref);
+export async function regenerateForRef(env: Env, ref: string, skipEmail?: boolean): Promise<void> {
+  return generateAndDeliver(env, ref, skipEmail);
 }
 
 /**
@@ -334,7 +339,7 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): 
   return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
 }
 
-async function generateAndDeliver(env: Env, ref: string): Promise<void> {
+async function generateAndDeliver(env: Env, ref: string, skipEmail?: boolean): Promise<void> {
   try {
     const lead = await getLead(env, ref);
     if (!lead) {
@@ -413,9 +418,11 @@ async function generateAndDeliver(env: Env, ref: string): Promise<void> {
     const token = await mintDownloadToken(env.DOWNLOAD_TOKEN_SECRET, ref, ttlSeconds);
     const downloadUrl = `${(env.API_ORIGIN || env.SITE_ORIGIN).replace(/\/$/, '')}/api/pdf/${token}`;
 
-    // Email customer + BCC admin
+    // Email customer + BCC admin. skipEmail (set by the admin "Save + Render
+    // (no email)" button) bypasses the send entirely so we can preview template
+    // fixes without delivering anything to the customer.
     const toEmail = lead.stripeCustomerEmail || lead.questionnaire.testator.email;
-    if (toEmail) {
+    if (toEmail && !skipEmail) {
       const customerName = lead.questionnaire.testator.fullName;
       const product = (lead.questionnaire.product || lead.product) === 'mirror' ? 'Mirror Wills' : 'Will';
       const subject = `Your ${product} from Clear Legacy — ready to sign`;
@@ -467,6 +474,8 @@ Reference: ${ref}
         'sendEmail (Resend)',
       );
       console.log(`[generate ${ref}] email sent OK`);
+    } else if (skipEmail) {
+      console.log(`[generate ${ref}] skipEmail=true; PDF stored but customer email skipped (admin preview render)`);
     } else {
       console.warn(`Webhook: no customer email for ref=${ref}; PDF stored but no email sent`);
     }
@@ -475,7 +484,7 @@ Reference: ${ref}
       pdfStatus: 'ready',
       pdfKey,
       pdfGeneratedAt: new Date().toISOString(),
-      emailedAt: toEmail ? new Date().toISOString() : undefined,
+      emailedAt: (toEmail && !skipEmail) ? new Date().toISOString() : undefined,
     });
   } catch (err: any) {
     console.error(`Webhook generate failed for ref=${ref}:`, err);
