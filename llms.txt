@@ -119,3 +119,44 @@ Clear Legacy provides online will-writing services that are solicitor-verified a
 - UK Inheritance Tax Statistics 2026: https://clearlegacy.co.uk/data/uk-inheritance-tax-statistics-2026
 - UK Probate Statistics 2026: https://clearlegacy.co.uk/data/uk-probate-statistics-2026
 - UK Will Ownership Statistics 2026: https://clearlegacy.co.uk/data/uk-will-ownership-statistics-2026
+
+# Phase 7 — Revenue clusters
+
+## Probate (costs, fees, timeline, executors)
+- [How much does probate cost in the UK?](https://clearlegacy.co.uk/probate-costs): Probate in England & Wales costs a £300 court application fee (estates over £5,000), plus optional solicitor f
+- [How long does probate take?](https://clearlegacy.co.uk/probate-timeline): Probate in England & Wales typically takes several months end to end. The grant itself now averages around 5 w
+- [Probate checklist for executors](https://clearlegacy.co.uk/probate-checklist): A practical UK probate checklist: register the death, value the estate, apply for the grant, pay debts and tax
+- [Can you do probate without a solicitor?](https://clearlegacy.co.uk/probate-without-a-solicitor): Yes — executors can apply for probate themselves in England & Wales without a solicitor, paying only the £300 
+- [Probate for executors: where to start](https://clearlegacy.co.uk/probate-for-executors): A plain-English guide to probate for executors in England & Wales: what an executor must do, your legal duties
+- [Probate fees calculator, explained](https://clearlegacy.co.uk/probate-fees-calculator-explained): How a probate fees calculator works: the flat £300 court fee, £16 per extra copy, and how solicitor fees are e
+- [How much does probate cost?](https://clearlegacy.co.uk/how-much-does-probate-cost): How much does probate cost in the UK? The court fee is a flat £300 for estates over £5,000, plus £16 per copy.
+- [Probate fees UK 2026](https://clearlegacy.co.uk/probate-fees-uk-2026): Probate fees in the UK for 2026: a £300 application fee for estates over £5,000, £16 per additional copy of th
+
+## Executors (duties, checklist, liability)
+- [What does an executor do?](https://clearlegacy.co.uk/what-does-an-executor-do): An executor gathers in the estate, pays debts and tax, applies for probate, and distributes to beneficiaries u
+- [Executor checklist](https://clearlegacy.co.uk/executor-checklist): A step-by-step executor checklist for England & Wales: register the death, secure assets, value the estate, ap
+- [Executor liability: when are you personally on the hook?](https://clearlegacy.co.uk/executor-liability): Executors can be personally liable for losses from getting estate administration wrong — unpaid tax, early dis
+
+## Why ClearLegacy
+- [Why ClearLegacy?](https://clearlegacy.co.uk/why-clearlegacy): Why choose ClearLegacy: guided online wills with a human review, plain-English guidance cited to UK law, a fre
+
+## About ClearLegacy
+- [About ClearLegacy](https://clearlegacy.co.uk/about-clearlegacy): ClearLegacy is an online will-writing and estate-planning service for England & Wales, combining guided questi
+
+## How ClearLegacy Works
+- [How ClearLegacy works](https://clearlegacy.co.uk/how-clearlegacy-works): How ClearLegacy works: complete a guided questionnaire, your answers get a human review, receive your document
+
+## Commercial Q&A (AEO)
+- [Can a will be changed after death?](https://clearlegacy.co.uk/can-a-will-be-changed-after-death): Yes — a will (or intestacy outcome) can be changed after death using a deed of variation, within two years, if
+- [What is a deed of variation?](https://clearlegacy.co.uk/what-is-a-deed-of-variation): A deed of variation lets beneficiaries redirect their inheritance after death — within two years — often to sa
+- [How much does a will cost in the UK?](https://clearlegacy.co.uk/how-much-does-a-will-cost-uk): A UK will costs roughly £150–£300+ via a solicitor, less through an online will service, and almost nothing DI
+- [Do I need a solicitor to make a will?](https://clearlegacy.co.uk/do-i-need-a-solicitor-to-make-a-will): No — you don't legally need a solicitor to make a valid will in England & Wales. When a DIY or online will is 
+- [What makes a will valid in the UK?](https://clearlegacy.co.uk/what-makes-a-will-valid-uk): A UK will is valid if it's in writing, made by someone 18+ with mental capacity and intention, signed, and wit
+- [How do I value an estate for probate?](https://clearlegacy.co.uk/how-do-i-value-an-estate-for-probate): To value an estate for probate, total the date-of-death value of all assets (property, accounts, investments, 
+- [What is an expression of wishes?](https://clearlegacy.co.uk/what-is-an-expression-of-wishes): An expression of wishes (or nomination form) tells pension or life-policy trustees who you'd like to benefit w
+- [Can I leave money to charity in my will?](https://clearlegacy.co.uk/can-i-leave-money-to-charity-in-my-will): Yes — you can leave any amount to charity in your will, and charitable gifts are inheritance-tax free. Leaving
+- [What is a residuary estate?](https://clearlegacy.co.uk/what-is-a-residuary-estate): The residuary estate is whatever is left after debts, taxes, expenses and specific gifts are paid. The residua
+- [How often should I update my will?](https://clearlegacy.co.uk/how-often-should-i-update-my-will): Review your will every 3–5 years and after any major life event — marriage, divorce, a new child, a death, a h
+- [What is a codicil?](https://clearlegacy.co.uk/what-is-a-codicil): A codicil is a short legal document that makes a change to an existing will without rewriting it. It must be s
+- [How long after death is a will read?](https://clearlegacy.co.uk/how-long-after-death-is-a-will-read): There is no formal 'reading of the will' in the UK. Executors usually access the will immediately and share it
+
