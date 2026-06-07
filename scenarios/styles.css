@@ -1,20 +1,21 @@
-/* ClearLegacy Scenario Library — shared styles
-   Situation → Legal outcome → Risks → Actions. Extractable, fast. */
+/* ClearLegacy Scenario Library — shared styles.
+   Brand palette: blue + black. Situation → Legal → Risks → Actions. */
 
 :root {
-  --ink: #1a2330;
-  --ink-soft: #45505f;
+  --ink: #11161d;
+  --ink-soft: #46505f;
   --line: #e3e7ec;
   --bg: #ffffff;
-  --bg-soft: #f6f8fa;
-  --brand: #1f5f4f;
-  --brand-dark: #143f34;
-  --accent: #c9a24b;
-  --answer-bg: #eef5f2;
-  --risk-bg: #fcefef;
+  --bg-soft: #f5f7fa;
+  --brand: #173a6b;          /* navy */
+  --brand-dark: #0f2746;
+  --accent: #2f6fb0;         /* bright blue */
+  --accent-hover: #3f82c9;
+  --answer-bg: #eef3fa;
+  --risk-bg: #fcefef;        /* red — risk signal */
   --risk-border: #c0564f;
-  --action-bg: #ecf6f1;
-  --action-border: #1f5f4f;
+  --action-bg: #eef3fa;      /* blue — recommended action */
+  --action-border: #173a6b;
   --max: 760px;
   --radius: 10px;
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -25,7 +26,7 @@ body { margin:0; font-family:var(--font); color:var(--ink); background:var(--bg)
 .site-header { border-bottom:1px solid var(--line); background:var(--bg); }
 .site-header .wrap { max-width:var(--max); margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
 .brand { font-weight:700; font-size:19px; color:var(--brand); text-decoration:none; letter-spacing:-0.01em; }
-.brand span { color:var(--accent); }
+.brand span { color:var(--ink); }
 .site-header nav a { color:var(--ink-soft); text-decoration:none; font-size:15px; margin-left:18px; }
 .site-header nav a:hover { color:var(--brand); }
 
@@ -37,7 +38,7 @@ main { max-width:var(--max); margin:0 auto; padding:0 20px 64px; }
 h1 { font-size:31px; line-height:1.22; letter-spacing:-0.02em; margin:12px 0 8px; }
 h2 { font-size:22px; margin:36px 0 10px; letter-spacing:-0.01em; }
 p { margin:0 0 16px; }
-a { color:var(--brand); }
+a { color:var(--accent); }
 .meta-line { font-size:14px; color:var(--ink-soft); margin-bottom:6px; }
 
 .quick-answer { background:var(--answer-bg); border-left:5px solid var(--brand); border-radius:var(--radius); padding:18px 22px; margin:20px 0 8px; }
@@ -76,9 +77,9 @@ li { margin-bottom:6px; }
 
 .cta { margin:36px 0 0; background:var(--brand); color:#fff; border-radius:var(--radius); padding:26px 28px; text-align:center; }
 .cta h2 { color:#fff; margin:0 0 8px; }
-.cta p { color:#dbe9e4; margin:0 0 16px; }
-.cta a.btn { display:inline-block; background:var(--accent); color:var(--brand-dark); font-weight:700; text-decoration:none; padding:12px 26px; border-radius:8px; }
-.cta a.btn:hover { background:#d8b463; }
+.cta p { color:#cdddef; margin:0 0 16px; }
+.cta a.btn { display:inline-block; background:var(--accent); color:#fff; font-weight:700; text-decoration:none; padding:12px 26px; border-radius:8px; }
+.cta a.btn:hover { background:var(--accent-hover); }
 
 .index-intro { margin:12px 0 24px; color:var(--ink-soft); }
 .q-list { list-style:none; padding:0; }
