@@ -1,9 +1,9 @@
 /* ClearLegacy Decision Trees — shared styles. Brand: blue + black. Mobile-first. */
 :root{
-  --ink:#11161d; --ink-soft:#46505f; --line:#e3e7ec; --bg:#fff; --bg-soft:#f5f7fa;
-  --brand:#173a6b; --brand-dark:#0f2746; --accent:#2f6fb0; --accent-hover:#3f82c9;
-  --answer-bg:#eef3fa;
-  --need-bg:#eef3fa; --need-bd:#173a6b;          /* navy — action needed */
+  --ink:#0f172a; --ink-soft:#475569; --line:#e2e8f0; --bg:#fff; --bg-soft:#f8fafc;
+  --navy:#0f172a; --brand:#2563eb; --brand-dark:#1d4ed8; --accent:#2563eb; --accent-hover:#1d4ed8;
+  --answer-bg:#eff6ff;
+  --need-bg:#eff6ff; --need-bd:#2563eb;          /* blue — action needed */
   --no-bg:#eef2f7; --no-bd:#5b6b7d;              /* grey — no action */
   --warn-bg:#fbf3e3; --warn-bd:#c08a1e;          /* amber — caution */
   --stop-bg:#fcefef; --stop-bd:#c0564f;          /* red — stop / elsewhere */
@@ -67,7 +67,7 @@ li{margin-bottom:6px;}
 .related li{margin-bottom:8px;}
 .related a{text-decoration:none;font-weight:500;}
 .related a:hover{text-decoration:underline;}
-.cta{margin:36px 0 0;background:var(--brand);color:#fff;border-radius:var(--radius);padding:26px 28px;text-align:center;}
+.cta{margin:36px 0 0;background:var(--navy);color:#fff;border-radius:var(--radius);padding:26px 28px;text-align:center;}
 .cta h2{color:#fff;margin:0 0 8px;}
 .cta p{color:#cdddef;margin:0 0 16px;}
 .cta a.btn{display:inline-block;background:var(--accent);color:#fff;font-weight:700;text-decoration:none;padding:12px 26px;border-radius:8px;}

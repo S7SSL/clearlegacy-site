@@ -2,17 +2,18 @@
    Brand palette: blue + black. Clean, extractable, fast. */
 
 :root {
-  --ink: #11161d;            /* near-black */
-  --ink-soft: #46505f;
-  --line: #e3e7ec;
+  --ink: #0f172a;            /* navy/black (brand --navy) */
+  --ink-soft: #475569;
+  --line: #e2e8f0;
   --bg: #ffffff;
-  --bg-soft: #f5f7fa;
-  --brand: #173a6b;          /* ClearLegacy navy */
-  --brand-dark: #0f2746;     /* deep navy */
-  --accent: #2f6fb0;         /* bright blue */
-  --accent-hover: #3f82c9;
-  --answer-bg: #eef3fa;       /* light blue tint */
-  --answer-border: #173a6b;
+  --bg-soft: #f8fafc;
+  --navy: #0f172a;           /* black-navy for dark sections */
+  --brand: #2563eb;          /* ClearLegacy primary blue */
+  --brand-dark: #1d4ed8;     /* primary-dark */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --answer-bg: #eff6ff;       /* light blue tint */
+  --answer-border: #2563eb;
   --warn-bg: #fbf3e3;         /* amber — caution only */
   --warn-border: #c08a1e;
   --max: 760px;
@@ -90,7 +91,7 @@ li { margin-bottom: 6px; }
 .related a:hover { text-decoration: underline; }
 
 /* CTA */
-.cta { margin: 36px 0 0; background: var(--brand); color: #fff; border-radius: var(--radius); padding: 26px 28px; text-align: center; }
+.cta { margin: 36px 0 0; background: var(--navy); color: #fff; border-radius: var(--radius); padding: 26px 28px; text-align: center; }
 .cta h2 { color: #fff; margin: 0 0 8px; }
 .cta p { color: #cdddef; margin: 0 0 16px; }
 .cta a.btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none; padding: 12px 26px; border-radius: 8px; }
