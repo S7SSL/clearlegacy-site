@@ -1,58 +1,55 @@
 # Clear Legacy
 
-> Online will writing and estate planning service for England & Wales. Solicitor-verified, affordable, instant PDF delivery.
+> Online will writing and estate planning service for England & Wales. Estate-planner reviewed, affordable, 24-hour PDF delivery.
 
 ## About
 
-Clear Legacy provides online will-writing services that are solicitor-verified and legally binding in England & Wales. Founded to make estate planning accessible and affordable, we offer fixed-price wills with no hidden fees.
+Clear Legacy provides online will-writing services that are reviewed by a qualified estate planner and legally valid in England & Wales. Founded to make estate planning accessible and affordable, we offer fixed-price wills with no hidden fees.
 
 ## Services & Pricing
 
-- Single Will: £69 — Full last will and testament, solicitor-verified, instant PDF
+- Single Will: £69 — Full last will and testament, estate-planner reviewed, PDF within 24 hours
 - Mirror Will (Couples): £99 — Two matching wills for partners/spouses
-- Property Trust Will: From £149.99 — Protect your home from care fees and sideways disinheritance
-- Lasting Power of Attorney (LPA): Guided preparation for health & welfare or property & financial affairs
-- Will Storage: Secure digital storage with lifetime access
 
 ## Key Pages
 
 - Homepage: https://clearlegacy.co.uk
-- Start Your Will: https://clearlegacy.co.uk/will
-- Mirror Wills: https://clearlegacy.co.uk/mirror-will
-- Property Trust Will: https://clearlegacy.co.uk/property-trust-will
+- Start Your Will: https://clearlegacy.co.uk/forms/will.html
+- Mirror Wills: https://clearlegacy.co.uk/mirror-wills
+- Property Trust Wills explained: https://clearlegacy.co.uk/what-is-a-property-protection-trust-will
 - Pricing: https://clearlegacy.co.uk/pricing
-- About Us: https://clearlegacy.co.uk/about
+- About Us: https://clearlegacy.co.uk/about-clearlegacy
 - Guides: https://clearlegacy.co.uk/guides
 
 ## Guide Topics
 
 - How to Write a Will: https://clearlegacy.co.uk/guides/how-to-write-a-will
-- Do I Need a Solicitor for a Will: https://clearlegacy.co.uk/guides/do-i-need-a-solicitor-for-a-will
-- What Happens If You Die Without a Will: https://clearlegacy.co.uk/guides/what-happens-if-you-die-without-a-will
-- Mirror Wills Explained: https://clearlegacy.co.uk/guides/mirror-wills-explained
-- Inheritance Tax Thresholds: https://clearlegacy.co.uk/guides/inheritance-tax-thresholds
-- Lasting Power of Attorney Guide: https://clearlegacy.co.uk/guides/lasting-power-of-attorney
-- Property Trust Wills Explained: https://clearlegacy.co.uk/guides/property-trust-wills
-- The 7-Year Rule for Inheritance Tax: https://clearlegacy.co.uk/guides/7-year-rule-inheritance-tax
-- Probate Explained: https://clearlegacy.co.uk/guides/probate-explained
-- Will Witnesses Rules: https://clearlegacy.co.uk/guides/will-witnesses-rules
+- Do I Need a Solicitor for a Will: https://clearlegacy.co.uk/do-i-need-a-solicitor-to-make-a-will
+- What Happens If You Die Without a Will: https://clearlegacy.co.uk/guides/dying-without-a-will
+- Mirror Wills Explained: https://clearlegacy.co.uk/guides/mirror-wills
+- Inheritance Tax Thresholds: https://clearlegacy.co.uk/guides/iht-threshold-2026
+- Lasting Power of Attorney Guide: https://clearlegacy.co.uk/guides/lpa-guide
+- Property Trust Wills Explained: https://clearlegacy.co.uk/what-is-a-property-protection-trust-will
+- The 7-Year Rule for Inheritance Tax: https://clearlegacy.co.uk/what-is-the-7-year-rule
+- Probate Explained: https://clearlegacy.co.uk/probate-costs
+- Will Witnesses Rules: https://clearlegacy.co.uk/who-can-witness-a-will
 
 ## Trust & Verification
 
-- All wills are verified by qualified solicitors
+- Every will is reviewed by a qualified estate planner before release
 - Compliant with the Wills Act 1837
 - Regulated by UK consumer protection law
 - Secure document generation and storage
-- Over 1,000 families served
+- 100+ UK families served
 
 ## Contact
 
 - Website: https://clearlegacy.co.uk
-- Email: support@clearlegacy.co.uk
+- Email: hello@clearlegacy.co.uk
 
 ## Knowledge Base (Q&A)
 - Can a Beneficiary Witness a Will? UK: https://clearlegacy.co.uk/knowledge-base/can-a-beneficiary-witness-a-will
-- Can a Will Be Challenged? Grounds &amp; Time Limits: https://clearlegacy.co.uk/knowledge-base/can-a-will-be-challenged
+- Can a Will Be Challenged? Grounds & Time Limits: https://clearlegacy.co.uk/knowledge-base/can-a-will-be-challenged
 - Can an Executor Be a Beneficiary?: https://clearlegacy.co.uk/knowledge-base/can-an-executor-be-a-beneficiary
 - Can an Executor Refuse to Act? UK: https://clearlegacy.co.uk/knowledge-base/can-an-executor-refuse-to-act
 - Can an Executor Remove a Beneficiary? UK: https://clearlegacy.co.uk/knowledge-base/can-an-executor-remove-a-beneficiary
@@ -75,14 +72,14 @@ Clear Legacy provides online will-writing services that are solicitor-verified a
 - What Happens to Joint Bank Accounts After Death? UK: https://clearlegacy.co.uk/knowledge-base/what-happens-to-joint-bank-accounts-after-death
 - What Is a Beneficiary? UK Meaning: https://clearlegacy.co.uk/knowledge-base/what-is-a-beneficiary
 - What Is a Mirror Will? UK: https://clearlegacy.co.uk/knowledge-base/what-is-a-mirror-will
-- What Is an Executor? UK Meaning &amp; Duties: https://clearlegacy.co.uk/knowledge-base/what-is-an-executor
+- What Is an Executor? UK Meaning & Duties: https://clearlegacy.co.uk/knowledge-base/what-is-an-executor
 - What Is Intestacy? UK Meaning: https://clearlegacy.co.uk/knowledge-base/what-is-intestacy
 - Who Inherits a Jointly Owned Property? UK: https://clearlegacy.co.uk/knowledge-base/who-inherits-a-jointly-owned-property
 - Who Inherits If There Is No Will? UK Intestacy 2026: https://clearlegacy.co.uk/knowledge-base/who-inherits-if-there-is-no-will
 - Who Pays Probate Fees in the UK? 2026: https://clearlegacy.co.uk/knowledge-base/who-pays-probate-fees
 
 ## Scenarios
-- I&#x27;m an executor and need help: https://clearlegacy.co.uk/scenarios/i-am-an-executor-and-need-help
+- I'm an executor and need help: https://clearlegacy.co.uk/scenarios/i-am-an-executor-and-need-help
 - I have children from two relationships: https://clearlegacy.co.uk/scenarios/i-have-children-from-two-relationships
 - I have disabled dependants: https://clearlegacy.co.uk/scenarios/i-have-disabled-dependants
 - I have no children: https://clearlegacy.co.uk/scenarios/i-have-no-children
@@ -101,11 +98,11 @@ Clear Legacy provides online will-writing services that are solicitor-verified a
 - My partner died without a will: https://clearlegacy.co.uk/scenarios/my-partner-died-without-a-will
 - A second marriage with children from both sides: https://clearlegacy.co.uk/scenarios/second-marriage-with-children
 - We have children but are not married: https://clearlegacy.co.uk/scenarios/we-have-children-but-are-not-married
-- We own a house together but aren&#x27;t married: https://clearlegacy.co.uk/scenarios/we-own-a-house-together-but-arent-married
+- We own a house together but aren't married: https://clearlegacy.co.uk/scenarios/we-own-a-house-together-but-arent-married
 
 ## Decision Trees
 - Do I need a will? (decision tree): https://clearlegacy.co.uk/decision-trees/do-i-need-a-will
-- I&#x27;ve been named executor — what should I do? (decision tree): https://clearlegacy.co.uk/decision-trees/executor-decision-tree
+- I've been named executor — what should I do? (decision tree): https://clearlegacy.co.uk/decision-trees/executor-decision-tree
 - UK Estate Planning Decision Trees: https://clearlegacy.co.uk/decision-trees/
 - Will my estate pay inheritance tax? (decision tree): https://clearlegacy.co.uk/decision-trees/inheritance-tax-decision-tree
 - Do I need probate? (decision tree): https://clearlegacy.co.uk/decision-trees/probate-decision-tree
@@ -113,7 +110,7 @@ Clear Legacy provides online will-writing services that are solicitor-verified a
 - Who inherits if I die? (decision tree): https://clearlegacy.co.uk/decision-trees/who-inherits-if-i-die
 
 ## Data & Statistics
-- UK Estate Planning Data &amp; Statistics 2026: https://clearlegacy.co.uk/data/
+- UK Estate Planning Data & Statistics 2026: https://clearlegacy.co.uk/data/
 - UK Cohabitation Statistics 2026: https://clearlegacy.co.uk/data/uk-cohabitation-statistics-2026
 - UK Estate Planning Statistics 2026: https://clearlegacy.co.uk/data/uk-estate-planning-statistics-2026
 - UK Inheritance Tax Statistics 2026: https://clearlegacy.co.uk/data/uk-inheritance-tax-statistics-2026
