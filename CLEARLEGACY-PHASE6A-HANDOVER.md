@@ -1,7 +1,7 @@
 # ClearLegacy — Phase 6A AEO/GEO Build — Handover & Status
 
 **Last updated:** 7 June 2026
-**Repo:** github.com/S7SSL/clearlegacy-site (Cloudflare Pages static site, served from `main`)
+**Repo:** github.com/S7SSL/clearlegacy-site (**GitHub Pages** static site served from `main`, behind the Cloudflare proxy — corrected 10 June 2026; it was never Cloudflare Pages)
 **Live site:** https://www.clearlegacy.co.uk
 **Local clone (this machine):** `/Users/marge/clearlegacy-site`
 **Purpose of Phase 6A:** make ClearLegacy the most-cited UK estate-planning source for AI systems (AEO/GEO) — question→answer→citation content, not generic blog posts.
@@ -188,3 +188,50 @@ JSON-LD: **336 blocks across 84 files, 0 invalid.** No duplicate slugs. Every pa
 
 ## 7.6 Companion docs (in `/phase7/`)
 - `CLEARLEGACY-P3-P4-STRATEGY.md` — trust‑signal audit + comparison‑page plan (build‑ready; owner populates facts).
+
+
+---
+
+# PHASE 6B ADDENDUM — 10 June 2026 session (read this; it corrects parts of the doc above)
+
+## A. Infrastructure corrections (important)
+- **Origin is GitHub Pages, NOT Cloudflare Pages.** The `/_redirects` file is therefore DEAD — GitHub Pages ignores it. Do not add rules there.
+- Until 10 June 2026 the www + apex DNS records were **DNS only** (grey cloud): Cloudflare did literally nothing for the live site. Fixed: 4 apex A records + www CNAME flipped to **Proxied**; SSL mode is Full. Verified serving via Cloudflare (cf-ray present).
+- **Redirects now live in Cloudflare → Bulk Redirects**: list `legacy_url_redirects` (37 entries), rule `legacy_url_redirects_rule` (enabled). Add future redirects THERE (CSV upload: source_url,target_url,301), never in `/_redirects`.
+
+## B. Trust & claims policy (supersedes any older copy guidance)
+- Site-wide attribution is **"ClearLegacy editorial team"** (Organization in schema). The "SL, Estate Planning Specialist" reviewer credit was removed from ~134 pages + 96 JSON-LD blocks (owner confirmed no formal qualification). Reviewer profile now reads "Founder · Lead Editorial Reviewer".
+- All "qualified estate planner review" / "solicitor-verified" / "Guided by qualified legal professionals" product claims were replaced with truthful wording: **automated review / quality-checked / "Built around the Wills Act 1837"**. Keep it that way unless a real credentialed reviewer (STEP member/solicitor) is engaged — that remains the single biggest E-E-A-T upgrade available.
+- Customer count claim: **"100+ UK families"** everywhere (llms.txt previously said 1,000+ — false). Contact email is **hello@clearlegacy.co.uk** (not support@).
+
+## C. Fixes shipped 10 June (4 deploy batches, all live + verified)
+1. llms.txt: all dead links fixed (4/7 key pages and 9/10 guide links were 404s), claims aligned with site, phantom products (Property Trust £149.99 / LPA / Storage) removed, HTML entities cleaned, /tools/ + /visual-guides/ added.
+2. Template rot: mangled bylines ("Last updated:middot;") on 110 pages; `&amp;middot;` literals on 48 pages; "Regulated by Kaizen Finance Ltd" → "A trading name of…" on 157 pages; 34 stale `.bak` files (incl. old checkout pages) deleted from the public branch.
+3. Internal links: 52 broken internal links across 21 phantom targets remapped to real pages; **new index pages created at /tools/ and /visual-guides/**; duplicated lede copy on /wills/ fixed. Site now crawls with 0 broken internal links (6,200+ checked).
+4. Duplicate titles: 12 old "Redirecting…/Moved" stub pages + duplicate /terms.html deleted (their meta-refresh redirects never worked); replaced with proper 301s in the Bulk Redirects list; title clash resolved (standalone page retitled "Are Online Wills Legal in England & Wales? 2026 Guide"); sitemap cleaned.
+- All 1,047 JSON-LD blocks re-validated after every batch (0 invalid).
+
+## D. Google Ads (account 658-429-9393) — paused by design
+Owner decision: ads burned money (May: ~£305 → 2-3 conversions); organic/AEO drives sales. All campaigns PAUSED and stay paused. Cleanup applied: 24-keyword negative list linked to both Search campaigns; non-converting RSA paused (the converting one: "Wills From Just £69"). Outstanding (manual, UI-only): set GA4 "ads_conversion_purchase" to Secondary to stop double counting.
+
+## E. Bing Webmaster Tools (account active, site verified)
+- Sitemap resubmitted 10 June (was stale since 8 May; Bing had only 89 URLs). 40 priority URLs pushed via URL Submission (quota 100/day).
+- Bing's three recommendations: duplicate titles/descriptions → fixed at source (see C4), will clear on recrawl; inbound links → see pitch kit (F).
+- Consider wiring **IndexNow** for instant Bing indexing on future deploys.
+
+## F. Off-site / backlinks
+Pitch kit at `_ops-docs/clearlegacy-backlink-pitch-kit.md`: 18 targets in 3 tiers, 3 email templates, 3-week sequence. Key facts: Wuhld already lists ClearLegacy (verify + thank); strongest news hook is the 6 April 2027 pension-IHT change. Ground rule: outreach claims must match the truthful on-site claims (B).
+
+## G. Monitoring
+- **Weekly scheduled audit** "clearlegacy-seo-aeo-weekly-audit" (Mondays 09:00, Cowork Scheduled sidebar): dead links in llms.txt/sitemap, JSON-LD validity, template-rot regression patterns, claim drift, indexation spot-checks.
+- Existing 3-day indexation monitor still runs.
+
+## H. Deploy pattern (corrected)
+Same git flow as §5 above, but: build lag is GitHub Pages (~1 min). After deploys that change long-cached files, purge cache in Cloudflare (now effective, since the site is actually proxied). Redirects: Cloudflare Bulk Redirects UI, not files.
+
+## I. Known open items
+1. GA4 conversion action double-count fix (D) — 2 clicks in Google Ads UI.
+2. "Reviewed by ClearLegacy Estate Planning Team — UK qualified · Wills Act 1837 specialists" badge still present on some pages (different markup variant) — remove "UK qualified" wording in next pass.
+3. twitter:title on is-an-online-will-legal-uk/ still shows old title.
+4. One page contradiction: best-online-will-uk and is-an-online-will-legal-uk tout "human estate-planner review" as a differentiator in one bullet while the service describes automated review — harmonise.
+5. NOTE: this repo is PUBLIC and GitHub Pages serves every committed file — internal docs (audits, this handover, the pitch kit) are world-readable. Consider moving ops docs to a private repo.
