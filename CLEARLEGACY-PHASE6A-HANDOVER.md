@@ -230,7 +230,7 @@ Pitch kit at `_ops-docs/clearlegacy-backlink-pitch-kit.md`: 18 targets in 3 tier
 Same git flow as §5 above, but: build lag is GitHub Pages (~1 min). After deploys that change long-cached files, purge cache in Cloudflare (now effective, since the site is actually proxied). Redirects: Cloudflare Bulk Redirects UI, not files.
 
 ## I. Known open items
-1. GA4 conversion action double-count fix (D) — 2 clicks in Google Ads UI.
+1. GA4 conversion action double-count fix (D) — 2 clicks in Google Ads UI. (ONLY remaining technical item.)
 2. ~~"UK qualified · specialists" badge~~ — FIXED 10 June (now "Wills Act 1837 compliant"; "Estate Planning Team" → "editorial team").
 3. ~~twitter:title on is-an-online-will-legal-uk/~~ — FIXED 10 June.
 4. ~~"human estate-planner review" contradiction~~ — FIXED 10 June (neutral "documented review step" wording).
@@ -254,3 +254,12 @@ Totals: 145 clicks · 38.5K impressions · 0.4% CTR · avg position 56.8. Impres
 | how much does a will cost uk | 42.8 | 52 | 1 |
 
 Strategy: probate-calculator cluster is already page 1 — biggest near-term win is pushing "probate fees calculator" (628 impressions, pos 19.7) onto page 1 via backlinks (pitch kit, F). Will-writing money terms are the medium-term targets. 90-day targets: probate calculator terms top 5; "best will writing service uk" page 1. Measure all progress against this table.
+
+
+## K. Session close-out — 10 June 2026 (final state)
+- **Claims sweep COMPLETE**: exhaustive grep confirms zero unverifiable credential claims remain in any of the 300+ pages ("qualified estate planner", "qualified-planner", "Estate Planning Specialist", "UK qualified", "Qualified review", "estate-planner review" — all removed or rewritten to automated/structured-review wording; commit a9054c5). Allowed exceptions (true generic advice): "consult a qualified estate planner or solicitor", "A qualified estate planner can talk you through", "straightforward for any qualified estate planner", "review is by a qualified estate planner, a paralegal, or automated".
+- **Bulk Redirects list**: now 37 entries (16 legacy llms.txt URLs + 21 deleted-stub URLs). All verified live with 200 at destination.
+- **GSC (10 June)**: sitemap resubmitted; /tools/ and /visual-guides/ submitted via Request Indexing (both were "unknown to Google"). Do NOT re-request repeatedly.
+- **Bing (10 June)**: sitemap resubmitted (was stale since 8 May; Bing knew only 89 URLs); 40 priority URLs pushed via URL Submission. Bing's duplicate-title/description warnings fixed at source — will clear on recrawl.
+- **Weekly audit updated**: now also greps for recurrence of every removed claim pattern (template regression guard), checks live llms.txt freshness via Cloudflare, and verifies 3 redirects.
+- All four 10-June deploy batches + handover updates pushed; final commit a9054c5.
