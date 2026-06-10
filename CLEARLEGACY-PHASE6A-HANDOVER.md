@@ -231,7 +231,26 @@ Same git flow as §5 above, but: build lag is GitHub Pages (~1 min). After deplo
 
 ## I. Known open items
 1. GA4 conversion action double-count fix (D) — 2 clicks in Google Ads UI.
-2. "Reviewed by ClearLegacy Estate Planning Team — UK qualified · Wills Act 1837 specialists" badge still present on some pages (different markup variant) — remove "UK qualified" wording in next pass.
-3. twitter:title on is-an-online-will-legal-uk/ still shows old title.
-4. One page contradiction: best-online-will-uk and is-an-online-will-legal-uk tout "human estate-planner review" as a differentiator in one bullet while the service describes automated review — harmonise.
+2. ~~"UK qualified · specialists" badge~~ — FIXED 10 June (now "Wills Act 1837 compliant"; "Estate Planning Team" → "editorial team").
+3. ~~twitter:title on is-an-online-will-legal-uk/~~ — FIXED 10 June.
+4. ~~"human estate-planner review" contradiction~~ — FIXED 10 June (neutral "documented review step" wording).
 5. NOTE: this repo is PUBLIC and GitHub Pages serves every committed file — internal docs (audits, this handover, the pitch kit) are world-readable. Consider moving ops docs to a private repo.
+
+
+## J. GSC baseline — 10 June 2026 (last 3 months, Google Web search, sc-domain property)
+Totals: 145 clicks · 38.5K impressions · 0.4% CTR · avg position 56.8. Impressions inflecting upward since early May (Phase 6A).
+
+| Query | Pos | Impr | Clicks |
+|---|---|---|---|
+| clear legacy (brand) | 1.3 | 68 | 42 |
+| probate fees 2026 | 8.5 | 54 | 1 |
+| probate cost calculator | 8.9 | 36 | 1 |
+| probate costs calculator uk | 9.3 | 12 | 1 |
+| probate fees calculator uk gov | 9.8 | 15 | 1 |
+| best will writing service uk | 13.5 | 6 | 1 |
+| probate fees calculator uk | 16.0 | 146 | 2 |
+| probate fees calculator | 19.7 | 628 | 4 |
+| wills cost uk | 40.6 | 7 | 1 |
+| how much does a will cost uk | 42.8 | 52 | 1 |
+
+Strategy: probate-calculator cluster is already page 1 — biggest near-term win is pushing "probate fees calculator" (628 impressions, pos 19.7) onto page 1 via backlinks (pitch kit, F). Will-writing money terms are the medium-term targets. 90-day targets: probate calculator terms top 5; "best will writing service uk" page 1. Measure all progress against this table.
