@@ -48,4 +48,4 @@ The legal product is the same at every price. The difference is operational over
 
 ---
 
-*ClearLegacy provides legally valid online wills from £69 — fixed-fee, reviewed by a qualified estate planner, 24-hour turnaround. England & Wales.*
+*ClearLegacy provides legally valid online wills from £69 — fixed-fee, checked against the Wills Act 1837, 24-hour turnaround. England & Wales.*

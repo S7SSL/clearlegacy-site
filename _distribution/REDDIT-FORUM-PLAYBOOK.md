@@ -33,7 +33,7 @@
 > - The signing ceremony is where most homemade and "DIY" wills fail. Witnesses can't be beneficiaries (or the spouse of a beneficiary), they have to be physically present at the same time, and the order of signatures matters. A reviewed online service will give you signing instructions that cover this — a £20 WHSmith kit usually won't.
 > - For complex estates (discretionary trusts, foreign property, business succession, contested family) a solicitor is still the right call. For a typical home + savings + family setup, an online will is the same legal document as a solicitor's, at a fraction of the price.
 >
-> Disclosure: I run ClearLegacy, a UK online will-writing service (£69 single, £99 mirror, qualified estate planner reviews every will). Happy to answer specifics about how the process works if it helps.
+> Disclosure: I run ClearLegacy, a UK online will-writing service (£69 single, £99 mirror, structured automated reviews every will). Happy to answer specifics about how the process works if it helps.
 
 ---
 

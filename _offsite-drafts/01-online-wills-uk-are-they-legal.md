@@ -60,4 +60,4 @@ The Wills Act 1837 doesn't care whether the will was drafted online or in a Geor
 
 ---
 
-*ClearLegacy provides legally valid online wills from £69 — reviewed by a qualified estate planner within 24 hours. England & Wales.*
+*ClearLegacy provides legally valid online wills from £69 — checked against the Wills Act 1837 within 24 hours. England & Wales.*

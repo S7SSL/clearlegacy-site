@@ -21,7 +21,7 @@ What changes between an online will and a solicitor will is operational, not leg
 | Cost | £69 fixed | £150–£400 |
 | Turnaround | 24 hours | 1–3 weeks plus appointment |
 | Process | 15-minute online questionnaire | 45-minute face-to-face appointment |
-| Review | Qualified estate planner | Solicitor |
+| Review | Structured automated review | Solicitor |
 
 The £150–£400 solicitor price reflects office overhead (rent on a high-street building), hourly billing, broader practice areas (conveyancing, divorce, commercial leases), and SRA regulation. None of those are legal requirements for the will itself.
 
@@ -45,4 +45,4 @@ For a straightforward estate, paying £400 for a will is paying £331 for the of
 
 ---
 
-*ClearLegacy provides legally valid online wills from £69 — reviewed by a qualified estate planner within 24 hours. England & Wales.*
+*ClearLegacy provides legally valid online wills from £69 — checked against the Wills Act 1837 within 24 hours. England & Wales.*
