@@ -28,6 +28,7 @@ interface SavedProgress {
   /** Nurture drip tracking — timestamps of when each was sent */
   nurture2SentAt?: string; // 24h social proof email
   nurture3SentAt?: string; // 72h price anchor email
+  nurture4SentAt?: string; // 7-day final expiry reminder
   /** Set to true if lead completed purchase (checked via lead:{ref} lookup) */
   converted?: boolean;
 }
@@ -232,6 +233,7 @@ export async function handleSendResumeEmail(request: Request, env: Env): Promise
 
 const NURTURE_2_DELAY_MS = 24 * 60 * 60 * 1000; // 24 hours
 const NURTURE_3_DELAY_MS = 72 * 60 * 60 * 1000; // 72 hours
+const NURTURE_4_DELAY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function nurtureEmail2Html(firstName: string, resumeUrl: string, productLabel: string, price: string, siteOrigin: string): string {
   return `<!DOCTYPE html>
@@ -270,7 +272,7 @@ function nurtureEmail3Html(firstName: string, resumeUrl: string, productLabel: s
     <span style="font-size: 20px; font-weight: 600; color: #0a0a0a; letter-spacing: -0.5px;">Clear<span style="color: #2563eb;">Legacy</span></span>
   </div>
   <div style="padding: 32px 0;">
-    <h1 style="font-size: 22px; font-weight: 600; margin-bottom: 16px;">Last reminder: your Will is still saved, ${firstName}</h1>
+    <h1 style="font-size: 22px; font-weight: 600; margin-bottom: 16px;">Your Will is still saved, ${firstName}</h1>
     <p>We know life gets busy — that's exactly why writing a Will matters. Here's how ClearLegacy compares:</p>
     <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
       <tr style="background: #f9fafb;">
@@ -303,12 +305,28 @@ function nurtureEmail3Html(firstName: string, resumeUrl: string, productLabel: s
     <div style="text-align: center; margin: 28px 0;">
       <a href="${resumeUrl}" style="display: inline-block; background: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 16px; font-weight: 600; border-radius: 8px;">Complete My Will — ${price} →</a>
     </div>
-    <p style="font-size: 14px; color: #6b7280;">This is our last reminder. If you didn't start a will on ClearLegacy, you can safely ignore this email.</p>
+    <p style="font-size: 14px; color: #6b7280;">If you didn't start a will on ClearLegacy, you can safely ignore this email.</p>
   </div>
   <div style="border-top: 1px solid #e5e7eb; padding-top: 16px; font-size: 12px; color: #9ca3af; text-align: center;">
     © 2026 ClearLegacy · A trading name of Kaizen Finance Ltd (12092327)<br>
     <a href="${siteOrigin}/legal/privacy.html" style="color: #9ca3af;">Privacy Policy</a>
   </div>
+</body>
+</html>`;
+}
+
+
+function nurtureEmail4Html(firstName: string, resumeUrl: string, productLabel: string, price: string, daysLeft: number): string {
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; color: #0a0a0a; line-height: 1.6; max-width: 560px; margin: 0 auto; padding: 20px;">
+  <h1 style="font-size: 22px; font-weight: 600; margin-bottom: 16px;">Final reminder: your saved Will expires in ${daysLeft} days, ${firstName}</h1>
+  <p>Your answers are still saved, but saved progress is kept for 30 days — after that it's deleted and you'd need to start again.</p>
+  <p>Finishing takes a few minutes. Pay the fixed ${price} and your legally valid Will (Wills Act 1837 compliant) is emailed to you within 24 hours, with simple signing instructions.</p>
+  <p style="margin: 28px 0;"><a href="${resumeUrl}" style="background: #2563eb; color: #ffffff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">Finish my Will — ${price}</a></p>
+  <p style="font-size: 14px; color: #6b7280;">${productLabel}: ${price}. One free amendment included. No subscriptions, no hidden fees.</p>
+  <p style="font-size: 14px; color: #6b7280;">This is the last email we'll send about this. If you didn't start a will on ClearLegacy, you can safely ignore it.</p>
 </body>
 </html>`;
 }
@@ -377,15 +395,35 @@ export async function processNurtureEmails(env: Env): Promise<void> {
           await sendEmail(env.RESEND_API_KEY, {
             from: fromEmail,
             to: record.email,
-            subject: `Last reminder: your ${price} Will vs £300+ solicitor — ${record.firstName}`,
+            subject: `Your ${price} Will vs a £300+ solicitor — ${record.firstName}`,
             html: nurtureEmail3Html(record.firstName, resumeUrl, productLabel, price, siteOrigin),
-            text: `Hi ${record.firstName},\n\nYour Will is still saved. ClearLegacy: ${price} in ~15 mins. Solicitor: £300-600+ over 2-4 weeks.\n\nComplete yours here: ${resumeUrl}\n\nThis is our last reminder.\n\n— ClearLegacy`,
+            text: `Hi ${record.firstName},\n\nYour Will is still saved. ClearLegacy: ${price} in ~15 mins. Solicitor: £300-600+ over 2-4 weeks.\n\nComplete yours here: ${resumeUrl}\n\n— ClearLegacy`,
           });
           record.nurture3SentAt = new Date().toISOString();
           updated = true;
           console.log(`Nurture email 3 sent to ${record.email}`);
         } catch (err) {
           console.error(`Nurture 3 failed for ${record.email}:`, err);
+        }
+      }
+
+
+      // Email 4: 7 days after save — final expiry reminder
+      if (ageMs >= NURTURE_4_DELAY_MS && !record.nurture4SentAt) {
+        const daysLeft = Math.max(1, 30 - Math.floor(ageMs / (24 * 60 * 60 * 1000)));
+        try {
+          await sendEmail(env.RESEND_API_KEY, {
+            from: fromEmail,
+            to: record.email,
+            subject: `Final reminder: your saved Will expires in ${daysLeft} days — ${record.firstName}`,
+            html: nurtureEmail4Html(record.firstName, resumeUrl, productLabel, price, daysLeft),
+            text: `Hi ${record.firstName},\n\nYour saved Will expires in ${daysLeft} days, then it's deleted and you'd need to start again.\n\nFinish here (${price}, delivered within 24 hours): ${resumeUrl}\n\nThis is the last email we'll send about this.\n\n— ClearLegacy`,
+          });
+          record.nurture4SentAt = new Date().toISOString();
+          updated = true;
+          console.log(`Nurture email 4 sent to ${record.email}`);
+        } catch (err) {
+          console.error(`Nurture 4 failed for ${record.email}:`, err);
         }
       }
 
