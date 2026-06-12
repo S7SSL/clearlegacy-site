@@ -55,7 +55,7 @@ STRIPE_URL_SINGLE = "https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03"
 STRIPE_URL_MIRROR = "https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04"
 THANK_YOU_URL = "https://www.clearlegacy.co.uk/thank-you.html"
 PDF_RETENTION_DAYS = "90"
-EMAIL_FROM = "Clear Legacy <no-reply@clearlegacy.co.uk>"
+EMAIL_FROM = "ClearLegacy <admin@clearlegacy.co.uk>"
 
 # Cron — watchdog runs every 2 minutes (auto-fails stuck-generating leads)
 [triggers]

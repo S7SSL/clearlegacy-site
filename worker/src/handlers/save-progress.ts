@@ -200,7 +200,7 @@ export async function handleSendResumeEmail(request: Request, env: Env): Promise
 
   try {
     await sendEmail(env.RESEND_API_KEY, {
-      from: env.EMAIL_FROM || 'Clear Legacy <no-reply@clearlegacy.co.uk>',
+      from: env.EMAIL_FROM || 'ClearLegacy <admin@clearlegacy.co.uk>',
       to: record.email,
       subject: `${record.firstName}, your Will is waiting — pick up where you left off`,
       html,
@@ -327,7 +327,7 @@ export async function processNurtureEmails(env: Env): Promise<void> {
   const list = await env.CLEARLEGACY_KV.list({ prefix: 'progress:', limit: 50 });
   const now = Date.now();
   const siteOrigin = env.SITE_ORIGIN || 'https://www.clearlegacy.co.uk';
-  const fromEmail = env.EMAIL_FROM || 'Clear Legacy <no-reply@clearlegacy.co.uk>';
+  const fromEmail = env.EMAIL_FROM || 'ClearLegacy <admin@clearlegacy.co.uk>';
 
   for (const key of list.keys) {
     try {
