@@ -167,7 +167,7 @@ export async function handleSendResumeEmail(request: Request, env: Env): Promise
   }
 
   const siteOrigin = env.SITE_ORIGIN || 'https://www.clearlegacy.co.uk';
-  const resumeUrl = `${siteOrigin}/forms/will.html?resume=${encodeURIComponent(token)}`;
+  const resumeUrl = `${siteOrigin}/forms/will.html?resume=${encodeURIComponent(token)}&utm_source=resend&utm_medium=email&utm_campaign=nurture-1`;
   const product = record.formData?.product || 'single';
   const productLabel = product === 'mirror' ? 'Mirror Wills' : 'Single Will';
   const price = product === 'mirror' ? '£99' : '£69';
@@ -367,7 +367,7 @@ export async function processNurtureEmails(env: Env): Promise<void> {
       const product = record.formData?.product || 'single';
       const productLabel = product === 'mirror' ? 'Mirror Wills' : 'Single Will';
       const price = product === 'mirror' ? '£99' : '£69';
-      const resumeUrl = `${siteOrigin}/forms/will.html?resume=${encodeURIComponent(token)}`;
+      const resumeBase = `${siteOrigin}/forms/will.html?resume=${encodeURIComponent(token)}&utm_source=resend&utm_medium=email`;
 
       let updated = false;
 
@@ -378,8 +378,8 @@ export async function processNurtureEmails(env: Env): Promise<void> {
             from: fromEmail,
             to: record.email,
             subject: `${record.firstName}, you're closer than you think — finish your Will`,
-            html: nurtureEmail2Html(record.firstName, resumeUrl, productLabel, price, siteOrigin),
-            text: `Hi ${record.firstName},\n\nMost people finish their Will in under 15 minutes. Your answers are saved — continue here:\n${resumeUrl}\n\n${productLabel}: ${price}. No hidden fees.\n\n— ClearLegacy`,
+            html: nurtureEmail2Html(record.firstName, resumeBase + `&utm_campaign=nurture-2`, productLabel, price, siteOrigin),
+            text: `Hi ${record.firstName},\n\nMost people finish their Will in under 15 minutes. Your answers are saved — continue here:\n${resumeBase + `&utm_campaign=nurture-2`}\n\n${productLabel}: ${price}. No hidden fees.\n\n— ClearLegacy`,
           });
           record.nurture2SentAt = new Date().toISOString();
           updated = true;
@@ -396,8 +396,8 @@ export async function processNurtureEmails(env: Env): Promise<void> {
             from: fromEmail,
             to: record.email,
             subject: `Your ${price} Will vs a £300+ solicitor — ${record.firstName}`,
-            html: nurtureEmail3Html(record.firstName, resumeUrl, productLabel, price, siteOrigin),
-            text: `Hi ${record.firstName},\n\nYour Will is still saved. ClearLegacy: ${price} in ~15 mins. Solicitor: £300-600+ over 2-4 weeks.\n\nComplete yours here: ${resumeUrl}\n\n— ClearLegacy`,
+            html: nurtureEmail3Html(record.firstName, resumeBase + `&utm_campaign=nurture-3`, productLabel, price, siteOrigin),
+            text: `Hi ${record.firstName},\n\nYour Will is still saved. ClearLegacy: ${price} in ~15 mins. Solicitor: £300-600+ over 2-4 weeks.\n\nComplete yours here: ${resumeBase + `&utm_campaign=nurture-3`}\n\n— ClearLegacy`,
           });
           record.nurture3SentAt = new Date().toISOString();
           updated = true;
@@ -416,8 +416,8 @@ export async function processNurtureEmails(env: Env): Promise<void> {
             from: fromEmail,
             to: record.email,
             subject: `Final reminder: your saved Will expires in ${daysLeft} days — ${record.firstName}`,
-            html: nurtureEmail4Html(record.firstName, resumeUrl, productLabel, price, daysLeft),
-            text: `Hi ${record.firstName},\n\nYour saved Will expires in ${daysLeft} days, then it's deleted and you'd need to start again.\n\nFinish here (${price}, delivered within 24 hours): ${resumeUrl}\n\nThis is the last email we'll send about this.\n\n— ClearLegacy`,
+            html: nurtureEmail4Html(record.firstName, resumeBase + `&utm_campaign=nurture-4`, productLabel, price, daysLeft),
+            text: `Hi ${record.firstName},\n\nYour saved Will expires in ${daysLeft} days, then it's deleted and you'd need to start again.\n\nFinish here (${price}, delivered within 24 hours): ${resumeBase + `&utm_campaign=nurture-4`}\n\nThis is the last email we'll send about this.\n\n— ClearLegacy`,
           });
           record.nurture4SentAt = new Date().toISOString();
           updated = true;
