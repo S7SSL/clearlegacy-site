@@ -1,0 +1,159 @@
+<!--
+  ClearLegacy — Will-Form CRO drop-in kit (DRAFT v1, 7 Jun 2026)
+  Target page: /forms/will.html  (the will questionnaire — the revenue engine)
+
+  WHY: GA4 (last 30 days) shows 126 form_start users -> only 10 will_form_submit_success
+  (~92% drop) -> 7 purchase. The completion step is the #1 revenue lever.
+
+  WHAT THIS ADDS (all four Finding-5 items):
+   1. Step progress indicator      -> reduces "how long is this?" abandonment
+   2. Trust strip                  -> reduces "is this legit / valid?" hesitation
+   3. Help tooltips                -> reduces drop-off on jargon fields (executor, residuary, guardian)
+   4. Exit-intent save/email capture -> recovers abandoners (fires email_captured + form_abandon_recoverable)
+
+  HOW TO USE: this is framework-agnostic vanilla HTML/CSS/JS. It is a STARTING POINT
+  to wire to the real form — search for [WIRE] comments and connect to your actual
+  step container, field IDs, and step-change events. It reuses the GA4 events the form
+  already emits (form_step_1..5, will_form_submit_success, etc.) and adds gtag pushes
+  so every CRO interaction is measured. Test on a staging copy before deploying.
+
+  GA4 note: the form already has rich event tracking (form_step_complete, qualify_*,
+  return_to_form, form_abandon_recoverable). This kit hooks INTO that, it does not replace it.
+-->
+<style>
+:root{
+  --cl-blue:#2563eb;--cl-blue-d:#1d4ed8;--cl-navy:#0f172a;--cl-ink:#0f172a;
+  --cl-soft:#475569;--cl-line:#e2e8f0;--cl-bg:#f8fafc;--cl-green:#15803d;
+  --cl-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+/* 1. PROGRESS INDICATOR */
+.cl-progress{font-family:var(--cl-font);margin:0 0 18px}
+.cl-progress .cl-pmeta{display:flex;justify-content:space-between;font-size:13px;color:var(--cl-soft);margin-bottom:6px}
+.cl-progress .cl-pmeta b{color:var(--cl-navy)}
+.cl-ptrack{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+.cl-pfill{height:100%;width:0;background:linear-gradient(90deg,var(--cl-blue),var(--cl-blue-d));border-radius:999px;transition:width .35s ease}
+.cl-pdots{display:flex;gap:6px;margin-top:8px}
+.cl-pdot{flex:1;height:4px;border-radius:2px;background:#e2e8f0}
+.cl-pdot.done{background:var(--cl-blue)}
+.cl-pdot.active{background:var(--cl-navy)}
+
+/* 2. TRUST STRIP */
+.cl-trust{font-family:var(--cl-font);display:flex;flex-wrap:wrap;gap:14px;align-items:center;
+  background:#eff6ff;border:1px solid #dbeafe;border-radius:10px;padding:10px 14px;margin:0 0 18px;font-size:13px;color:var(--cl-navy)}
+.cl-trust .cl-ti{display:flex;align-items:center;gap:6px}
+.cl-trust svg{flex:none}
+
+/* 3. HELP TOOLTIPS */
+.cl-help{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;background:var(--cl-blue);color:#fff;font-size:11px;
+  font-weight:700;font-family:var(--cl-font);cursor:help;margin-left:6px;vertical-align:middle}
+.cl-help .cl-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  width:230px;background:var(--cl-navy);color:#fff;font-weight:400;font-size:12px;line-height:1.45;
+  padding:9px 11px;border-radius:8px;opacity:0;visibility:hidden;transition:opacity .15s;z-index:50;text-align:left}
+.cl-help:hover .cl-tip,.cl-help:focus .cl-tip{opacity:1;visibility:visible}
+.cl-help .cl-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--cl-navy)}
+
+/* 4. EXIT-INTENT MODAL */
+.cl-exit-ov{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;
+  justify-content:center;z-index:9999;font-family:var(--cl-font)}
+.cl-exit-ov.show{display:flex}
+.cl-exit{background:#fff;max-width:420px;width:92%;border-radius:14px;padding:26px 26px 22px;text-align:center;box-shadow:0 20px 60px rgba(15,23,42,.3)}
+.cl-exit h3{margin:0 0 8px;font-size:20px;color:var(--cl-navy)}
+.cl-exit p{margin:0 0 16px;color:var(--cl-soft);font-size:14px}
+.cl-exit input{width:100%;padding:12px 14px;border:1px solid var(--cl-line);border-radius:8px;font-size:15px;margin-bottom:10px}
+.cl-exit .cl-btn{width:100%;background:var(--cl-blue);color:#fff;border:0;padding:12px;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer}
+.cl-exit .cl-btn:hover{background:var(--cl-blue-d)}
+.cl-exit .cl-no{display:block;margin-top:10px;background:none;border:0;color:var(--cl-soft);font-size:13px;cursor:pointer}
+</style>
+
+<!-- ============ 1. PROGRESS INDICATOR (place above the form steps) ============ -->
+<div class="cl-progress" id="clProgress" aria-label="Form progress">
+  <div class="cl-pmeta"><span>Step <b id="clStepNow">1</b> of <b id="clStepTot">5</b></span><span id="clStepName">About you</span></div>
+  <div class="cl-ptrack"><div class="cl-pfill" id="clPfill"></div></div>
+  <div class="cl-pdots" id="clPdots"></div>
+</div>
+
+<!-- ============ 2. TRUST STRIP (place just above the first field) ============ -->
+<div class="cl-trust">
+  <span class="cl-ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Legally valid in England &amp; Wales</span>
+  <span class="cl-ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#2563eb" stroke-width="2"/><path d="M4 20c0-3.3 3.6-5 8-5s8 1.7 8 5" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/></svg> Checked by our team before you sign</span>
+  <span class="cl-ti"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="2" stroke="#2563eb" stroke-width="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke="#2563eb" stroke-width="2"/></svg> Secure &amp; private</span>
+</div>
+
+<!--
+  ============ 3. HELP TOOLTIPS ============
+  Drop a tooltip next to any jargon field label. Example markup to place inside a <label>:
+
+  Executor
+  <span class="cl-help" tabindex="0" data-cl-help="executor">?<span class="cl-tip">
+    The person who carries out your will — collecting your assets, paying debts, and
+    distributing to your beneficiaries. Most people choose a spouse, adult child or close friend.
+  </span></span>
+
+  Suggested tooltips (copy text):
+   - executor:  "The person who carries out your will. Choose someone trustworthy and organised — you can name two."
+   - residuary: "Who inherits 'everything else' after specific gifts. Always name one so nothing is left undecided."
+   - guardian:  "Who would raise your children under 18 if both parents die. Without this, a court decides."
+   - beneficiary: "A person or charity who inherits from you."
+   - estate:    "Everything you own minus what you owe."
+-->
+
+<!-- ============ 4. EXIT-INTENT MODAL (place once near </body>) ============ -->
+<div class="cl-exit-ov" id="clExitOv">
+  <div class="cl-exit" role="dialog" aria-modal="true" aria-labelledby="clExitTitle">
+    <h3 id="clExitTitle">Save your progress?</h3>
+    <p>Pop in your email and we'll send you a link to finish your will whenever you're ready — no pressure.</p>
+    <input type="email" id="clExitEmail" placeholder="you@example.com" autocomplete="email">
+    <button class="cl-btn" id="clExitSave">Email me my saved progress</button>
+    <button class="cl-no" id="clExitNo">No thanks, I'll finish now</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var GA = function(name,params){ try{ if(window.gtag){ gtag('event',name,params||{}); } }catch(e){} };
+
+  /* ---------- 1 + progress ---------- */
+  var TOTAL = 5;                                  // [WIRE] number of real form steps
+  var STEP_NAMES = ["About you","Your family","Your assets","Executors & guardians","Review & sign"]; // [WIRE]
+  var dots = document.getElementById('clPdots');
+  for(var i=0;i<TOTAL;i++){ var d=document.createElement('span'); d.className='cl-pdot'; dots.appendChild(d); }
+  document.getElementById('clStepTot').textContent = TOTAL;
+  window.clSetStep = function(step){                // call clSetStep(n) whenever the form changes step
+    step = Math.max(1, Math.min(TOTAL, step));
+    document.getElementById('clStepNow').textContent = step;
+    document.getElementById('clStepName').textContent = STEP_NAMES[step-1] || '';
+    document.getElementById('clPfill').style.width = Math.round((step-1)/(TOTAL-1)*100) + '%';
+    var nodes = dots.children;
+    for(var j=0;j<nodes.length;j++){ nodes[j].className = 'cl-pdot' + (j<step-1?' done':(j===step-1?' active':'')); }
+    GA('cl_cro_step_view',{step:step});
+  };
+  // [WIRE] If the form fires GA4 form_step_N events, you can mirror them:
+  //   on step 2 shown -> clSetStep(2), etc. Or call clSetStep from the form's own next()/prev().
+  window.clSetStep(1);
+
+  /* ---------- 4 exit-intent ---------- */
+  var ov=document.getElementById('clExitOv'), shown=false, started=false, done=false;
+  // [WIRE] set started=true once the user actually begins (e.g. on form_start), done=true on submit success,
+  // so the modal only fires for genuine abandoners.
+  window.clFormStarted = function(){ started=true; };
+  window.clFormDone    = function(){ done=true; };
+  function openExit(){
+    if(shown||done||!started) return; shown=true;
+    ov.classList.add('show');
+    GA('form_abandon_recoverable',{trigger:'exit_intent'});   // matches existing GA4 event
+  }
+  document.addEventListener('mouseout', function(e){ if(!e.relatedTarget && e.clientY<=0) openExit(); });
+  window.addEventListener('beforeunload', function(){ if(started&&!done) GA('form_abandoned',{}); });
+  document.getElementById('clExitNo').onclick=function(){ ov.classList.remove('show'); };
+  document.getElementById('clExitSave').onclick=function(){
+    var email=(document.getElementById('clExitEmail').value||'').trim();
+    if(!/.+@.+\..+/.test(email)){ document.getElementById('clExitEmail').focus(); return; }
+    GA('email_captured',{source:'exit_intent'});               // matches existing GA4 event
+    // [WIRE] POST {email} to your save-progress / email endpoint here.
+    ov.querySelector('.cl-exit').innerHTML='<h3>Saved ✓</h3><p>Check your inbox for a link to finish your will.</p>';
+    setTimeout(function(){ ov.classList.remove('show'); }, 2200);
+  };
+})();
+</script>

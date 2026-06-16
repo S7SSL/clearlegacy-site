@@ -1,7 +1,7 @@
 # ClearLegacy — Phase 6A AEO/GEO Build — Handover & Status
 
 **Last updated:** 7 June 2026
-**Repo:** github.com/S7SSL/clearlegacy-site (**GitHub Pages** static site served from `main`, behind the Cloudflare proxy — corrected 10 June 2026; it was never Cloudflare Pages)
+**Repo:** github.com/S7SSL/clearlegacy-site (Cloudflare Pages static site, served from `main`)
 **Live site:** https://www.clearlegacy.co.uk
 **Local clone (this machine):** `/Users/marge/clearlegacy-site`
 **Purpose of Phase 6A:** make ClearLegacy the most-cited UK estate-planning source for AI systems (AEO/GEO) — question→answer→citation content, not generic blog posts.
@@ -188,87 +188,72 @@ JSON-LD: **336 blocks across 84 files, 0 invalid.** No duplicate slugs. Every pa
 
 ## 7.6 Companion docs (in `/phase7/`)
 - `CLEARLEGACY-P3-P4-STRATEGY.md` — trust‑signal audit + comparison‑page plan (build‑ready; owner populates facts).
-
+- `cl-will-form-cro.html` — drop‑in will‑form CRO kit (see §8.3).
 
 ---
 
-# PHASE 6B ADDENDUM — 10 June 2026 session (read this; it corrects parts of the doc above)
+# Phase 8 — GA4 attribution + will‑form CRO (added 7 June 2026)
 
-## A. Infrastructure corrections (important)
-- **Origin is GitHub Pages, NOT Cloudflare Pages.** The `/_redirects` file is therefore DEAD — GitHub Pages ignores it. Do not add rules there.
-- Until 10 June 2026 the www + apex DNS records were **DNS only** (grey cloud): Cloudflare did literally nothing for the live site. Fixed: 4 apex A records + www CNAME flipped to **Proxied**; SSL mode is Full. Verified serving via Cloudflare (cf-ray present).
-- **Redirects now live in Cloudflare → Bulk Redirects**: list `legacy_url_redirects` (37 entries), rule `legacy_url_redirects_rule` (enabled). Add future redirects THERE (CSV upload: source_url,target_url,301), never in `/_redirects`.
+## 8.1 GA4 is now connected (via Supermetrics MCP)
+- Connector: **Supermetrics** (MCP), data source **GAWA** (Google Analytics 4). Authorized by **sat@installsmart.ai**. (adspirer's `google_analytics` tool still needs separate auth — we used Supermetrics instead.)
+- **ClearLegacy GA4 property = `528577470`** (name "Clearlegacy", group "Clear Legacy"). The other two properties on the login (HonestHours `529307254`, InstallSmart.ai `529314888`) are different sites — do not use.
+- Query pattern: `data_query(ds_id="GAWA", ds_accounts="528577470", date_range_type=..., fields="dim,metric,...")` returns a `schedule_id`; then poll `get_async_query_results(schedule_id)` until `completed`. Useful GA4 field IDs: dimensions `landingPage`, `sessionDefaultChannelGrouping`, `eventName`, `pagePath`; metrics `sessions`, `totalUsers`, `conversions`, `eventCount`, `ecommercePurchases`, `transactions`, `purchaseRevenue`, `totalRevenue`, `sessionConversionRate`, `bounceRate`. Revenue is GBP.
 
-## B. Trust & claims policy (supersedes any older copy guidance)
-- Site-wide attribution is **"ClearLegacy editorial team"** (Organization in schema). The "SL, Estate Planning Specialist" reviewer credit was removed from ~134 pages + 96 JSON-LD blocks (owner confirmed no formal qualification). Reviewer profile now reads "Founder · Lead Editorial Reviewer".
-- All "qualified estate planner review" / "solicitor-verified" / "Guided by qualified legal professionals" product claims were replaced with truthful wording: **automated review / quality-checked / "Built around the Wills Act 1837"**. Keep it that way unless a real credentialed reviewer (STEP member/solicitor) is engaged — that remains the single biggest E-E-A-T upgrade available.
-- Customer count claim: **"100+ UK families"** everywhere (llms.txt previously said 1,000+ — false). Contact email is **hello@clearlegacy.co.uk** (not support@).
+## 8.2 Live attribution dashboard (built)
+- Cowork artifact id **`clearlegacy-attribution-dashboard`** (re‑openable in the sidebar). Dated snapshot, last 30 days as of 7 Jun 2026. Ask Claude to refresh to pull a newer window.
+- **Key real findings (last 30 days):**
+  - **Organic Search is the engine:** 1,035 sessions (47%), 48/67 conversions (72%), £474/£642 revenue (74%), 6/8 purchases. Confirms Finding 1.
+  - **Will‑form funnel leak (the #1 lever):** **126 form_start users → 72 qualify_complete → 10 will_form_submit_success → 7 purchase.** ~86% drop at the submission step. `/forms/will.html` converts 8 of 56 sessions (14%).
+  - **Guides assist, don't last‑click convert:** trust‑fund (149 sessions), executor‑of‑will (91), iht‑threshold (73), will‑cost (67) — high traffic, 0 direct conversions as landing pages. Confirms Findings 4 & 10; measure assisted conversions before judging guide ROI.
+  - **Homepage `/`** = top converting entry (544 sessions, 31 conv, 3 purchases, £237).
+  - **Caveat:** tracked revenue (£642/8 purchases) is a **FLOOR** (historic tracking gaps). Read page performance relatively, not by absolute £.
+  - Phase 7's 84 new pages have ~0 sessions (deployed 7 Jun) — re‑check in 1–2 weeks.
+- The form already emits rich GA4 events: `form_start, form_step_1..5, form_step_complete, qualify_answer/complete, will_form_submit_attempt/success, begin_checkout, checkout_redirect_success, payment_started/completed/failed, purchase, ads_conversion_purchase, email_captured, return_to_form, form_abandon_recoverable, form_abandoned`. Use these for the CRO measurement.
 
-## C. Fixes shipped 10 June (4 deploy batches, all live + verified)
-1. llms.txt: all dead links fixed (4/7 key pages and 9/10 guide links were 404s), claims aligned with site, phantom products (Property Trust £149.99 / LPA / Storage) removed, HTML entities cleaned, /tools/ + /visual-guides/ added.
-2. Template rot: mangled bylines ("Last updated:middot;") on 110 pages; `&amp;middot;` literals on 48 pages; "Regulated by Kaizen Finance Ltd" → "A trading name of…" on 157 pages; 34 stale `.bak` files (incl. old checkout pages) deleted from the public branch.
-3. Internal links: 52 broken internal links across 21 phantom targets remapped to real pages; **new index pages created at /tools/ and /visual-guides/**; duplicated lede copy on /wills/ fixed. Site now crawls with 0 broken internal links (6,200+ checked).
-4. Duplicate titles: 12 old "Redirecting…/Moved" stub pages + duplicate /terms.html deleted (their meta-refresh redirects never worked); replaced with proper 301s in the Bulk Redirects list; title clash resolved (standalone page retitled "Are Online Wills Legal in England & Wales? 2026 Guide"); sitemap cleaned.
-- All 1,047 JSON-LD blocks re-validated after every batch (0 invalid).
+## 8.3 Will‑form CRO kit (DRAFT v1 — `/phase7/cl-will-form-cro.html`)
+Drop‑in, framework‑agnostic vanilla HTML/CSS/JS targeting `/forms/will.html`. Implements all four Finding‑5 items: **(1) step progress indicator, (2) trust strip, (3) help tooltips for jargon fields, (4) exit‑intent save/email capture**. It hooks into the existing GA4 events (fires `email_captured`, `form_abandon_recoverable`, `form_abandoned`, plus `cl_cro_step_view`). Search the file for `[WIRE]` comments — these mark where to connect to the real form's step container, field IDs, step‑change calls (`clSetStep(n)`, `clFormStarted()`, `clFormDone()`), and the save‑progress endpoint. **It is a starting point — adapt to the real form markup and test on staging before deploy.**
+**Next session (from Dubai):** get the real `/forms/will.html` markup (or screenshots/DOM via Claude‑in‑Chrome), wire the `[WIRE]` hooks to the actual steps/fields, A/B or staged‑deploy, then watch `form_start → will_form_submit_success` in the dashboard to confirm lift.
 
-## D. Google Ads (account 658-429-9393) — paused by design
-Owner decision: ads burned money (May: ~£305 → 2-3 conversions); organic/AEO drives sales. All campaigns PAUSED and stay paused. Cleanup applied: 24-keyword negative list linked to both Search campaigns; non-converting RSA paused (the converting one: "Wills From Just £69"). Outstanding (manual, UI-only): set GA4 "ads_conversion_purchase" to Secondary to stop double counting.
+## 8.4 How to continue from a new device (e.g. Dubai)
+1. `cd /Users/marge/clearlegacy-site && git pull` — brings this MD + `cl-will-form-cro.html` + `CLEARLEGACY-P3-P4-STRATEGY.md` if they were committed (deploy script copies them).
+2. Read this MD first. GA4 = Supermetrics GAWA, property `528577470`.
+3. To refresh the dashboard: re‑run the three queries in §8.2 and ask Claude to update artifact `clearlegacy-attribution-dashboard`.
+4. CRO: open `cl-will-form-cro.html`, wire the `[WIRE]` hooks to the live form, test, deploy.
 
-## E. Bing Webmaster Tools (account active, site verified)
-- Sitemap resubmitted 10 June (was stale since 8 May; Bing had only 89 URLs). 40 priority URLs pushed via URL Submission (quota 100/day).
-- Bing's three recommendations: duplicate titles/descriptions → fixed at source (see C4), will clear on recrawl; inbound links → see pitch kit (F).
-- Consider wiring **IndexNow** for instant Bing indexing on future deploys.
+## 8.5 Still open after Phase 8
+- Wire + deploy the will‑form CRO kit to the live form (needs real form markup).
+- Build the four Tier‑1 comparison pages (safe; note `/farewill-vs-online-will` already exists on the live site — audit/refresh it).
+- P3 trust pages (`/pricing`, policies, company details, real reviews/reviewer) — owner facts.
+- Link the 84 new Phase 7 pages from the existing site nav/homepage/indexes (fixes Ahrefs "canonical has no incoming internal links" + aids indexing).
+- Tracking 5a/5b/5c.
+- Confirm `/start` real will‑flow URL (CTAs currently point to `/estate-risk-assessment/`).
 
-## F. Off-site / backlinks
-Pitch kit at `_ops-docs/clearlegacy-backlink-pitch-kit.md`: 18 targets in 3 tiers, 3 email templates, 3-week sequence. Key facts: Wuhld already lists ClearLegacy (verify + thank); strongest news hook is the 6 April 2027 pension-IHT change. Ground rule: outreach claims must match the truthful on-site claims (B).
+---
 
-## G. Monitoring
-- **Weekly scheduled audit** "clearlegacy-seo-aeo-weekly-audit" (Mondays 09:00, Cowork Scheduled sidebar): dead links in llms.txt/sitemap, JSON-LD validity, template-rot regression patterns, claim drift, indexation spot-checks.
-- Existing 3-day indexation monitor still runs.
+# Phase 9 — GEO Score Recovery sprint (planned 7 June 2026)
 
-## H. Deploy pattern (corrected)
-Same git flow as §5 above, but: build lag is GitHub Pages (~1 min). After deploys that change long-cached files, purge cache in Cloudflare (now effective, since the site is actually proxied). Redirects: Cloudflare Bulk Redirects UI, not files.
+Source: BabyLoveGrowth GEO audit (score dropped). Owner's correct framing: commercial data is strong (organic = 47% traffic, 72% conversions, 74% revenue), so this is a **coverage/completeness** issue on newly added pages, not strategy. Plan = recover GEO score by completing schema/reviewer/source/linking/FAQ coverage, then double down on the probate calculator.
 
-## I. Known open items
-1. GA4 conversion action double-count fix (D) — 2 clicks in Google Ads UI. (ONLY remaining technical item.)
-2. ~~"UK qualified · specialists" badge~~ — FIXED 10 June (now "Wills Act 1837 compliant"; "Estate Planning Team" → "editorial team").
-3. ~~twitter:title on is-an-online-will-legal-uk/~~ — FIXED 10 June.
-4. ~~"human estate-planner review" contradiction~~ — FIXED 10 June (neutral "documented review step" wording).
-5. NOTE: this repo is PUBLIC and GitHub Pages serves every committed file — internal docs (audits, this handover, the pitch kit) are world-readable. Consider moving ops docs to a private repo.
+## 9.1 ⚠️ INTEGRITY GUARDRAIL — named reviewer (Priority 2)
+The plan recommends a named "Estate Planning Specialist" reviewer + `/reviewers/<name>` Person‑schema page, because AI prefers identifiable experts. **This is the same fabricated "Michael Smith, Estate Planning Specialist" removed in Phase 6A.** DO NOT invent a named reviewer. Only roll out named‑reviewer + Person schema when the owner supplies a **real, verifiable person** (themselves, or a named solicitor / STEP member who genuinely reviews). Until then keep "ClearLegacy editorial team" (Organization). This is a recurring, non‑negotiable guardrail.
 
+## 9.2 Priority 1 audit — DONE for the 84 new pages (`/phase7/CLEARLEGACY-GEO-AUDIT.xlsx`)
+3 sheets: Summary, Phase7 new pages (84, fully audited from source), Existing pages (crawl needed). **Key finding:** all 84 new pages already have FAQ+Article+Breadcrumb+Organization schema, quick answer, sources, last‑reviewed date, CTA, internal links, correct canonical. **Two real gaps:**
+  1. **No VISIBLE FAQ section** — pages carry FAQ *schema* (2–3 Qs) but render only quick‑answer+body+example, no on‑page "FAQs" block. GEO/AEO best practice (and Priority 8) wants visible FAQs matching the schema. **This is the #1 quick win.**
+  2. **No Person/named reviewer** — by design (see 9.1).
+**Conclusion:** the GEO drop is most likely the **older existing pages** (guides, visual‑guides, tools, homepage, pricing, statistics) that predate the Phase 7 schema standard — audit those next via live crawl (Claude‑in‑Chrome) to fill sheet 3.
 
-## J. GSC baseline — 10 June 2026 (last 3 months, Google Web search, sc-domain property)
-Totals: 145 clicks · 38.5K impressions · 0.4% CTR · avg position 56.8. Impressions inflecting upward since early May (Phase 6A).
+## 9.3 #1 quick win — add visible FAQ sections (ready to build)
+Add a `render_faq()` to `build_phase7.py` that outputs the existing FAQ schema Q&As as a visible `<h2>FAQs</h2>` block (≥3–4 Qs), regenerate all 84 pages, redeploy via `deploy-phase7.sh`. Purely additive, low risk, directly addresses Priorities 8 + 3. Do this first next session.
 
-| Query | Pos | Impr | Clicks |
-|---|---|---|---|
-| clear legacy (brand) | 1.3 | 68 | 42 |
-| probate fees 2026 | 8.5 | 54 | 1 |
-| probate cost calculator | 8.9 | 36 | 1 |
-| probate costs calculator uk | 9.3 | 12 | 1 |
-| probate fees calculator uk gov | 9.8 | 15 | 1 |
-| best will writing service uk | 13.5 | 6 | 1 |
-| probate fees calculator uk | 16.0 | 146 | 2 |
-| probate fees calculator | 19.7 | 628 | 4 |
-| wills cost uk | 40.6 | 7 | 1 |
-| how much does a will cost uk | 42.8 | 52 | 1 |
+## 9.4 Rest of the GEO plan (next‑session backlog, in priority order)
+- **P3 schema completion** on existing pages: add SoftwareApplication/WebApplication schema to `/tools/probate-calculator` + `/tools/estate-risk-assessment`; Article+FAQ+Breadcrumb to guides/visual‑guides; Service/Offer to pricing.
+- **P4 source attribution**: ensure every legal page has a Sources block (GOV.UK, HMRC, OPG, Citizens Advice, ONS, MoJ). New pages already do; older ones may not.
+- **P5 AI‑crawler access**: audit `robots.txt` — confirm GPTBot, ChatGPT‑User, ClaudeBot, PerplexityBot, Google‑Extended, Googlebot, Bingbot are NOT blocked; check meta robots / X‑Robots / canonicals / sitemap inclusion.
+- **P6 probate calculator authority**: expand `/tools/probate-calculator` (fee table, worked examples, solicitor‑vs‑online, FAQs, downloadable checklist) + internal links in from executor/timeline/risk‑tool/will‑cost/homepage. (Note: Phase 7 already shipped `/probate-fees-calculator-explained`, `/how-much-does-probate-cost`, `/probate-fees-uk-2026`, `/probate-costs` — link the live calculator to these.)
+- **P7 internal linking repair**: link the 84 Phase 7 pages FROM the existing site (nav/homepage/indexes) and to `/tools/*`, `/forms/will.html`, `/pricing`, `/visual-guides/*`. Also fixes the Ahrefs "no incoming internal links" bucket.
+- **P8 quick‑answer + visible FAQ** everywhere (see 9.3).
+- **P9 re‑run BabyLoveGrowth GEO audit**; **P10 monthly AI‑visibility checks** (ChatGPT/Gemini/Perplexity/AI Overviews) on the listed queries — record mention/citation/URL/competitor.
 
-Strategy: probate-calculator cluster is already page 1 — biggest near-term win is pushing "probate fees calculator" (628 impressions, pos 19.7) onto page 1 via backlinks (pitch kit, F). Will-writing money terms are the medium-term targets. 90-day targets: probate calculator terms top 5; "best will writing service uk" page 1. Measure all progress against this table.
-
-
-## K. Session close-out — 10 June 2026 (final state)
-- **Claims sweep COMPLETE**: exhaustive grep confirms zero unverifiable credential claims remain in any of the 300+ pages ("qualified estate planner", "qualified-planner", "Estate Planning Specialist", "UK qualified", "Qualified review", "estate-planner review" — all removed or rewritten to automated/structured-review wording; commit a9054c5). Allowed exceptions (true generic advice): "consult a qualified estate planner or solicitor", "A qualified estate planner can talk you through", "straightforward for any qualified estate planner", "review is by a qualified estate planner, a paralegal, or automated".
-- **Bulk Redirects list**: now 37 entries (16 legacy llms.txt URLs + 21 deleted-stub URLs). All verified live with 200 at destination.
-- **GSC (10 June)**: sitemap resubmitted; /tools/ and /visual-guides/ submitted via Request Indexing (both were "unknown to Google"). Do NOT re-request repeatedly.
-- **Bing (10 June)**: sitemap resubmitted (was stale since 8 May; Bing knew only 89 URLs); 40 priority URLs pushed via URL Submission. Bing's duplicate-title/description warnings fixed at source — will clear on recrawl.
-- **Weekly audit updated**: now also greps for recurrence of every removed claim pattern (template regression guard), checks live llms.txt freshness via Cloudflare, and verifies 3 redirects.
-- All four 10-June deploy batches + handover updates pushed; final commit a9054c5.
-
-## L. 11 June 2026 — GBP, DKIM, GA4 conversion hygiene
-- **Google Business Profile CREATED (unverified)** under sat@clearlegacy.co.uk: name "ClearLegacy"; category **Legal services** (deliberately NOT "Estate planning attorney" — no credentials, misrepresentation risk); **no visitable location** (Paul Street is a virtual office — honest answer, lower suspension risk); service areas England, UK + Wales, UK; phone 07707 071984; website https://www.clearlegacy.co.uk; services "Online will writing" + "Mirror wills for couples"; description added (£69/£99, Wills Act 1837 check, 24h delivery, 100+ families, Kaizen Finance Ltd 12092327 — GBP descriptions reject URLs/emails); hours skipped; £400 ads credit skipped. **NOT publicly visible until video verification** (only method offered). Video must show: live site + Stripe dashboard with business name, Paul Street certification letter / Companies House entry, work setting. Manage at business.google.com.
-- **DKIM ENABLED**: 2048-bit key, selector "google"; TXT `google._domainkey` added in Cloudflare DNS (verified resolving via dns.google); Start authentication clicked in Workspace Admin. Outbound email auth now SPF + DKIM + DMARC complete.
-- **Google Ads conversion hygiene**: GA4 import "Purchase (Google Analytics event ads_conversion_purchase)" switched **Primary → Secondary** in Ads UI (account 658-429-9393). "Purchase (Google Analytics event purchase)" remains the sole Primary — no double-counting if ads are ever re-enabled.
-- Still open: GBP video verification (Sat, ~5-day Google review); Trustpilot + Reviews.co.uk claims → then worker review-ask patch; LinkedIn URL → sameAs on /founder/; pitch kit execution (F).
-
-### L1. 11 June — second claims sweep (human-review / specialist residue)
-120 files: removed all "Human review"/"Human-reviewed" product claims (~115 instances — site FAQ itself states the service is fully automated) and a missed claim family "qualified UK estate planner" / "estate planning specialist" (the word "UK"/"planning" in the middle dodged the 10-June regexes). Replaced with "structured automated review" / "checked against the Wills Act 1837" wording. Also fixed: /proposal/ "our solicitor team" (false), how-clearlegacy-works HowTo schema step "Qualified estate planner review", why-clearlegacy FAQ/schema, comparison-table Review rows (farewill-alternative, online-will-vs-solicitor, cheap-vs-solicitor-wills, top-online-will-providers-uk), _offsite-drafts + Reddit playbook. Weekly audit must add patterns: "human.review", "human-reviewed", "qualified UK estate planner", "estate planning specialist", "solicitor team". Allowed exceptions unchanged + editorial-policy "human review was completed" (true, refers to SL reviewing content) and /reviewers/ pages (honest).
+## 9.5 Companion file
+- `CLEARLEGACY-GEO-AUDIT.xlsx` (in `/phase7/`) — Priority 1 audit spreadsheet.
