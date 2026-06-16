@@ -123,3 +123,11 @@ table.fee-table caption { caption-side: bottom; font-size: 13px; color: var(--in
   .sticky-cta p { font-size: 13px; }
   .sticky-cta a.btn { padding: 9px 14px; }
 }
+
+/* Visible FAQ section (matches FAQPage schema) — added by add_visible_faqs.py */
+.faq { margin: 32px 0 0; }
+.faq h2 { margin-bottom: 6px; }
+.faq-item { border-top: 1px solid var(--line,#e2e8f0); padding: 14px 0; }
+.faq-item:last-child { border-bottom: 1px solid var(--line,#e2e8f0); }
+.faq-item h3 { margin: 0 0 6px; font-size: 17px; color: var(--navy,#0f172a); }
+.faq-item p { margin: 0; }
