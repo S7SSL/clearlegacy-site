@@ -131,3 +131,8 @@ table.fee-table caption { caption-side: bottom; font-size: 13px; color: var(--in
 .faq-item:last-child { border-bottom: 1px solid var(--line,#e2e8f0); }
 .faq-item h3 { margin: 0 0 6px; font-size: 17px; color: var(--navy,#0f172a); }
 .faq-item p { margin: 0; }
+
+/* Related-tool callout — internal links into calculators (add_tool_links.py) */
+.tool-callout { background:#eff6ff; border:1px solid #dbeafe; border-left:5px solid var(--brand,#2563eb);
+  border-radius:10px; padding:12px 16px; margin:24px 0; font-size:15px; }
+.tool-callout a { font-weight:600; }
