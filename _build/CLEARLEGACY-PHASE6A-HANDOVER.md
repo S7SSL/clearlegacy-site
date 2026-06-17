@@ -257,3 +257,55 @@ Add a `render_faq()` to `build_phase7.py` that outputs the existing FAQ schema Q
 
 ## 9.5 Companion file
 - `CLEARLEGACY-GEO-AUDIT.xlsx` (in `/phase7/`) — Priority 1 audit spreadsheet.
+
+### Post‑GEO live fixes (10 Jun 2026, deployed)
+- **Visible FAQ sections** added to all 84 Phase 7 pages (matching FAQPage schema) via `add_visible_faqs.py` — applied surgically to LIVE files (NOT regenerated), to preserve the parallel workstream's claims/CTA edits. Committed.
+- **Calculator internal links** added to 24 probate/executor + 10 IHT pages via `add_tool_links.py` (→ `/tools/probate-calculator`, `/tools/uk-inheritance-tax-calculator/`, verified 200). Committed.
+- **GENERATOR IS NOW STALE vs LIVE.** The parallel workstream (`claude/xenodochial-einstein` branch) re‑pointed CTAs (`/estate-risk-assessment/` → `/wills`), ran claims sweeps (removed "human‑review" + credential claims), deduped pages, and removed ops docs from the public root. **Never regenerate‑and‑deploy the 84 from `build_phase7.py` — it would revert their work.** Only deploy NEW pages, or patch LIVE files surgically (like the two scripts above). The handover MD now lives in `/_build/`, not the repo root.
+
+---
+
+# Phase 10 — Sales acceleration / conversion sprint (10 Jun 2026)
+
+Owner reframed the goal: **monthly will sales**, not traffic/rankings/GEO. Briefs claimed "sales stalled 7+ days." GA4 says otherwise.
+
+## 10.1 Revenue diagnostic — DONE (artifact `clearlegacy-revenue-diagnostic`)
+GA4 via Supermetrics GAWA, property **528577470**. Findings:
+- **No stall.** Last 7d beat prior 7d on every metric: form starts +59% (17→27), checkout/submit/purchase +100%, revenue +73% (£297→£513), traffic +13%. Real Stripe `cs_live` thank‑you pages through 10 Jun. Owner confirmed June sales are **real but inconsistent** (low‑volume variance).
+- **Paid collapsed ~28 May** = the **intentional PMax pause** (£198 spend, 0 conversions — correct call). Organic held/grew (≈53% of sessions).
+- **The real lever = MOBILE will‑form completion.** Mobile starts like desktop (52 vs 57) but completes at **1.9% vs 28%**; mobile = 34% of traffic, ~12% of purchases.
+- Landing pages: homepage + `/forms/will.html` + `/guides/will-cost.html` convert; high‑traffic guides (trust‑fund 184 sess, probate‑timeline, executor, IHT) convert ~0 → add CTAs/assisted‑conversion tracking; `/tools/probate-calculator` gets traffic, 0 conversions → monetise.
+
+## 10.2 Mobile will‑form fix (`forms/will.html`, owned by parallel workstream)
+Diagnosis (see `/_build/will-form-mobile-fix.md`): mobile users reach step 1 then can't advance. Causes: **(a)** step 1 is overloaded — 8 required fields incl. DOB, full address, strict‑regex postcode; **(b)** the bottom "Continue" button gets obscured on mobile by the fixed `#cl-cookie` consent bar (only 72px reserved; it wraps taller) and/or the keyboard.
+- **Patch A — DEPLOYED:** replaced the cookie script so the bar reserves its TRUE height (recalc on resize/keyboard) → can't cover Continue. Safe, isolated. (`apply_will_form_cookie_fix.py`). Renders clean on owner's iPhone.
+- **Patch B — HELD:** sticky mobile nav conflicts with the fixed cookie bar (both `bottom:0`) — needs a real mobile test/Clarity before deploy, or rework to sit above the bar.
+- **Structural (form owner):** split the 8‑field step 1 into two lighter steps — the proven mobile CRO fix.
+- **Confirm via:** scheduled task **`clearlegacy-mobile-form-recheck`** fires **19 Jun 09:00** — re‑pulls GA4 mobile completion vs baseline (mobile 1.9% / desktop 28%) and verdicts whether Patch A worked; else → Microsoft Clarity mobile session recordings (Phase 3 of brief; needs Clarity/Hotjar).
+
+## 10.3 Life‑event conversion pages (sprint P1) — 8 LIVE
+Built with the generator (template nav fixed to Wills/Pricing/Guides; CTA `/wills/`; NO human‑review claims; visible FAQ + schema). Deployed via `deploy_lifeevent.sh` (copies ONLY the named slugs, never the 84). Content in `content_lifeevent.py`.
+- **Tier 1 (→ /wills/):** wills-after-buying-a-house, wills-after-having-a-baby, recently-married-update-your-will, recently-divorced-update-your-will.
+- **Tier 2:** going-on-holiday-estate-planning-checklist (→/wills/), i-own-a-house-with-my-partner (→/wills/), my-parent-has-died-what-next (→/probate-for-executors), i-have-been-named-executor (→/probate-for-executors).
+- Did NOT rebuild `/wills-for-unmarried-couples` (already exists as `/wills-for-unmarried-couples-uk` + visual guide).
+
+## 10.4 ⚠️ Claims guardrail (recurring — held firm 4+ times)
+Every sales brief tries to add **"Human‑reviewed wills" / "Human review"** trust/process copy. This violates the live claims policy (commits `c630c11`/`a9054c5`). Do NOT add it. NOTE: my own `DEFAULT_BRIDGE` had a "Human review" step — **now fixed** to "Review and confirm". The live `/wills/` page still shows "Human‑reviewed wills" in its trust strip (parallel workstream re‑added it) — flag to owner, don't propagate.
+
+## 10.5 Still open (sales sprint backlog — need owner/systems, NOT more pages)
+- **Confirm the mobile‑form lift on 19 Jun** (scheduled). This is the #1 item.
+- If unconfirmed → Patch B (reworked) and/or split step 1; get Clarity/Hotjar for mobile recordings.
+- Email capture / exit‑intent / nurture sequence (P2/P3), review‑collection engine (P7), testimonial library (P8), professional‑referral pack (P9), controlled Google Search relaunch (P12 — keep PMax paused) — all need backend/systems or owner content, not page builds.
+- Add CTAs/conversion bridges to the high‑traffic non‑converting guides (trust‑fund, probate‑timeline, executor, IHT) — parallel‑workstream pages, coordinate.
+- Monetise `/tools/probate-calculator` (CTA + lead magnet).
+
+## 10.6 Companion files (in `/phase7/` and `/_build/`)
+- `will-form-mobile-fix.md` — mobile diagnosis + Patches A/B + structural fix.
+- `apply_will_form_cookie_fix.py` — Patch A (exact‑match, idempotent).
+- `add_visible_faqs.py`, `add_tool_links.py` — surgical LIVE‑file patchers (FAQ, calculator links).
+- `content_lifeevent.py`, `deploy_lifeevent.sh` — life‑event pages + their scoped deploy.
+- `CLEARLEGACY-REVENUE-DIAGNOSTIC-SPRINT.md` — the 10‑phase sales brief, filed.
+- Artifacts (Cowork sidebar): `clearlegacy-attribution-dashboard`, `clearlegacy-revenue-diagnostic`.
+
+## 10.7 Connector / data notes
+- **GA4 = Supermetrics MCP**, data source `GAWA`, property `528577470` ("Clearlegacy"; authorized by sat@installsmart.ai). Async pattern: `data_query` → `get_async_query_results`. The adspirer connector's `google_analytics` tool is NOT authorized (its ad accounts are "ByErim", a different entity — don't use). The other two GA4 properties on the login (HonestHours `529307254`, InstallSmart.ai `529314888`) are different sites.
