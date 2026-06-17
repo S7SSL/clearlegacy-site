@@ -1476,7 +1476,20 @@ body.cl-cookie-visible{padding-bottom:64px}
 </style>
 <div id="cl-cookie" style="display:none">  <span>We use cookies to improve your experience. <a href="/legal/terms.html">Learn more</a></span>  <button onclick="document.getElementById('cl-cookie').style.display='none';document.body.classList.remove('cl-cookie-visible');localStorage.setItem('cl_ok','1');window.uetq=window.uetq||[];window.uetq.push('consent','update',{'ad_storage':'granted'})">Accept</button>
 </div>
-<script>if(!localStorage.getItem('cl_ok')){document.getElementById('cl-cookie').style.display='flex';document.body.classList.add('cl-cookie-visible');}</script>
+<script>
+(function(){
+  var bar=document.getElementById('cl-cookie');
+  if(!bar) return;
+  if(!localStorage.getItem('cl_ok')){ bar.style.display='flex'; document.body.classList.add('cl-cookie-visible'); }
+  function reserve(){
+    document.body.style.paddingBottom = (getComputedStyle(bar).display==='none') ? '' : (bar.offsetHeight + 16) + 'px';
+  }
+  reserve();
+  window.addEventListener('load', reserve);
+  window.addEventListener('resize', reserve);   /* mobile keyboard open/close + rotate */
+  setTimeout(reserve, 400);
+})();
+</script>
   <!-- Attribution capture: UTMs, referrer, gclid/fbclid/ttclid/msclkid -> sessionStorage, auto-injected into POST /api/lead -->
   <script>
   (function () {
