@@ -341,6 +341,25 @@ Autumn Statement 2022 (IHT threshold freeze until April 2030) · <a href="https:
 
   // Initial render
   calculate();
+
+  // Fire tool_iht_calculator_used once per page load on first user interaction.
+  let usedFired = false;
+  function fireUsed(){
+    if (usedFired) return;
+    usedFired = true;
+    try {
+      if (typeof gtag === 'function') {
+        gtag('event', 'tool_iht_calculator_used', {
+          tool: 'iht_calculator',
+          tool_variant: 'uk-inheritance-tax-calculator'
+        });
+      }
+    } catch(_){}
+  }
+  document.querySelectorAll('#ihtForm input, #ihtForm select').forEach(el => {
+    el.addEventListener('change', fireUsed);
+    el.addEventListener('input', fireUsed);
+  });
 })();
 </script>
 

@@ -1224,7 +1224,7 @@ Inheritance (Provision for Family and Dependants) Act 1975 &middot; <a href="htt
     document.getElementById('results').classList.add('show');
     document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
 
-    fireGA('tool_complete', {
+    var completionParams = {
       tool: 'estate_risk_assessment_v2',
       risk_level: level.level,
       risk_score: overall,
@@ -1234,7 +1234,9 @@ Inheritance (Provision for Family and Dependants) Act 1975 &middot; <a href="htt
       cat_tax: cats.tax,
       cat_legal: cats.legal,
       iht_exposure_gbp: ihtCost
-    });
+    };
+    fireGA('tool_complete', completionParams);
+    fireGA('tool_risk_assessment_completed', completionParams);
   }
 
   // ============================================================
@@ -1278,7 +1280,7 @@ Inheritance (Provision for Family and Dependants) Act 1975 &middot; <a href="htt
     );
     window.location.href = 'mailto:' + encodeURIComponent(email) + '?subject=' + subject + '&body=' + body;
     document.getElementById('emailCap').classList.add('sent');
-    fireGA('email_capture_submit', {
+    fireGA('email_captured', {
       tool: 'estate_risk_assessment_v2',
       risk_level: level,
       risk_score: parseInt(score, 10)

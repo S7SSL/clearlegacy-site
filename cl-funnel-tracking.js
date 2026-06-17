@@ -8,13 +8,13 @@
  *
  *   Phase 3 funnel events (the canonical names the audit/spec uses):
  *     - homepage_cta_click          (any CTA on the homepage)
- *     - pricing_page_visit          (page load of /pricing/)
+ *     - pricing_page_visit          (homepage #services scrolled into view, OR /pricing/ load)
  *     - begin_will                  (any click that lands the user on /forms/will.html)
  *     - form_step_1 … form_step_5   (per-step advance inside the will questionnaire)
  *     - payment_started             (just before Stripe redirect)
  *     - payment_completed           (thank-you page with a session_id)
  *     - form_abandoned              (beforeunload after begin, not completed)
- *     - email_capture_submit        (lead-magnet email capture forms)
+ *     - email_captured              (lead-magnet email capture forms)
  *
  * Drop-in: <script src="/cl-funnel-tracking.js" defer></script>
  * Safe to load multiple times — guards against double-firing.
@@ -44,8 +44,47 @@
   window.clFire = fire;
 
   // ---------- pricing_page_visit ----------
+  // Fires once per page load. Two triggers:
+  //   1. Direct visit to /pricing/ (backward-compat — the page exists but gets
+  //      very little traffic since pricing is shown on the homepage).
+  //   2. Homepage #services pricing-cards section scrolls into view (the
+  //      section title is "Our Services" and contains the £69/£99 cards).
+  var pricingVisitFired = false;
+  function firePricingVisit(trigger) {
+    if (pricingVisitFired) return;
+    pricingVisitFired = true;
+    fire('pricing_page_visit', { page_path: SITE, trigger: trigger });
+  }
   if (IS_PRICING) {
-    fire('pricing_page_visit', { page_path: SITE });
+    firePricingVisit('pricing_page_load');
+  } else if (IS_HOMEPAGE) {
+    function watchServicesSection() {
+      var target = document.getElementById('services');
+      if (!target) return false;
+      if (typeof IntersectionObserver !== 'function') {
+        // Old browser — just fire when DOM is ready as a fallback.
+        firePricingVisit('homepage_services_fallback');
+        return true;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            firePricingVisit('homepage_services_scroll');
+            io.disconnect();
+            break;
+          }
+        }
+      }, { threshold: 0.25 });
+      io.observe(target);
+      return true;
+    }
+    if (!watchServicesSection()) {
+      // Section may not be in the DOM yet if script loaded very early.
+      var svcTries = 0;
+      var svcIv = setInterval(function () {
+        if (watchServicesSection() || ++svcTries > 20) clearInterval(svcIv);
+      }, 250);
+    }
   }
 
   // ---------- 1. click_start_will (every commercial-page CTA) + begin_will ----------

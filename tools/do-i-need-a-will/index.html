@@ -338,6 +338,17 @@ function finish(){
   quizCard.style.display = 'none';
   resultCard.classList.add('show');
   resultCard.scrollIntoView({behavior:'smooth', block:'start'});
+
+  try {
+    if (typeof gtag === 'function') {
+      gtag('event', 'tool_quiz_completed', {
+        tool: 'do_i_need_a_will',
+        urgency_level: level,
+        score: s,
+        factors_triggered: triggers.length
+      });
+    }
+  } catch(_){}
 }
 
 function factorText(key){

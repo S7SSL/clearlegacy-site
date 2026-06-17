@@ -367,6 +367,26 @@ Inheritance Tax Act 1984 &middot; <a href="https://www.legislation.gov.uk/ukpga/
     el.addEventListener('change', calculate);
   });
   calculate();
+
+  // Fire tool_iht_calculator_used once per page load on first user interaction.
+  let usedFired = false;
+  function fireUsed(){
+    if (usedFired) return;
+    usedFired = true;
+    try {
+      if (typeof gtag === 'function') {
+        gtag('event', 'tool_iht_calculator_used', {
+          tool: 'iht_calculator',
+          tool_variant: 'iht-calculator',
+          iht_due: parseFloat(document.getElementById('iht').textContent.replace(/[^0-9.]/g,'')) || 0
+        });
+      }
+    } catch(_){}
+  }
+  document.querySelectorAll('#ihtForm input').forEach(el=>{
+    el.addEventListener('change', fireUsed, { once: false });
+    el.addEventListener('input', fireUsed, { once: false });
+  });
 })();
 </script>
 </body>
