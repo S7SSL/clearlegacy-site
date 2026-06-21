@@ -36,6 +36,24 @@ Allow: /
 User-agent: DuckDuckBot
 Allow: /
 
+# Google Ads crawlers - MUST be explicitly allowed.
+# AdsBot ignores the wildcard (*) user-agent, so without these entries
+# Google Ads can disapprove landing pages with "Destination not working".
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+User-agent: AdsBot-Google-Mobile-Apps
+Allow: /
+
+User-agent: Google-InspectionTool
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
 # SEO scrapers & bad bots - BLOCKED
 User-agent: AhrefsBot
 Disallow: /
