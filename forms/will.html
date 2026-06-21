@@ -74,6 +74,10 @@ body.pay-first .hide-on-paid{display:none !important}
 .add-btn:hover{background:var(--blue);color:var(--white)}
 /* CALLOUT */
 .info-box{background:var(--light-blue);border-left:3px solid var(--blue);padding:16px 18px;margin-bottom:24px;font-size:14px;color:var(--dark);line-height:1.6;border-radius:6px}
+/* SECTION DIVIDER inside a step */
+.section-divider{margin:32px 0 24px;padding-top:24px;border-top:1px solid var(--border)}
+.section-divider .section-title{font-size:14px;font-weight:600;color:var(--dark);letter-spacing:0.3px;margin-bottom:6px}
+.section-divider .section-sub{font-size:13px;color:var(--grey);line-height:1.5;margin-bottom:18px}
 /* NAV BUTTONS */
 .form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;gap:16px}
 .btn-back{background:var(--white);border:1px solid var(--border);color:var(--grey);padding:12px 24px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;transition:all .2s;border-radius:6px}
@@ -96,7 +100,7 @@ body.pay-first .hide-on-paid{display:none !important}
 footer{background:var(--soft-bg);border-top:1px solid var(--border);padding:24px 5%;text-align:center;font-size:13px;color:var(--grey)}
 footer a{color:var(--blue);text-decoration:none}
 footer a:hover{text-decoration:underline}
-/* REVIEW SUMMARY (step 7) */
+/* REVIEW SUMMARY */
 .review-wrap{background:var(--soft-bg);border:1px solid var(--border);border-radius:8px;padding:0;margin-bottom:28px;overflow:hidden}
 .review-wrap h3{background:var(--white);font-size:13px;color:var(--dark);padding:14px 18px;border-bottom:1px solid var(--border);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;margin:0}
 .review-section{border-bottom:1px solid var(--border);padding:16px 18px;background:var(--white)}
@@ -116,35 +120,14 @@ footer a:hover{text-decoration:underline}
 /* INLINE ERROR */
 .form-error{background:#fef2f2;border-left:3px solid var(--err);padding:14px 16px;margin-bottom:16px;color:var(--err);border-radius:6px;font-size:14px;line-height:1.5;display:none}
 .form-error.visible{display:block}
+/* SOFT NOTE (e.g. complex business heads-up) */
+.soft-note{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:12px 16px;font-size:13px;color:#92400e;line-height:1.5;margin-top:10px}
 /* MOBILE */
 @media(max-width:600px){ .field-row{grid-template-columns:1fr} .radio-group.horizontal{flex-direction:column} .form-nav{flex-wrap:wrap} .btn-back{width:100%;max-width:none;order:2} .btn-next{max-width:none;order:1} .step-title{font-size:22px} .review-body dl{grid-template-columns:1fr;gap:2px} .review-body dt{padding-top:8px}
 }
 
 .quick-fill-btn { background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; padding:4px 10px; border-radius:6px; font-size:12px; cursor:pointer; margin-left:8px; font-weight:500; transition:all 0.15s; }
 .quick-fill-btn:hover { background:#dbeafe; border-color:#3b82f6; }
-/* PRE-QUALIFYING FLOW (Farewill-style screening, 6 yes/no questions) */
-#qualify-wrap{max-width:680px;margin:0 auto;padding:32px 4% 60px;display:none}
-.qualify-progress{padding:0 0 32px}
-.qualify-progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--grey);letter-spacing:0.5px;margin-bottom:12px;text-transform:uppercase;font-weight:500}
-.qualify-step{display:none}
-.qualify-step.active{display:block}
-.qualify-step-num{font-size:12px;color:var(--blue);letter-spacing:0.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px}
-.qualify-title{font-size:30px;color:var(--dark);margin-bottom:28px;line-height:1.3;font-weight:600;letter-spacing:-0.5px}
-.qualify-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.qualify-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:32px 24px;cursor:pointer;transition:all .18s;text-align:left;font-family:'Inter',sans-serif;color:inherit;display:block;width:100%;min-height:140px}
-.qualify-card:hover{border-color:var(--blue);background:var(--light-blue);transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,0.12)}
-.qualify-card.selected{border-color:var(--blue);background:var(--light-blue);box-shadow:0 0 0 3px rgba(37,99,235,0.18)}
-.qualify-card-answer{font-size:22px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:-0.3px}
-.qualify-card-sub{font-size:13px;color:var(--grey);line-height:1.5;min-height:36px}
-.qualify-nav{display:flex;align-items:center;margin-top:6px}
-.qualify-back{background:none;border:none;color:var(--grey);font-size:13px;cursor:pointer;padding:8px 12px;border-radius:6px;font-weight:600;transition:all .15s;letter-spacing:0.3px;text-transform:uppercase}
-.qualify-back:hover{color:var(--blue);background:var(--light-blue)}
-@media(max-width:600px){
-  .qualify-cards{grid-template-columns:1fr}
-  .qualify-title{font-size:24px}
-  .qualify-card{min-height:auto;padding:22px 18px}
-  .qualify-card-sub{min-height:0}
-}
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J3GPRFYR2Q"></script>
@@ -210,133 +193,265 @@ fbq('track', 'PageView');
   <span id="trust-price">💷 Single Will — £69 · Mirror Wills — £99</span>
 </div>
 
-<!-- PRE-QUALIFYING FLOW (shown first; transitions into the existing form after Q6) -->
-<div id="qualify-wrap">
-  <div class="qualify-progress">
-    <div class="qualify-progress-label">
-      <span id="q-step-label">Step 1 of 6</span>
-      <span id="q-step-pct">17%</span>
-    </div>
-    <div class="bar-track"><div class="bar-fill" id="q-bar" style="width:17%"></div></div>
-  </div>
-  <div class="qualify-step active" data-q="1">
-    <div class="qualify-step-num">A few quick questions</div>
-    <h2 class="qualify-title" style="font-size:24px;margin-bottom:8px">A few quick questions to tailor your will</h2>
-    <p style="color:var(--grey);font-size:14px;margin-bottom:24px;line-height:1.5">Takes 30 seconds. We use these to pre-fill the rest of the form and make sure ClearLegacy is the right fit for your situation.</p>
-    <div class="qualify-inline-list">
-      <style>
-        .qualify-inline-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-        .qualify-inline-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:10px}
-        .qualify-inline-q{font-size:14.5px;color:var(--dark);font-weight:500;line-height:1.4}
-        .qualify-inline-q small{display:block;color:var(--grey);font-size:12px;font-weight:400;margin-top:2px}
-        .qualify-inline-btn{background:#fff;color:var(--grey);border:1px solid var(--border);padding:8px 18px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:600;transition:all .15s;font-family:'Inter',sans-serif;min-width:60px}
-        .qualify-inline-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--light-blue)}
-        .qualify-inline-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff}
-        @media(max-width:600px){
-          .qualify-inline-row{grid-template-columns:1fr 60px 60px;gap:6px;padding:12px}
-          .qualify-inline-q{font-size:13.5px}
-        }
-      </style>
-      <div class="qualify-inline-row">
-        <div class="qualify-inline-q">Do you have a partner?<small>Including engaged or cohabiting</small></div>
-        <button type="button" class="qualify-inline-btn" data-q="1" data-v="no" onclick="setInlineQualify(1,'no',this)">No</button>
-        <button type="button" class="qualify-inline-btn" data-q="1" data-v="yes" onclick="setInlineQualify(1,'yes',this)">Yes</button>
-      </div>
-      <div class="qualify-inline-row">
-        <div class="qualify-inline-q">Do you have any children?<small>Including step-children if you wish to include them</small></div>
-        <button type="button" class="qualify-inline-btn" data-q="2" data-v="no" onclick="setInlineQualify(2,'no',this)">No</button>
-        <button type="button" class="qualify-inline-btn" data-q="2" data-v="yes" onclick="setInlineQualify(2,'yes',this)">Yes</button>
-      </div>
-      <div class="qualify-inline-row">
-        <div class="qualify-inline-q">Do you own your home?<small>Including a mortgaged property</small></div>
-        <button type="button" class="qualify-inline-btn" data-q="3" data-v="no" onclick="setInlineQualify(3,'no',this)">No</button>
-        <button type="button" class="qualify-inline-btn" data-q="3" data-v="yes" onclick="setInlineQualify(3,'yes',this)">Yes</button>
-      </div>
-      <div class="qualify-inline-row">
-        <div class="qualify-inline-q">Do you live in England or Wales?<small>ClearLegacy serves England & Wales only</small></div>
-        <button type="button" class="qualify-inline-btn" data-q="4" data-v="no" onclick="setInlineQualify(4,'no',this)">No</button>
-        <button type="button" class="qualify-inline-btn" data-q="4" data-v="yes" onclick="setInlineQualify(4,'yes',this)">Yes</button>
-      </div>
-      <div class="qualify-inline-row">
-        <div class="qualify-inline-q">Is everything you own in the UK?<small>No foreign property or assets</small></div>
-        <button type="button" class="qualify-inline-btn" data-q="5" data-v="no" onclick="setInlineQualify(5,'no',this)">No</button>
-        <button type="button" class="qualify-inline-btn" data-q="5" data-v="yes" onclick="setInlineQualify(5,'yes',this)">Yes</button>
-      </div>
-      <div class="qualify-inline-row">
-        <div class="qualify-inline-q">Do you own a business?<small>Sole traders OK · limited companies may need solicitor advice</small></div>
-        <button type="button" class="qualify-inline-btn" data-q="6" data-v="no" onclick="setInlineQualify(6,'no',this)">No</button>
-        <button type="button" class="qualify-inline-btn" data-q="6" data-v="yes" onclick="setInlineQualify(6,'yes',this)">Yes</button>
-      </div>
-    </div>
-    <button type="button" id="qualify-continue-btn" onclick="finishQualifyInline()" disabled style="width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;opacity:.5;transition:opacity .15s;font-family:'Inter',sans-serif">Continue to your will →</button>
-    <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--grey)">
-      <a href="#" onclick="event.preventDefault();skipQualifyInline()" style="color:var(--grey);text-decoration:underline">Skip and start my will</a>
-    </p>
-</div>
-
-</div>
-
-<div class="progress-wrap" style="display:none">  <div class="progress-bar">  <div class="steps-label">  <span id="step-label">Part 1 — About You</span>  <span id="step-pct">14%</span>  </div>  <div class="bar-track"><div class="bar-fill" id="bar" style="width:14%"></div></div>  </div>
+<div class="progress-wrap">  <div class="progress-bar">  <div class="steps-label">  <span id="step-label">Part 1 of 4 — About You</span>  <span id="step-pct">25%</span>  </div>  <div class="bar-track"><div class="bar-fill" id="bar" style="width:25%"></div></div>  </div>
 </div>
 <div id="step-nudge" style="display:none;text-align:center;padding:10px 5%;font-size:13px;color:#374151;font-family:'Inter',sans-serif;background:#f0fdf4;border-bottom:1px solid #bbf7d0;font-weight:500;"></div>
 
-<div class="form-wrap" style="display:none">
+<div class="form-wrap">
 
 <!-- STEP 1: ABOUT YOU -->
-<div class="step active" id="step-1">  <div class="step-header">  <div class="step-num">Part 1</div>  <h2 class="step-title">About You</h2>  <p class="step-sub">A few quick details to identify you as the person making this Will. Takes about 2 minutes.</p>  </div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="f-first" name="given-name" autocomplete="given-name" placeholder="e.g. James" required></div>  <div class="field"><label>Last Name</label><input type="text" id="f-last" name="family-name" autocomplete="family-name" placeholder="e.g. Hargreaves" required></div>  </div>  <div class="field"><label>Email Address</label><input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" placeholder="We'll send your completed Will here" required></div>  <div class="field"><label>Date of Birth</label><input type="date" id="f-dob" name="bday" autocomplete="bday" required></div>  <div class="field"><label>Marital Status</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="marital" value="single"> Single</label>  <label class="radio-opt"><input type="radio" name="marital" value="married"> Married</label>  <label class="radio-opt"><input type="radio" name="marital" value="civil-partner"> Civil Partner</label>  <label class="radio-opt"><input type="radio" name="marital" value="divorced"> Divorced</label>  <label class="radio-opt"><input type="radio" name="marital" value="widowed"> Widowed</label>  <label class="radio-opt"><input type="radio" name="marital" value="cohabiting"> Cohabiting</label>  </div>  </div>  <div class="field"><label>Address Line 1</label><input type="text" id="f-addr1" name="address-line1" autocomplete="address-line1" placeholder="House number and street" required></div>  <div class="field"><label>Address Line 2 (optional)</label><input type="text" id="f-addr2" name="address-line2" autocomplete="address-line2" placeholder="Flat, apartment, etc."></div>  <div class="field-row">  <div class="field"><label>City / Town</label><input type="text" id="f-city" name="address-level2" autocomplete="address-level2" required></div>  <div class="field"><label>Postcode</label><input type="text" id="f-post" name="postal-code" autocomplete="postal-code" placeholder="e.g. SW1A 1AA" required></div>  </div>  <div class="field"><label>Phone Number (optional)</label><input type="tel" id="f-phone" name="tel" autocomplete="tel" inputmode="tel" placeholder="In case we need to clarify anything"></div>  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
-</div>
-
-<!-- STEP 2: PARTNER -->
-<div class="step" id="step-2">  <div class="step-header">  <div class="step-num">Part 2</div>  <h2 class="step-title">Your Partner</h2>  <p class="step-sub">If you are married or in a civil partnership, we need their details. If not, skip to the next step.</p>  </div>  <div class="field"><label>Do you have a spouse or civil partner?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-partner" value="yes" onchange="toggleSection('partner-details','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-partner" value="no" onchange="toggleSection('partner-details','no')"> No</label>  </div>  </div>  <div id="partner-details" style="display:none">  <div class="field-row">  <div class="field"><label>Partner First Name(s)</label><input type="text" id="p-first" autocomplete="section-partner given-name" placeholder="e.g. Elizabeth"></div>  <div class="field"><label>Partner Last Name</label><input type="text" id="p-last" autocomplete="section-partner family-name"></div>  </div>  <div class="field"><label>Partner Date of Birth</label><input type="date" id="p-dob" autocomplete="section-partner bday"></div>  <div class="field"><label>Leave everything to my partner first?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="partner-primary" value="yes"> Yes — then to others if partner predeceases me</label>  <label class="radio-opt"><input type="radio" name="partner-primary" value="no"> No — I want a different arrangement</label>  </div>  </div>  <div class="info-box">Most married couples leave their entire estate to their partner first, with an alternative gift if the partner predeceases them. This is the most common and straightforward arrangement.</div>  <div class="info-box" id="mirror-nudge" style="border-left-color:#16a34a"><strong>Doing this as a couple?</strong> Mirror Wills cover you both for £99 — a £39 saving vs two single Wills, and your partner’s Will is drafted from the same answers. You can pick Mirror Wills at the final step.</div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(2)">← Back</button>  <button class="btn-next" onclick="nextStep(2)">Continue →</button>  </div>
-</div>
-
-<!-- STEP 3: CHILDREN & DEPENDANTS -->
-<div class="step" id="step-3">  <div class="step-header">  <div class="step-num">Part 3</div>  <h2 class="step-title">Children &amp; Dependants</h2>  <p class="step-sub">Tell us about your children and any other dependants you wish to provide for.</p>  </div>  <div class="field"><label>Do you have children?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-children" value="yes" onchange="toggleSection('children-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-children" value="no" onchange="toggleSection('children-section','no')"> No</label>  </div>  </div>  <div id="children-section" style="display:none">  <div id="children-list"></div>  <button class="add-btn" onclick="addChild()">+ Add a Child</button>  <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they receive their inheritance?</label>  <select id="child-age">  <option value="18">18 (as soon as legally an adult)</option>  <option value="21">21</option>  <option value="25" selected>25 (recommended)</option>  <option value="30">30</option>  </select>  <div class="hint">Assets will be held in trust by your executors until this age.</div>  </div>  </div>  <div class="field" style="margin-top:10px"><label>If both you and your partner were no longer here, who should care for your children?</label><p class="hint" style="margin:6px 0 10px">A guardian only steps in when both parents are gone. While one parent is alive they keep parental responsibility automatically, so this should be a third person — a sibling, parent, godparent, or close friend — not your spouse or partner.</p>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-guardian" value="yes" onchange="toggleSection('guardian-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-guardian" value="no" onchange="toggleSection('guardian-section','no')"> No</label>  </div>  </div>  <div id="guardian-section" style="display:none">  <div class="person-block">  <div class="block-title">Guardian Details</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="g-first" autocomplete="off" onblur="checkGuardianMatch()" placeholder="Guardian's first name(s)"></div>  <div class="field"><label>Last Name</label><input type="text" id="g-last" autocomplete="off" onblur="checkGuardianMatch()" placeholder="Guardian's last name"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" id="g-rel" autocomplete="off" placeholder="e.g. Sister, Brother-in-law"></div>  </div>  <div id="guardian-warn" style="display:none;margin-top:10px;padding:12px;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;font-size:14px;color:#92400e;line-height:1.5"><strong>Heads up:</strong> The name you've entered matches your partner. A guardian only steps in when both parents are gone, so naming your partner here has no effect. Did you mean to name someone else?</div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(3)">← Back</button>  <button class="btn-next" onclick="nextStep(3)">Continue →</button>  </div>
-</div>
-
-<!-- STEP 4: EXECUTORS -->
-<div class="step" id="step-4">  <div class="step-header">  <div class="step-num">Part 4</div>  <h2 class="step-title">Your Executors</h2>  <p class="step-sub">Executors are the people who will carry out your wishes and administer your estate after your death. You should appoint at least two.</p>  </div>  <div class="info-box">Choose people you trust who are likely to outlive you and are capable of managing financial and legal matters. They can be beneficiaries of your Will.</div>  <div id="executor-list">  <div class="person-block" id="exec-0">  <div class="block-title">Executor 1 (Primary) <button class="quick-fill-btn" type="button" onclick="usePartnerAsExecutor()">Use my partner</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" id="e1-first" autocomplete="off" placeholder="e.g. Sarah"></div>  <div class="field"><label>Last Name</label><input type="text" id="e1-last" autocomplete="off" placeholder="e.g. Hargreaves"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship to you</label><input type="text" id="e1-rel" autocomplete="off" placeholder="e.g. Spouse, Son, Daughter"></div>  <div class="field"><label>Email Address (optional)</label><input type="email" id="e1-email" autocomplete="off" inputmode="email" placeholder="For contact purposes"></div>  </div>  </div>  <div class="person-block" id="exec-1">  <div class="block-title">Executor 2 (Substitute)</div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" autocomplete="off" placeholder="e.g. Michael"></div>  <div class="field"><label>Last Name</label><input type="text" autocomplete="off" placeholder="e.g. Thompson"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship to you</label><input type="text" autocomplete="off" placeholder="e.g. Brother, Friend"></div>  <div class="field"><label>Email Address</label><input type="email" autocomplete="off" inputmode="email" placeholder="For contact purposes"></div>  </div>  </div>  </div>  <button class="add-btn" onclick="addExecutor()">+ Add a Third Executor (optional)</button>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(4)">← Back</button>  <button class="btn-next" onclick="nextStep(4)">Continue →</button>  </div>
-</div>
-
-<!-- STEP 5: YOUR ESTATE & GIFTS -->
-<div class="step" id="step-5">  <div class="step-header">  <div class="step-num">Part 5</div>  <h2 class="step-title">Your Estate &amp; Gifts</h2>  <p class="step-sub">Tell us how you wish your estate to be distributed. You can leave specific items or amounts to individuals, then specify who receives everything else.</p>  </div>  <div class="field"><label>Do you own property?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>  <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>  </div>  </div>  <div id="property-section" style="display:none;margin-bottom:20px">
-<div id="properties-list">
-<div class="person-block" id="prop-block-1">
-<div class="block-title">Property 1 <button class="quick-fill-btn" type="button" onclick="useHomeAsProp(1)">Same as my home</button></div>
-<div class="field"><label>Address Line 1</label><input type="text" id="prop-addr1" autocomplete="off" placeholder="House number and street"></div>
-<div class="field"><label>Address Line 2 (optional)</label><input type="text" id="prop-addr2" autocomplete="off" placeholder="Flat, apartment, etc."></div>
-<div class="field-row">
-<div class="field"><label>City / Town</label><input type="text" id="prop-city" autocomplete="off"></div>
-<div class="field"><label>Postcode</label><input type="text" id="prop-post" autocomplete="off" placeholder="e.g. SW1A 1AA"></div>
-</div>
-<div class="field"><label>How is the property owned?</label><select id="prop-ownership"><option value="">Select...</option><option value="sole">Solely in my name</option><option value="joint-tenants">Joint tenants (with partner/spouse)</option><option value="tenants-in-common">Tenants in common (I own a specific share)</option></select><div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div></div>
-</div>
-</div>
-<button class="add-btn" type="button" onclick="addProperty()">+ Add another property</button>
-</div>  <div class="field"><label>Specific Gifts (optional)</label>  <p class="hint" style="margin:0 0 10px">List any specific items, sums of money, or accounts you wish to leave to named individuals.</p>  <div id="gifts-list"></div>  <button class="add-btn" onclick="addGift()">+ Add a Specific Gift</button>  </div>  <div class="field" style="margin-top:22px"><label>Residuary Estate</label>  <p class="hint" style="margin:0 0 10px">Your residuary estate is everything left over after debts, funeral costs and specific gifts. Who should receive it?</p>  <div class="radio-group">  <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>  <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I will specify below)</label>  <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>  <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>  </div>  <div id="residuary-detail" style="display:none;margin-top:14px">  <textarea placeholder="Please describe how you would like your residuary estate distributed..."></textarea>  </div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(5)">← Back</button>  <button class="btn-next" onclick="nextStep(5)">Continue →</button>  </div>
-</div>
-
-<!-- STEP 6: FUNERAL & ADDITIONAL WISHES -->
-<div class="step" id="step-6">  <div class="step-header">  <div class="step-num">Part 6</div>  <h2 class="step-title">Funeral &amp; Additional Wishes</h2>  <p class="step-sub">These instructions are not legally binding but provide important guidance for your executors and family.</p>  </div>  <div class="field"><label>Burial or Cremation Preference</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="funeral" value="burial"> Burial</label>  <label class="radio-opt"><input type="radio" name="funeral" value="cremation"> Cremation</label>  <label class="radio-opt"><input type="radio" name="funeral" value="no-preference"> No preference</label>  <label class="radio-opt"><input type="radio" name="funeral" value="other"> Other</label>  </div>  </div>  <div class="field"><label>Any specific funeral or memorial wishes?</label>  <textarea placeholder="e.g. Location, type of service, music, flowers, charitable donations in lieu of flowers..."></textarea>  </div>  <div class="field"><label>Do you have any additional instructions for your executors?</label>  <textarea placeholder="e.g. Digital accounts, pets, personal items not covered above, messages for beneficiaries..."></textarea>  </div>  <div class="field"><label>Do you wish to include a trust for any beneficiary?</label>  <div class="radio-group horizontal">  <label class="radio-opt"><input type="radio" name="needs-trust" value="yes"> Yes — I'll need advice on this</label>  <label class="radio-opt"><input type="radio" name="needs-trust" value="no"> No</label>  <label class="radio-opt"><input type="radio" name="needs-trust" value="unsure"> Not sure</label>  </div>  <div class="hint">Trusts are useful for protecting assets for minor children, vulnerable beneficiaries, or reducing Inheritance Tax. We will contact you if you select Yes or Not Sure.</div>  </div>  <div class="form-nav">  <button class="btn-back" onclick="prevStep(6)">← Back</button>  <button class="btn-next" onclick="nextStep(6)">Continue →</button>  </div>
-</div>
-
-<!-- STEP 7: REVIEW & PAY -->
-<div class="step" id="step-7">
+<div class="step active" id="step-1">
   <div class="step-header">
-    <div class="step-num">Part 7</div>
-    <h2 class="step-title">Review &amp; Complete</h2>
-    <p class="step-sub" id="step7-sub">Please review every section below. Click <em>Edit</em> next to any section to amend your answers, then return here to submit.</p>
+    <div class="step-num">Part 1 of 4</div>
+    <h2 class="step-title">About You</h2>
+    <p class="step-sub">A few quick details so we can identify you as the person making this Will. Takes about 2 minutes.</p>
+  </div>
+  <div class="field-row">
+    <div class="field"><label>First Name(s)</label><input type="text" id="f-first" name="given-name" autocomplete="given-name" placeholder="e.g. James" required></div>
+    <div class="field"><label>Last Name</label><input type="text" id="f-last" name="family-name" autocomplete="family-name" placeholder="e.g. Hargreaves" required></div>
+  </div>
+  <div class="field"><label>Email Address</label><input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" placeholder="We'll send your completed Will here" required></div>
+  <div class="field"><label>Date of Birth</label><input type="date" id="f-dob" name="bday" autocomplete="bday" required></div>
+  <div class="field"><label>Address Line 1</label><input type="text" id="f-addr1" name="address-line1" autocomplete="address-line1" placeholder="House number and street" required></div>
+  <div class="field"><label>Address Line 2 (optional)</label><input type="text" id="f-addr2" name="address-line2" autocomplete="address-line2" placeholder="Flat, apartment, etc."></div>
+  <div class="field-row">
+    <div class="field"><label>City / Town</label><input type="text" id="f-city" name="address-level2" autocomplete="address-level2" required></div>
+    <div class="field"><label>Postcode</label><input type="text" id="f-post" name="postal-code" autocomplete="postal-code" placeholder="e.g. SW1A 1AA" required></div>
+  </div>
+  <div class="field"><label>Phone Number (optional)</label><input type="tel" id="f-phone" name="tel" autocomplete="tel" inputmode="tel" placeholder="So we can email a receipt with delivery"></div>
+  <div class="field"><label>Marital Status</label>
+    <div class="radio-group horizontal">
+      <label class="radio-opt"><input type="radio" name="marital" value="single"> Single</label>
+      <label class="radio-opt"><input type="radio" name="marital" value="married"> Married</label>
+      <label class="radio-opt"><input type="radio" name="marital" value="civil-partner"> Civil Partner</label>
+      <label class="radio-opt"><input type="radio" name="marital" value="divorced"> Divorced</label>
+      <label class="radio-opt"><input type="radio" name="marital" value="widowed"> Widowed</label>
+      <label class="radio-opt"><input type="radio" name="marital" value="cohabiting"> Cohabiting</label>
+    </div>
   </div>
 
-  <!-- REVIEW SUMMARY (populated by renderReviewSummary() when step 7 shown) -->
+  <!-- Partner identity (auto-revealed when marital is married/civil-partner) -->
+  <div id="partner-details" style="display:none">
+    <div class="section-divider">
+      <div class="section-title">Your Spouse or Civil Partner</div>
+      <p class="section-sub">We only need a few details about them so your Will names them correctly.</p>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Partner First Name(s)</label><input type="text" id="p-first" autocomplete="section-partner given-name" placeholder="e.g. Elizabeth"></div>
+      <div class="field"><label>Partner Last Name</label><input type="text" id="p-last" autocomplete="section-partner family-name"></div>
+    </div>
+    <div class="field"><label>Partner Date of Birth</label><input type="date" id="p-dob" autocomplete="section-partner bday"></div>
+    <input type="hidden" name="has-partner" value="yes">
+    <div class="info-box" id="mirror-nudge" style="border-left-color:#16a34a"><strong>Doing this as a couple?</strong> Mirror Wills cover you both for £99 — a £39 saving vs two single Wills, and your partner's Will is drafted from the same answers. You can pick Mirror Wills on the final step.</div>
+  </div>
+
+  <div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
+</div>
+
+<!-- STEP 2: YOUR WISHES (beneficiaries, gifts, guardians, property, business) -->
+<div class="step" id="step-2">
+  <div class="step-header">
+    <div class="step-num">Part 2 of 4</div>
+    <h2 class="step-title">Your Wishes</h2>
+    <p class="step-sub">Who should inherit, and any specific gifts you want to leave. Skip past anything that doesn't apply.</p>
+  </div>
+
+  <!-- CHILDREN -->
+  <div class="field"><label>Do you have children?</label>
+    <p class="hint" style="margin:0 0 8px">Including adopted and step-children if you wish to include them.</p>
+    <div class="radio-group horizontal">
+      <label class="radio-opt"><input type="radio" name="has-children" value="yes" onchange="toggleSection('children-section','yes')"> Yes</label>
+      <label class="radio-opt"><input type="radio" name="has-children" value="no" onchange="toggleSection('children-section','no')"> No</label>
+    </div>
+  </div>
+  <div id="children-section" style="display:none">
+    <div id="children-list"></div>
+    <button class="add-btn" type="button" onclick="addChild()">+ Add a Child</button>
+    <div class="field" style="margin-top:24px"><label>If a child is under 18 at the time of your death, at what age should they inherit?</label>
+      <select id="child-age">
+        <option value="18">18 (as soon as legally an adult)</option>
+        <option value="21">21</option>
+        <option value="25" selected>25 (recommended)</option>
+        <option value="30">30</option>
+      </select>
+      <div class="hint">Assets will be held in trust by your executors until this age.</div>
+    </div>
+
+    <!-- GUARDIANS (only shown when children=yes) -->
+    <div class="field" style="margin-top:24px"><label>If both you and your partner were no longer here, who should care for your children?</label>
+      <p class="hint" style="margin:6px 0 10px">A guardian only steps in when both parents are gone. While one parent is alive they keep parental responsibility automatically, so name a third person — a sibling, parent, godparent or close friend — not your spouse or partner.</p>
+      <div class="radio-group horizontal">
+        <label class="radio-opt"><input type="radio" name="has-guardian" value="yes" onchange="toggleSection('guardian-section','yes')"> Yes — I'll nominate someone</label>
+        <label class="radio-opt"><input type="radio" name="has-guardian" value="no" onchange="toggleSection('guardian-section','no')"> No — leave this to the court</label>
+      </div>
+    </div>
+    <div id="guardian-section" style="display:none">
+      <div class="person-block">
+        <div class="block-title">Guardian Details</div>
+        <div class="field-row">
+          <div class="field"><label>First Name(s)</label><input type="text" id="g-first" autocomplete="off" onblur="checkGuardianMatch()" placeholder="Guardian's first name(s)"></div>
+          <div class="field"><label>Last Name</label><input type="text" id="g-last" autocomplete="off" onblur="checkGuardianMatch()" placeholder="Guardian's last name"></div>
+        </div>
+        <div class="field"><label>Relationship to you</label><input type="text" id="g-rel" autocomplete="off" placeholder="e.g. Sister, Brother-in-law"></div>
+      </div>
+      <div id="guardian-warn" style="display:none;margin-top:10px;padding:12px;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;font-size:14px;color:#92400e;line-height:1.5"><strong>Heads up:</strong> The name you've entered matches your partner. A guardian only steps in when both parents are gone, so naming your partner here has no effect. Did you mean to name someone else?</div>
+    </div>
+  </div>
+
+  <!-- PROPERTY -->
+  <div class="section-divider">
+    <div class="section-title">Property</div>
+    <p class="section-sub">Do you own a home or other property? If not, skip this.</p>
+  </div>
+  <div class="field"><label>Do you own property?</label>
+    <div class="radio-group horizontal">
+      <label class="radio-opt"><input type="radio" name="has-property" value="yes" onchange="toggleSection('property-section','yes')"> Yes</label>
+      <label class="radio-opt"><input type="radio" name="has-property" value="no" onchange="toggleSection('property-section','no')"> No</label>
+    </div>
+  </div>
+  <div id="property-section" style="display:none;margin-bottom:20px">
+    <div id="properties-list">
+      <div class="person-block" id="prop-block-1">
+        <div class="block-title">Property 1 <button class="quick-fill-btn" type="button" onclick="useHomeAsProp(1)">Same as my home</button></div>
+        <div class="field"><label>Address Line 1</label><input type="text" id="prop-addr1" autocomplete="off" placeholder="House number and street"></div>
+        <div class="field"><label>Address Line 2 (optional)</label><input type="text" id="prop-addr2" autocomplete="off" placeholder="Flat, apartment, etc."></div>
+        <div class="field-row">
+          <div class="field"><label>City / Town</label><input type="text" id="prop-city" autocomplete="off"></div>
+          <div class="field"><label>Postcode</label><input type="text" id="prop-post" autocomplete="off" placeholder="e.g. SW1A 1AA"></div>
+        </div>
+        <div class="field"><label>How is the property owned?</label><select id="prop-ownership"><option value="">Select...</option><option value="sole">Solely in my name</option><option value="joint-tenants">Joint tenants (with partner/spouse)</option><option value="tenants-in-common">Tenants in common (I own a specific share)</option></select><div class="hint">If joint tenants, the property passes automatically to the co-owner on your death, outside your Will.</div></div>
+      </div>
+    </div>
+    <button class="add-btn" type="button" onclick="addProperty()">+ Add another property</button>
+  </div>
+
+  <!-- BUSINESS ASSETS (optional, never disqualifying) -->
+  <div class="section-divider">
+    <div class="section-title">Business Assets</div>
+    <p class="section-sub">Sole traders and most simple business interests can be included in your Will. Skip if not applicable.</p>
+  </div>
+  <div class="field"><label>Do you want to include business assets in your Will?</label>
+    <div class="radio-group horizontal">
+      <label class="radio-opt"><input type="radio" name="has-business" value="yes" onchange="toggleSection('business-section','yes')"> Yes</label>
+      <label class="radio-opt"><input type="radio" name="has-business" value="no" onchange="toggleSection('business-section','no')"> No</label>
+    </div>
+  </div>
+  <div id="business-section" style="display:none">
+    <div class="person-block">
+      <div class="field"><label>Business Name</label><input type="text" id="biz-name" autocomplete="off" placeholder="e.g. Hargreaves Plumbing Ltd"></div>
+      <div class="field"><label>What should happen to it?</label><textarea id="biz-plan" placeholder="e.g. Sold and proceeds added to residuary estate / passed to my business partner Alex Brown / continued by my son James"></textarea></div>
+    </div>
+    <div class="soft-note" id="biz-complex-note">If your business has complex structures (shareholder agreements, multiple directors, trust arrangements), you may want a solicitor to review the final document. We'll still draft what you've described.</div>
+  </div>
+
+  <!-- SPECIFIC GIFTS -->
+  <div class="section-divider">
+    <div class="section-title">Specific Gifts (optional)</div>
+    <p class="section-sub">Items, sums of money, or accounts you want to leave to specific people. Skip if you'd rather everything go through the residuary.</p>
+  </div>
+  <div class="field">
+    <div id="gifts-list"></div>
+    <button class="add-btn" type="button" onclick="addGift()">+ Add a Specific Gift</button>
+  </div>
+
+  <!-- RESIDUARY -->
+  <div class="section-divider">
+    <div class="section-title">The Rest of Your Estate (Residuary)</div>
+    <p class="section-sub">Everything left after debts, funeral costs and specific gifts. Who should receive it?</p>
+  </div>
+  <div class="field">
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="residuary" value="partner-children"> My partner, and if they predecease me, equally between my children</label>
+      <label class="radio-opt"><input type="radio" name="residuary" value="partner-only"> Entirely to my partner</label>
+      <label class="radio-opt"><input type="radio" name="residuary" value="children-only"> Equally between my children</label>
+      <label class="radio-opt"><input type="radio" name="residuary" value="named"> Named individuals (I'll specify below)</label>
+      <label class="radio-opt"><input type="radio" name="residuary" value="charity"> A charity or charities</label>
+      <label class="radio-opt"><input type="radio" name="residuary" value="other"> Other arrangement</label>
+    </div>
+    <div id="residuary-detail" style="display:none;margin-top:14px">
+      <textarea id="f-residuary-detail" placeholder="Please describe how you would like your residuary estate distributed..."></textarea>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-back" type="button" onclick="prevStep(2)">← Back</button>
+    <button class="btn-next" type="button" onclick="nextStep(2)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 3: YOUR EXECUTOR(S) + FINAL WISHES -->
+<div class="step" id="step-3">
+  <div class="step-header">
+    <div class="step-num">Part 3 of 4</div>
+    <h2 class="step-title">Your Executors</h2>
+    <p class="step-sub">Executors carry out your wishes and administer your estate. Most people appoint at least two — they can also be beneficiaries.</p>
+  </div>
+  <div class="info-box">Choose people you trust who are likely to outlive you and are capable of managing financial and legal matters.</div>
+  <div id="executor-list">
+    <div class="person-block" id="exec-0">
+      <div class="block-title">Executor 1 (Primary) <button class="quick-fill-btn" type="button" onclick="usePartnerAsExecutor()">Use my partner</button></div>
+      <div class="field-row">
+        <div class="field"><label>First Name(s)</label><input type="text" id="e1-first" autocomplete="off" placeholder="e.g. Sarah"></div>
+        <div class="field"><label>Last Name</label><input type="text" id="e1-last" autocomplete="off" placeholder="e.g. Hargreaves"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Relationship to you</label><input type="text" id="e1-rel" autocomplete="off" placeholder="e.g. Spouse, Son, Daughter"></div>
+        <div class="field"><label>Email Address (optional)</label><input type="email" id="e1-email" autocomplete="off" inputmode="email" placeholder="For contact purposes"></div>
+      </div>
+    </div>
+    <div class="person-block" id="exec-1">
+      <div class="block-title">Executor 2 (Substitute)</div>
+      <div class="field-row">
+        <div class="field"><label>First Name(s)</label><input type="text" autocomplete="off" placeholder="e.g. Michael"></div>
+        <div class="field"><label>Last Name</label><input type="text" autocomplete="off" placeholder="e.g. Thompson"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Relationship to you</label><input type="text" autocomplete="off" placeholder="e.g. Brother, Friend"></div>
+        <div class="field"><label>Email Address (optional)</label><input type="email" autocomplete="off" inputmode="email" placeholder="For contact purposes"></div>
+      </div>
+    </div>
+  </div>
+  <button class="add-btn" type="button" onclick="addExecutor()">+ Add a Third Executor (optional)</button>
+
+  <!-- FINAL WISHES (kept short, optional) -->
+  <div class="section-divider">
+    <div class="section-title">Funeral &amp; Final Wishes (optional)</div>
+    <p class="section-sub">Not legally binding, but a helpful guide for your executors and family.</p>
+  </div>
+  <div class="field"><label>Burial or Cremation Preference</label>
+    <div class="radio-group horizontal">
+      <label class="radio-opt"><input type="radio" name="funeral" value="burial"> Burial</label>
+      <label class="radio-opt"><input type="radio" name="funeral" value="cremation"> Cremation</label>
+      <label class="radio-opt"><input type="radio" name="funeral" value="no-preference"> No preference</label>
+    </div>
+  </div>
+  <div class="field"><label>Any specific funeral or memorial wishes? (optional)</label>
+    <textarea id="f-funeral-wishes" placeholder="e.g. Location, type of service, music, flowers, charitable donations in lieu of flowers..."></textarea>
+  </div>
+  <div class="field"><label>Any additional instructions for your executors? (optional)</label>
+    <textarea id="f-additional" placeholder="e.g. Digital accounts, pets, personal items not covered above, messages for beneficiaries..."></textarea>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn-back" type="button" onclick="prevStep(3)">← Back</button>
+    <button class="btn-next" type="button" onclick="nextStep(3)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 4: REVIEW & CONFIRM -->
+<div class="step" id="step-4">
+  <div class="step-header">
+    <div class="step-num">Part 4 of 4</div>
+    <h2 class="step-title">Review &amp; Confirm</h2>
+    <p class="step-sub" id="step4-sub">Review your answers below. Click <em>Edit</em> next to any section to change them, then submit.</p>
+  </div>
+
+  <!-- REVIEW SUMMARY (populated by renderReviewSummary() when step 4 shown) -->
   <div class="review-wrap" id="review-summary">
     <h3>Your Answers</h3>
     <div class="review-section"><div class="review-section-head"><span class="review-section-title">About You</span><button type="button" class="edit-btn" onclick="editStep(1)">Edit</button></div><div class="review-body" id="sum-1"></div></div>
-    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Partner</span><button type="button" class="edit-btn" onclick="editStep(2)">Edit</button></div><div class="review-body" id="sum-2"></div></div>
-    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Children &amp; Dependants</span><button type="button" class="edit-btn" onclick="editStep(3)">Edit</button></div><div class="review-body" id="sum-3"></div></div>
-    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Executors</span><button type="button" class="edit-btn" onclick="editStep(4)">Edit</button></div><div class="review-body" id="sum-4"></div></div>
-    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Estate &amp; Gifts</span><button type="button" class="edit-btn" onclick="editStep(5)">Edit</button></div><div class="review-body" id="sum-5"></div></div>
-    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Funeral &amp; Additional Wishes</span><button type="button" class="edit-btn" onclick="editStep(6)">Edit</button></div><div class="review-body" id="sum-6"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Wishes</span><button type="button" class="edit-btn" onclick="editStep(2)">Edit</button></div><div class="review-body" id="sum-2"></div></div>
+    <div class="review-section"><div class="review-section-head"><span class="review-section-title">Your Executors &amp; Final Wishes</span><button type="button" class="edit-btn" onclick="editStep(3)">Edit</button></div><div class="review-body" id="sum-3"></div></div>
   </div>
 
   <div class="price-box hide-on-paid">
@@ -351,6 +466,7 @@ fbq('track', 'PageView');
       <label class="radio-opt"><input type="radio" name="will-type" value="mirror" onchange="setPrice('mirror')"> Mirror Wills (Couple) — £99 <span style="display:inline-block;background:#dcfce7;color:#166534;font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px;margin-left:6px">Save £39 vs two singles</span></label>
     </div>
   </div>
+
   <!-- WHAT HAPPENS NEXT -->
   <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:22px;margin-bottom:24px">
     <h3 style="font-size:15px;font-weight:700;color:#166534;margin:0 0 14px;letter-spacing:0.3px">What Happens Next</h3>
@@ -362,9 +478,9 @@ fbq('track', 'PageView');
     </div>
   </div>
 
-  <div class="info-box">Once you submit and pay, your Will is generated automatically and delivered to your email within 24 hours. You can then print, sign, and witness it to make it legally binding.</div>
+  <!-- DECLARATION — combined: age 18+, sound mind, accuracy, revocation of prior wills, T&Cs -->
   <div class="field">
-    <label class="terms-label" for="terms-check"><input type="checkbox" id="terms-check"><span>I confirm I am over 18, of sound mind, and that the information I have provided is accurate to the best of my knowledge. I have read and accept the <a href="/legal/terms.html" target="_blank" rel="noopener" style="color:var(--blue)">Terms of Service</a> and <a href="/legal/privacy.html" target="_blank" rel="noopener" style="color:var(--blue)">Privacy Policy</a>.</span></label>
+    <label class="terms-label" for="terms-check"><input type="checkbox" id="terms-check"><span>I confirm I am 18 or over, of sound mind, that the information above is accurate to the best of my knowledge, and that this Will revokes any previous Wills or codicils I have made. I have read and accept the <a href="/legal/terms.html" target="_blank" rel="noopener" style="color:var(--blue)">Terms of Service</a> and <a href="/legal/privacy.html" target="_blank" rel="noopener" style="color:var(--blue)">Privacy Policy</a>.</span></label>
   </div>
 
   <!-- REASSURANCE BLOCK -->
@@ -377,7 +493,7 @@ fbq('track', 'PageView');
 
   <div id="form-error" class="form-error" role="alert" aria-live="polite"></div>
   <button type="button" id="btn-submit" class="btn-submit" onclick="submitForm()">Get My Will →</button>
-  <div class="form-nav"><button class="btn-back" onclick="prevStep(7)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
+  <div class="form-nav"><button class="btn-back" type="button" onclick="prevStep(4)" style="width:100%;max-width:none;margin-top:12px">← Back to edit</button></div>
 </div>
 
 <!-- CONFIRMATION -->
@@ -397,8 +513,8 @@ fbq('track', 'PageView');
 
 <script>
 let currentStep = 1;
-const totalSteps = 7;
-const stepLabels = ['About You','Your Partner','Children & Dependants','Your Executors','Your Estate & Gifts','Funeral & Wishes','Review & Complete'];
+const totalSteps = 4;
+const stepLabels = ['About You','Your Wishes','Your Executors','Review & Confirm'];
 
 // Fire form_start once on page load
 try {
@@ -412,33 +528,28 @@ try {
 const STRIPE_URLS = {
   single: 'https://buy.stripe.com/7sYcMYaQ84rZbb9d5v5ZC03',
   mirror: 'https://buy.stripe.com/eVq3co2jC7Eb2EDaXn5ZC04'
-  // 'full' maps to 'single' below — no dedicated Stripe link yet
 };
 
-// ClearLegacy Worker (intake + PDF pipeline). Set to the deployed URL.
-// For launch: replace with custom domain once DNS is configured (e.g. https://api.clearlegacy.co.uk)
+// ClearLegacy Worker (intake + PDF pipeline).
 const WORKER_ENDPOINT = 'https://api.clearlegacy.co.uk/api/lead';
 
-// Lead-capture endpoints (silent failsafe — runs in parallel to the Worker during rollout so
-// leads are never lost if the Worker has an issue on day one).
+// Lead-capture endpoints (silent failsafe — runs in parallel to the Worker so leads aren't lost if the Worker has an issue).
 const LEAD_ENDPOINT_PRIMARY = 'https://formspree.io/f/xvgozwak';
-const LEAD_ENDPOINT_BACKUP = ''; // TODO(Sat): set to second Formspree URL (see fix doc)
+const LEAD_ENDPOINT_BACKUP = '';
 
 function updateProgress(step){
   const pct = Math.round((step/totalSteps)*100);
   document.getElementById('bar').style.width = pct+'%';
-  document.getElementById('step-label').textContent = 'Part '+step+' — '+stepLabels[step-1];
+  document.getElementById('step-label').textContent = 'Part '+step+' of '+totalSteps+' — '+stepLabels[step-1];
   document.getElementById('step-pct').textContent = pct+'%';
 }
+
 // Mid-form reassurance nudges — contextual per step
 const stepNudges = {
   1: '',
   2: '🔒 Your data is encrypted and never shared with third parties.',
-  3: '⏱ Most people complete this in under 20 minutes.',
-  4: "Executors can also be beneficiaries — that's perfectly normal.",
-  5: '📝 You can update your Will at any time if your circumstances change.',
-  6: '⚖️ Nearly done — just your wishes and a final review to go.',
-  7: '✅ Review everything below, then pay securely via Stripe.'
+  3: "Executors can also be beneficiaries — that's perfectly normal.",
+  4: '✅ Review everything below, then pay securely via Stripe.'
 };
 
 function showStep(n){
@@ -446,33 +557,44 @@ function showStep(n){
   const el = document.getElementById('step-'+n);
   if(el) el.classList.add('active');
   if(n!=='confirm') updateProgress(parseInt(n));
-  // Show contextual nudge
   var nudgeEl = document.getElementById('step-nudge');
   if(nudgeEl && stepNudges[n]){ nudgeEl.textContent = stepNudges[n]; nudgeEl.style.display = 'block'; }
   else if(nudgeEl){ nudgeEl.style.display = 'none'; }
-  // Render the review summary when landing on step 7 so answers are always current.
-  if(String(n) === '7'){ try { renderReviewSummary(); } catch(e){ console.error('renderReviewSummary failed', e); } hideFormError(); }
+  // Render the review summary when landing on the final step so answers are always current.
+  if(String(n) === '4'){ try { renderReviewSummary(); } catch(e){ console.error('renderReviewSummary failed', e); } hideFormError(); }
   window.scrollTo(0,0);
 }
+
 function nextStep(n){
-  if (!validateStep(n)) return; // block advance until current step is valid
+  if (!validateStep(n)) return;
   hideFormError();
   currentStep = n+1; showStep(currentStep);
-  // Fire GA4 / Meta / UET step-completion events for funnel analysis
   try {
-    var stepNames = ['about_you','partner','children','executors','estate','wishes','review'];
-    var evName = 'form_step_complete';
+    var stepNames = ['about_you','wishes','executors','review'];
     var params = { step_number: n, step_name: stepNames[n-1] || ('step_'+n), form_name: 'will_questionnaire' };
-    if(typeof gtag==='function') gtag('event', evName, params);
+    if(typeof gtag==='function') gtag('event', 'form_step_complete', params);
     if(typeof fbq==='function') fbq('track', 'CompleteRegistration', params);
-    if(window.uetq) window.uetq.push('event', evName, params);
+    if(window.uetq) window.uetq.push('event', 'form_step_complete', params);
   } catch(e){}
 }
 function prevStep(n){ hideFormError(); currentStep = n-1; showStep(currentStep); }
 
-// Per-step validation. Mirror Wills enforce partner-required (otherwise the
-// customer paid for two wills but only gave us one set of details — the worker
-// would later reject at /api/lead, but we want fail-fast at the customer's step).
+function isAtLeast18(dob){
+  if(!dob) return false;
+  var d = new Date(dob);
+  if(isNaN(d.getTime())) return false;
+  var now = new Date();
+  var age = now.getFullYear() - d.getFullYear();
+  var m = now.getMonth() - d.getMonth();
+  if(m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+  return age >= 18;
+}
+
+function hasPartnerSelected(){
+  var m = getRadio('marital');
+  return m === 'married' || m === 'civil-partner';
+}
+
 function validateStep(n){
   hideFormError();
   const productSel = document.querySelector('input[name="will-type"]:checked');
@@ -498,48 +620,43 @@ function validateStep(n){
   if (n === 1) {
     if (!need('f-first', 'your first name')) return false;
     if (!need('f-last', 'your last name')) return false;
+    if (!need('f-email', 'your email address')) return false;
     if (!need('f-dob', 'your date of birth')) return false;
     if (!need('f-addr1', 'your address')) return false;
     if (!need('f-city', 'your town/city')) return false;
     if (!need('f-post', 'your postcode')) return false;
-    if (!need('f-email', 'your email address')) return false;
     if (!needRadio('marital', 'your marital status')) return false;
     const email = (document.getElementById('f-email').value || '').trim();
     if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       showFormError('Please enter a valid email address.'); return false;
     }
-    // UK postcode check — ClearLegacy only writes Wills under the Wills Act 1837
-    // (England & Wales). Reject non-UK postcodes here so they don't reach Stripe.
+    // Silent 18+ check (replaces the old qualifying "are you 18?" question)
+    if (!isAtLeast18(document.getElementById('f-dob').value)) {
+      showFormError('You must be 18 or over to make a Will.'); return false;
+    }
+    // UK postcode validation (silently confirms domicile — replaces the old "do you live in England/Wales?" question)
     const post = (document.getElementById('f-post').value || '').trim().toUpperCase().replace(/\s+/g,'');
     const UK_POSTCODE_RE = /^(GIR0AA|[A-PR-UWYZ](?:\d{1,2}|[A-HK-Y]\d|[A-HK-Y]\d\d|\d[A-HJKSTUW]|[A-HK-Y]\d[ABEHMNPRV-Y])\d[ABD-HJLNP-UW-Z]{2})$/;
     if (!UK_POSTCODE_RE.test(post)) {
       showFormError('ClearLegacy serves England & Wales only. Please enter a valid UK postcode (e.g. SW1A 1AA).'); return false;
     }
-    return true;
-  }
-  if (n === 2) {
-    const hasPartner = document.querySelector('input[name="has-partner"]:checked');
-    if (product === 'mirror') {
-      if (!hasPartner || hasPartner.value !== 'yes') {
-        showFormError("Mirror Wills cover both partners. Please tick 'Yes' and add your partner's details, or change to Single Will at the final step.");
-        return false;
-      }
-    }
-    if (!hasPartner) {
-      showFormError('Please tell us whether you have a spouse or civil partner.');
-      return false;
-    }
-    if (hasPartner.value === 'yes') {
+    // If partner section is visible (married/civil-partner), require partner details
+    if (hasPartnerSelected()) {
       if (!need('p-first', "your partner's first name")) return false;
       if (!need('p-last', "your partner's last name")) return false;
       if (!need('p-dob', "your partner's date of birth")) return false;
-      if (!needRadio('partner-primary', 'how you wish to leave your estate to your partner')) return false;
+    }
+    // Mirror Wills require a partner — fail fast here rather than at the Worker
+    if (product === 'mirror' && !hasPartnerSelected()) {
+      showFormError("Mirror Wills cover both partners. Please choose 'Married' or 'Civil Partner' and add your partner's details, or change to Single Will on the final step.");
+      return false;
     }
     return true;
   }
-  if (n === 3) {
+  if (n === 2) {
     if (!needRadio('has-children', 'whether you have children')) return false;
-    if (!needRadio('has-guardian', 'whether you wish to appoint a guardian')) return false;
+    if (!needRadio('has-property', 'whether you own property')) return false;
+    if (!needRadio('has-business', 'whether you want to include business assets')) return false;
     if (document.querySelector('input[name="has-children"]:checked').value === 'yes') {
       const childBlocks = document.querySelectorAll('#children-list .person-block');
       let validChildren = 0;
@@ -551,10 +668,33 @@ function validateStep(n){
         showFormError("You said you have children — please add at least one child's details, or change your answer above.");
         return false;
       }
+      if (!needRadio('has-guardian', 'whether you wish to appoint a guardian')) return false;
+    }
+    if (document.querySelector('input[name="has-property"]:checked').value === 'yes') {
+      const propSection = document.getElementById('property-section');
+      const propAddr = propSection?.querySelector('input[type="text"]')?.value?.trim();
+      if (!propAddr) {
+        showFormError('Please enter the address of the property you own.');
+        return false;
+      }
+    }
+    if (document.querySelector('input[name="has-business"]:checked').value === 'yes') {
+      if (!need('biz-name', 'the business name')) return false;
+      if (!need('biz-plan', 'what should happen to the business')) return false;
+    }
+    if (!needRadio('residuary', 'who should receive the rest of your estate')) return false;
+    const r = document.querySelector('input[name="residuary"]:checked').value;
+    if (r === 'named' || r === 'other' || r === 'charity') {
+      const ta = document.getElementById('f-residuary-detail');
+      if (!ta || !ta.value.trim()) {
+        showFormError(r === 'charity' ? 'Please name the charity (or charities) and any percentages you want them to receive.' : 'Please describe your residuary arrangement in the text box.');
+        if (ta) { try { ta.focus(); } catch(e){} }
+        return false;
+      }
     }
     return true;
   }
-  if (n === 4) {
+  if (n === 3) {
     const blocks = document.querySelectorAll('#executor-list .person-block');
     let valid = 0;
     blocks.forEach(b => {
@@ -565,60 +705,32 @@ function validateStep(n){
       showFormError('Please add at least one Executor with their full name to continue.');
       return false;
     }
-    return true;
-  }
-  if (n === 5) {
-    if (!needRadio('residuary', 'how your residuary estate should be distributed')) return false;
-    const r = document.querySelector('input[name="residuary"]:checked').value;
-    if (r === 'named' || r === 'other') {
-      const ta = document.querySelector('#residuary-detail textarea');
-      if (!ta || !ta.value.trim()) {
-        showFormError('Please describe your residuary arrangement in the text box.');
-        if (ta) { try { ta.focus(); } catch(e){} }
-        return false;
-      }
-    }
-    if (document.querySelector('input[name="has-property"]:checked')?.value === 'yes') {
-      const propSection = document.getElementById('property-section');
-      const propAddr = propSection?.querySelector('input[type="text"]')?.value?.trim();
-      if (!propAddr) {
-        showFormError('Please enter the address of the property you own.');
-        return false;
-      }
-    }
-    return true;
-  }
-  if (n === 6) {
-    if (!needRadio('funeral', 'a funeral preference (or "No preference")')) return false;
+    // Funeral preference is optional — no validation
     return true;
   }
   return true;
 }
-function toggleSection(id, val){ document.getElementById(id).style.display = val==='yes'?'block':'none'; updateResiduaryVisibility(); }
-// "Edit" button on the review page jumps back to the chosen step. When the
-// customer then clicks Continue they'll step forward again and eventually land
-// back on step 7, which re-renders the summary from the latest DOM values.
+
+function toggleSection(id, val){ const el = document.getElementById(id); if(el) el.style.display = val==='yes'?'block':'none'; updateResiduaryVisibility(); }
+
 function editStep(n){ currentStep = n; showStep(n); }
 
-// ---- Residuary visibility — hide options that no longer make sense given answers ----
-// Samara-style failure mode: user answers "no children" then still sees (and can
-// pick) "Equally between my children" on the residuary radio. Keep the radio
-// choices in sync with earlier answers.
+// Hide residuary options that don't match earlier answers
 function updateResiduaryVisibility(){
   const hasChildren = getRadio('has-children') === 'yes';
-  const hasPartner = getRadio('has-partner') === 'yes';
+  const hasPartner = hasPartnerSelected();
   document.querySelectorAll('input[name="residuary"]').forEach(function(r){
     const opt = r.closest('.radio-opt');
     if(!opt) return;
     let hide = false;
     if(r.value === 'children-only' && !hasChildren) hide = true;
-    if(r.value === 'partner-children' && !hasPartner) hide = true;
+    if(r.value === 'partner-children' && (!hasPartner || !hasChildren)) hide = true;
+    if(r.value === 'partner-only' && !hasPartner) hide = true;
     opt.style.display = hide ? 'none' : '';
     if(hide && r.checked){ r.checked = false; opt.classList.remove('selected'); }
   });
 }
 
-// ---- Inline form error (replaces alert() for submit-time problems) ----
 function showFormError(msg){
   const box = document.getElementById('form-error');
   if(!box){ alert(msg); return; }
@@ -631,136 +743,117 @@ function hideFormError(){
   if(box){ box.classList.remove('visible'); box.textContent = ''; }
 }
 
-// ---- Review summary renderer — reads the DOM and paints step 7 ----
+// ---- Review summary renderer — reads the DOM and paints the final step ----
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function kv(label, value){ return value ? ('<dt>' + esc(label) + '</dt><dd>' + esc(value) + '</dd>') : ''; }
 function emptyMsg(msg){ return '<p class="empty">' + esc(msg) + '</p>'; }
 
 function renderReviewSummary(){
-  // Step 1 — About You
+  // Section 1 — About You (incl. partner if applicable)
   const s1 = document.getElementById('sum-1');
   if(s1){
     const name = (getVal('f-first') + ' ' + getVal('f-last')).trim();
     const addrParts = [getVal('f-addr1'), getVal('f-addr2'), getVal('f-city'), getVal('f-post')].filter(Boolean);
     const dob = getVal('f-dob');
     const marital = getRadio('marital');
-    const items = ''
+    let items = ''
       + kv('Name', name)
       + kv('DOB', dob)
       + kv('Address', addrParts.join(', '))
       + kv('Email', getVal('f-email'))
       + kv('Phone', getVal('f-phone'))
       + kv('Marital', marital);
+    if(hasPartnerSelected()){
+      const pn = (getVal('p-first') + ' ' + getVal('p-last')).trim();
+      items += kv('Partner', pn);
+      items += kv('Partner DOB', getVal('p-dob'));
+    }
     s1.innerHTML = items ? ('<dl>' + items + '</dl>') : emptyMsg('No details entered yet.');
   }
 
-  // Step 2 — Partner
+  // Section 2 — Your Wishes (children, guardians, property, business, gifts, residuary)
   const s2 = document.getElementById('sum-2');
   if(s2){
-    const hasPartner = getRadio('has-partner');
-    if(hasPartner === 'no'){ s2.innerHTML = '<p>No spouse or civil partner.</p>'; }
-    else if(hasPartner === 'yes'){
-      const pn = (getVal('p-first') + ' ' + getVal('p-last')).trim();
-      const items = ''
-        + kv('Name', pn)
-        + kv('DOB', getVal('p-dob'))
-        + kv('Everything to partner first?', getRadio('partner-primary') || '—');
-      s2.innerHTML = items ? ('<dl>' + items + '</dl>') : emptyMsg('Partner details not entered.');
-    } else { s2.innerHTML = emptyMsg('Not answered.'); }
-  }
-
-  // Step 3 — Children & Dependants
-  const s3 = document.getElementById('sum-3');
-  if(s3){
+    let html = '<dl>';
     const hasChildren = getRadio('has-children');
     const hasGuardian = getRadio('has-guardian');
-    if(hasChildren === 'no' && hasGuardian === 'no'){
-      s3.innerHTML = '<p>No children and no guardian nominated.</p>';
-    } else {
-      let html = '';
-      if(hasChildren === 'yes'){
-        const kids = buildChildren();
-        html += '<dl>' + kv('Has children', 'Yes') + kv('Inheritance age', getVal('child-age')) + '</dl>';
-        if(kids.length){
-          html += '<ul>' + kids.map(function(k){ return '<li>' + esc(k.name) + '</li>'; }).join('') + '</ul>';
-        } else {
-          html += emptyMsg('No children entered yet.');
-        }
-      } else if(hasChildren === 'no'){
-        html += '<p>No children.</p>';
-      }
-      if(hasGuardian === 'yes'){
-        const g = buildGuardians();
-        html += '<dl>' + kv('Guardian', g[0] ? (g[0].name + (g[0].relationship ? ' (' + g[0].relationship + ')' : '')) : '(not entered)') + '</dl>';
-      }
-      s3.innerHTML = html || emptyMsg('Not answered.');
-    }
-  }
-
-  // Step 4 — Executors
-  const s4 = document.getElementById('sum-4');
-  if(s4){
-    const execs = buildExecutors();
-    if(!execs.length){ s4.innerHTML = emptyMsg('No executors entered. You need at least one.'); }
-    else {
-      s4.innerHTML = '<ul>' + execs.map(function(e, i){
-        const label = i === 0 ? 'Primary' : (i === 1 ? 'Substitute' : 'Executor ' + (i+1));
-        return '<li><strong>' + esc(label) + ':</strong> ' + esc(e.name) + (e.relationship ? ' <span style="color:var(--grey)">(' + esc(e.relationship) + ')</span>' : '') + '</li>';
-      }).join('') + '</ul>';
-    }
-  }
-
-  // Step 5 — Estate & Gifts
-  const s5 = document.getElementById('sum-5');
-  if(s5){
     const hasProp = getRadio('has-property');
-    const propSection = document.getElementById('property-section');
-    const propAddr = propSection ? (propSection.querySelector('input[type="text"]')?.value || '').trim() : '';
-    const propOwn = propSection ? (propSection.querySelector('select')?.value || '').trim() : '';
-    const gifts = buildSpecificGifts();
-    const residChoice = getRadio('residuary');
-    const residText = (document.querySelector('#residuary-detail textarea')?.value || '').trim();
-
-    const residMap = {
-      'partner-children': 'My partner, then equally between my children',
-      'children-only': 'Equally between my children',
-      'named': 'Named individuals (see detail)',
-      'charity': 'Charity',
-      'other': 'Other arrangement (see detail)'
-    };
-    let html = '';
-    html += '<dl>';
+    const hasBiz = getRadio('has-business');
+    html += kv('Has children', hasChildren === 'yes' ? 'Yes' : (hasChildren === 'no' ? 'No' : '—'));
+    if(hasChildren === 'yes'){ html += kv('Inheritance age', getVal('child-age')); }
     html += kv('Owns property', hasProp === 'yes' ? 'Yes' : (hasProp === 'no' ? 'No' : '—'));
     if(hasProp === 'yes'){
+      const propSection = document.getElementById('property-section');
+      const propAddr = propSection ? (propSection.querySelector('input[type="text"]')?.value || '').trim() : '';
+      const propOwn = propSection ? (propSection.querySelector('select')?.value || '').trim() : '';
       html += kv('Property address', propAddr);
       html += kv('Ownership', propOwn);
     }
+    html += kv('Business assets', hasBiz === 'yes' ? 'Yes' : (hasBiz === 'no' ? 'No' : '—'));
+    if(hasBiz === 'yes'){
+      html += kv('Business name', getVal('biz-name'));
+      html += kv('Business plan', getVal('biz-plan'));
+    }
+    const residMap = {
+      'partner-children': 'My partner, then equally between my children',
+      'partner-only': 'Entirely to my partner',
+      'children-only': 'Equally between my children',
+      'named': 'Named individuals (see detail)',
+      'charity': 'Charity (see detail)',
+      'other': 'Other arrangement (see detail)'
+    };
+    const residChoice = getRadio('residuary');
+    const residText = getVal('f-residuary-detail');
     html += kv('Residuary', residMap[residChoice] || residChoice || '—');
     if(residText){ html += kv('Residuary detail', residText); }
     html += '</dl>';
+
+    // Children list
+    if(hasChildren === 'yes'){
+      const kids = buildChildren();
+      if(kids.length){
+        html += '<p style="margin-top:10px"><strong>Children</strong></p><ul>' + kids.map(function(k){ return '<li>' + esc(k.name) + '</li>'; }).join('') + '</ul>';
+      }
+    }
+    // Guardian
+    if(hasGuardian === 'yes'){
+      const g = buildGuardians();
+      if(g[0]){
+        html += '<p style="margin-top:10px"><strong>Guardian:</strong> ' + esc(g[0].name) + (g[0].relationship ? ' (' + esc(g[0].relationship) + ')' : '') + '</p>';
+      }
+    }
+    // Specific gifts
+    const gifts = buildSpecificGifts();
     if(gifts.length){
       html += '<p style="margin-top:10px"><strong>Specific gifts</strong></p>';
       html += '<ul>' + gifts.map(function(g){ return '<li>' + esc(g.gift) + ' — <strong>' + esc(g.name) + '</strong>' + (g.relationship ? ' (' + esc(g.relationship) + ')' : '') + '</li>'; }).join('') + '</ul>';
     }
-    s5.innerHTML = html;
+    s2.innerHTML = html;
   }
 
-  // Step 6 — Funeral & Additional
-  const s6 = document.getElementById('sum-6');
-  if(s6){
+  // Section 3 — Executors & Final Wishes
+  const s3 = document.getElementById('sum-3');
+  if(s3){
+    const execs = buildExecutors();
+    let html = '';
+    if(!execs.length){ html += emptyMsg('No executors entered. You need at least one.'); }
+    else {
+      html += '<ul>' + execs.map(function(e, i){
+        const label = i === 0 ? 'Primary' : (i === 1 ? 'Substitute' : 'Executor ' + (i+1));
+        return '<li><strong>' + esc(label) + ':</strong> ' + esc(e.name) + (e.relationship ? ' <span style="color:var(--grey)">(' + esc(e.relationship) + ')</span>' : '') + '</li>';
+      }).join('') + '</ul>';
+    }
     const funeral = getRadio('funeral');
-    const textareas = document.querySelectorAll('#step-6 textarea');
-    const wishes = textareas[0] ? (textareas[0].value||'').trim() : '';
-    const extra = textareas[1] ? (textareas[1].value||'').trim() : '';
-    const trust = getRadio('needs-trust');
-    let html = '<dl>';
-    html += kv('Funeral preference', funeral);
-    html += kv('Funeral wishes', wishes);
-    html += kv('Additional instructions', extra);
-    html += kv('Trust advice', trust);
-    html += '</dl>';
-    if(!funeral && !wishes && !extra && !trust){ html = emptyMsg('No funeral wishes entered.'); }
-    s6.innerHTML = html;
+    const wishes = getVal('f-funeral-wishes');
+    const extra = getVal('f-additional');
+    if(funeral || wishes || extra){
+      html += '<dl style="margin-top:12px">';
+      html += kv('Funeral preference', funeral);
+      html += kv('Funeral wishes', wishes);
+      html += kv('Additional instructions', extra);
+      html += '</dl>';
+    }
+    s3.innerHTML = html;
   }
 }
 
@@ -776,7 +869,6 @@ document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{
       });
       input.checked=true;
       this.classList.add('selected');
-      // Fire change so inline onchange="setPrice(...)" / toggleSection(...) still run
       input.dispatchEvent(new Event('change', {bubbles:true}));
     } else if(input.type==='checkbox'){
       input.checked=!input.checked;
@@ -788,24 +880,23 @@ document.querySelectorAll('.radio-opt,.check-opt').forEach(card=>{
 
 document.querySelectorAll('input[name="residuary"]').forEach(r=>{
   r.addEventListener('change',function(){
-    document.getElementById('residuary-detail').style.display = (this.value==='named'||this.value==='other')?'block':'none';
+    document.getElementById('residuary-detail').style.display = (this.value==='named'||this.value==='other'||this.value==='charity')?'block':'none';
   });
 });
 
 let childCount = 0;
-function addChild(){ childCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'child-'+childCount; d.innerHTML = `<div class="block-title">Child ${childCount}<button class="remove-btn" onclick="removeBlock('child-${childCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name</label><input type="text" autocomplete="off" placeholder="Child's first name"></div>  <div class="field"><label>Last Name</label><input type="text" autocomplete="off" placeholder="Child's last name"></div>  </div>  <div class="field-row">  <div class="field"><label>Date of Birth</label><input type="date" autocomplete="off"></div>  <div class="field"><label>Relationship</label>  <select autocomplete="off"><option>Biological child</option><option>Adopted child</option><option>Step-child</option><option>Grandchild</option></select>  </div>  </div>`; document.getElementById('children-list').appendChild(d); }
+function addChild(){ childCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'child-'+childCount; d.innerHTML = `<div class="block-title">Child ${childCount}<button class="remove-btn" onclick="removeBlock('child-${childCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name</label><input type="text" autocomplete="off" placeholder="Child's first name"></div>  <div class="field"><label>Last Name</label><input type="text" autocomplete="off" placeholder="Child's last name"></div>  </div>  <div class="field-row">  <div class="field"><label>Date of Birth (optional)</label><input type="date" autocomplete="off"></div>  <div class="field"><label>Relationship</label>  <select autocomplete="off"><option>Biological child</option><option>Adopted child</option><option>Step-child</option><option>Grandchild</option></select>  </div>  </div>`; document.getElementById('children-list').appendChild(d); }
 let execCount = 2;
 function addExecutor(){ execCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'exec-'+execCount; d.innerHTML = `<div class="block-title">Executor ${execCount}<button class="remove-btn" onclick="removeBlock('exec-${execCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>First Name(s)</label><input type="text" autocomplete="off"></div>  <div class="field"><label>Last Name</label><input type="text" autocomplete="off"></div>  </div>  <div class="field-row">  <div class="field"><label>Relationship</label><input type="text" autocomplete="off"></div>  <div class="field"><label>Email</label><input type="email" autocomplete="off" inputmode="email"></div>  </div>`; document.getElementById('executor-list').appendChild(d); }
 let giftCount = 0;
 function addGift(){ giftCount++; const d = document.createElement('div'); d.className = 'person-block'; d.id = 'gift-'+giftCount; d.innerHTML = `<div class="block-title">Gift ${giftCount}<button class="remove-btn" onclick="removeBlock('gift-${giftCount}')">✕</button></div>  <div class="field-row">  <div class="field"><label>Item or Amount</label><input type="text" autocomplete="off" placeholder="e.g. £10,000 cash / my gold watch / 5 Osidge Lane"></div>  <div class="field"><label>Recipient Name</label><input type="text" autocomplete="off" placeholder="Full name of recipient"></div>  </div>  <div class="field"><label>Relationship to you</label><input type="text" autocomplete="off" placeholder="e.g. Daughter, Friend, Charity name"></div>`; document.getElementById('gifts-list').appendChild(d); }
 
-// === Form speed-up helpers (added 2026-05-04) ===
 function _set(id, val) { var el = document.getElementById(id); if (el && val) { el.value = val; el.dispatchEvent(new Event('input', {bubbles: true})); } }
 function _get(id) { var el = document.getElementById(id); return el ? el.value : ''; }
 
 function usePartnerAsExecutor() {
   var pf = _get('p-first'), pl = _get('p-last');
-  if (!pf && !pl) { alert('Please fill in your partner details in Step 2 first.'); return; }
+  if (!pf && !pl) { alert('Please fill in your partner details on Step 1 first.'); return; }
   _set('e1-first', pf);
   _set('e1-last', pl);
   _set('e1-rel', 'Spouse');
@@ -825,10 +916,10 @@ function checkGuardianMatch() {
   }
 }
 
-function useHomeAsProperty() { useHomeAsProp(1); } // legacy — keep for old callers
+function useHomeAsProperty() { useHomeAsProp(1); }
 function useHomeAsProp(idx) {
   var a1 = _get('f-addr1'), a2 = _get('f-addr2'), c = _get('f-city'), p = _get('f-post');
-  if (!a1) { alert('Please fill in your address in Step 1 first.'); return; }
+  if (!a1) { alert('Please fill in your address on Step 1 first.'); return; }
   var prefix = idx === 1 ? 'prop-' : 'prop-' + idx + '-';
   _set(prefix + 'addr1', a1);
   _set(prefix + 'addr2', a2);
@@ -836,7 +927,6 @@ function useHomeAsProp(idx) {
   _set(prefix + 'post', p);
 }
 
-// === Multi-property support ===
 var propertyCount = 1;
 function addProperty() {
   propertyCount++;
@@ -853,7 +943,6 @@ function addProperty() {
     '</div>' +
     '<div class="field"><label>How is the property owned?</label><select id="prop-' + n + '-ownership" autocomplete="off"><option value="">Select...</option><option value="sole">Solely in my name</option><option value="joint-tenants">Joint tenants (with partner/spouse)</option><option value="tenants-in-common">Tenants in common (I own a specific share)</option></select></div>';
   document.getElementById('properties-list').appendChild(div);
-  // Install postcode lookup on the new property
   if (typeof window.clInstallPostcodeOn === 'function') {
     window.clInstallPostcodeOn({ postcode: 'prop-' + n + '-post', addr1: 'prop-' + n + '-addr1', addr2: 'prop-' + n + '-addr2', city: 'prop-' + n + '-city' });
   }
@@ -863,29 +952,25 @@ function removeProperty(n) {
   if (el) el.parentNode.removeChild(el);
 }
 
-// Auto-show partner section in Step 2 when marital status is married/civil-partner
+// Auto-show partner section on Step 1 when marital status is married/civil-partner
 document.addEventListener('change', function(e) {
   if (e.target && e.target.name === 'marital') {
     var v = e.target.value;
-    if (v === 'married' || v === 'civil-partner') {
-      var partnerYes = document.querySelector('input[name="has-partner"][value="yes"]');
-      if (partnerYes && !partnerYes.checked) {
-        partnerYes.checked = true;
-        if (typeof toggleSection === 'function') toggleSection('partner-details', 'yes');
-      }
-    }
+    var details = document.getElementById('partner-details');
+    if (details) details.style.display = (v === 'married' || v === 'civil-partner') ? 'block' : 'none';
+    updateResiduaryVisibility();
   }
 });
 
 // === localStorage form persistence (resume mid-form) ===
 (function() {
-  var KEY = 'cl_will_form_v1';
+  var KEY = 'cl_will_form_v2';
   var DEBOUNCE_MS = 500;
   var saveTimer;
 
   function collectForm() {
     var data = {};
-    document.querySelectorAll('#will-form input, #will-form select, #will-form textarea, .step input, .step select, .step textarea').forEach(function(el) {
+    document.querySelectorAll('.step input, .step select, .step textarea').forEach(function(el) {
       if (!el.id && !el.name) return;
       var key = el.id || el.name;
       if (el.type === 'radio' || el.type === 'checkbox') {
@@ -936,17 +1021,15 @@ document.addEventListener('change', function(e) {
     setTimeout(restoreForm, 100);
   }
 
-  // Clear saved data on successful purchase redirect (heuristic: if we leave for stripe)
   window.addEventListener('beforeunload', function() {
     if (window.location.href.indexOf('stripe') > -1 || sessionStorage.getItem('cl_purchase_initiated')) {
       try { localStorage.removeItem(KEY); } catch (e) {}
     }
   });
 })();
-// === End form speed-up helpers ===
-
 
 function removeBlock(id){ const el = document.getElementById(id); if(el) el.remove(); }
+
 function setPrice(type){
   if(type==='single'){
     document.getElementById('final-price').textContent='£69';
@@ -957,13 +1040,12 @@ function setPrice(type){
   }
 }
 
-// ---- ?product= URL param preselection ----
 function getProductParam(){
   try {
     const params = new URLSearchParams(window.location.search);
     const p = (params.get('product') || '').toLowerCase();
     if(p === 'mirror') return 'mirror';
-    if(p === 'single' || p === 'full') return 'single'; // 'full' bundles default to single-will flow
+    if(p === 'single' || p === 'full') return 'single';
     return null;
   } catch(e) { return null; }
 }
@@ -981,138 +1063,34 @@ function applyStoredProduct(){
       });
       setPrice(selected);
     }
-  } catch(e) { /* ignore */ }
+  } catch(e) {}
 }
-// Pay-first UI: if the URL has ?ref=..., the customer has already paid.
-// Hide the price/product selector and reword the final CTA so they don't
-// think there's a second payment step.
+
 function applyPayFirstMode(){
   try {
     const paidRef = getPaidRefFromUrl();
     if(!paidRef) return;
     document.body.classList.add('pay-first');
-    const sub = document.getElementById('step7-sub');
+    const sub = document.getElementById('step4-sub');
     if(sub){ sub.textContent = 'Your questionnaire is complete. Payment has already been received — please confirm the declaration below to submit.'; }
     const btn = document.getElementById('btn-submit');
     if(btn){ btn.textContent = 'Submit Questionnaire →'; }
-  } catch(e) { /* ignore */ }
-}
-// === Pre-qualifying questions (Farewill-style screening) ===
-var qualifyAnswers = {};
-var qualifyCurrent = 1;
-var qualifyTotal = 6;
-var qualifyKeys = {1:'has_partner',2:'has_children',3:'owns_home',4:'lives_in_england_wales',5:'all_assets_in_uk',6:'owns_business'};
-var QUALIFY_KEY = 'cl_qualify_v1';
-
-function showQualifyStep(n){
-  document.querySelectorAll('.qualify-step').forEach(function(s){ s.classList.remove('active'); });
-  var el = document.querySelector('.qualify-step[data-q="' + n + '"]');
-  if(el) el.classList.add('active');
-  var pct = Math.round((n / qualifyTotal) * 100);
-  var bar = document.getElementById('q-bar');     if(bar) bar.style.width = pct + '%';
-  var lbl = document.getElementById('q-step-label'); if(lbl) lbl.textContent = 'Step ' + n + ' of ' + qualifyTotal;
-  var pe  = document.getElementById('q-step-pct');   if(pe)  pe.textContent  = pct + '%';
-  window.scrollTo(0, 0);
+  } catch(e) {}
 }
 
-function selectQualify(qNum, value){
-  qualifyAnswers[qualifyKeys[qNum]] = value;
-  try { localStorage.setItem(QUALIFY_KEY, JSON.stringify(qualifyAnswers)); } catch(e){}
-  document.querySelectorAll('.qualify-step[data-q="' + qNum + '"] .qualify-card').forEach(function(c){ c.classList.remove('selected'); });
-  var card = document.querySelector('.qualify-step[data-q="' + qNum + '"] .qualify-card[data-value="' + value + '"]');
-  if(card) card.classList.add('selected');
-  // Funnel telemetry
-  try {
-    if(typeof gtag === 'function') gtag('event', 'qualify_answer', { question: qualifyKeys[qNum], answer: value, step_number: qNum, form_name: 'will_questionnaire' });
-  } catch(e){}
-  if(qNum < qualifyTotal){
-    setTimeout(function(){ qualifyCurrent = qNum + 1; showQualifyStep(qualifyCurrent); }, 220);
-  } else {
-    setTimeout(finishQualify, 220);
-  }
+function bootstrapForm(){
+  applyStoredProduct();
+  applyPayFirstMode();
+  updateResiduaryVisibility();
+  updateProgress(1);
 }
-
-function prevQualify(qNum){
-  if(qNum <= 1) return;
-  qualifyCurrent = qNum - 1;
-  showQualifyStep(qualifyCurrent);
-}
-
-function applyQualifyHints(){
-  function setRadio(name, value){
-    var r = document.querySelector('input[name="' + name + '"][value="' + value + '"]');
-    if(r){ r.checked = true; r.dispatchEvent(new Event('change', {bubbles:true})); }
-  }
-  if(qualifyAnswers.has_partner === 'yes' || qualifyAnswers.has_partner === 'no') setRadio('has-partner', qualifyAnswers.has_partner);
-  if(qualifyAnswers.has_children === 'yes' || qualifyAnswers.has_children === 'no') setRadio('has-children', qualifyAnswers.has_children);
-  if(qualifyAnswers.owns_home === 'yes' || qualifyAnswers.owns_home === 'no') setRadio('has-property', qualifyAnswers.owns_home);
-}
-
-function setInlineQualify(q, v, btn){
-  var key = qualifyKeys[q];
-  if(!key) return;
-  qualifyAnswers[key] = v;
-  // Toggle visual selection for the pair
-  var row = btn.closest('.qualify-inline-row');
-  if(row){
-    row.querySelectorAll('.qualify-inline-btn').forEach(function(b){ b.classList.remove('selected'); });
-    btn.classList.add('selected');
-  }
-  try { localStorage.setItem(QUALIFY_KEY, JSON.stringify(qualifyAnswers)); } catch(e){}
-  // Enable continue if all 6 answered
-  var allAnswered = Object.keys(qualifyKeys).every(function(k){ return qualifyAnswers[qualifyKeys[k]]; });
-  var cb = document.getElementById('qualify-continue-btn');
-  if(cb){
-    cb.disabled = !allAnswered;
-    cb.style.opacity = allAnswered ? '1' : '.5';
-  }
-  try { if(typeof gtag === 'function') gtag('event', 'qualify_answer', { question: key, answer: v, step_number: q, form_name: 'will_questionnaire' }); } catch(e){}
-}
-function finishQualifyInline(){ finishQualify(); }
-function skipQualifyInline(){
-  try { if(typeof gtag === 'function') gtag('event', 'qualify_skipped', { form_name: 'will_questionnaire' }); } catch(e){}
-  finishQualify();
-}
-
-function finishQualify(){
-  var qw = document.getElementById('qualify-wrap');
-  if(qw) qw.style.display = 'none';
-  document.querySelectorAll('.progress-wrap, .form-wrap').forEach(function(el){ el.style.display = ''; });
-  applyQualifyHints();
-  if(typeof showStep === 'function') showStep(1);
-  try {
-    if(typeof gtag === 'function') gtag('event', 'qualify_complete', { form_name: 'will_questionnaire' });
-  } catch(e){}
-}
-
-function bootstrapQualify(){
-  var params = new URLSearchParams(window.location.search);
-  var ref = params.get('ref');
-  var resume = params.get('resume');
-  var saved = null;
-  try { var raw = localStorage.getItem(QUALIFY_KEY); if(raw){ saved = JSON.parse(raw); } } catch(e){}
-  var allAnswered = saved && Object.keys(qualifyKeys).every(function(k){ return saved[qualifyKeys[k]]; });
-  if(ref || resume || allAnswered){
-    if(saved){ qualifyAnswers = saved; applyQualifyHints(); }
-    var qw = document.getElementById('qualify-wrap');
-    if(qw) qw.style.display = 'none';
-    document.querySelectorAll('.progress-wrap, .form-wrap').forEach(function(el){ el.style.display = ''; });
-    return;
-  }
-  document.querySelectorAll('.progress-wrap, .form-wrap').forEach(function(el){ el.style.display = 'none'; });
-  var qw2 = document.getElementById('qualify-wrap');
-  if(qw2) qw2.style.display = 'block';
-  showQualifyStep(1);
-}
-
-function bootstrapForm(){ bootstrapQualify(); applyStoredProduct(); applyPayFirstMode(); updateResiduaryVisibility(); }
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', bootstrapForm);
 } else {
   bootstrapForm();
 }
 
-// ---- Bulletproof submit & Stripe redirect ----
+// ---- Submit & Stripe redirect ----
 function stripeUrlForSelection(){
   const checked = document.querySelector('input[name="will-type"]:checked');
   const v = checked ? checked.value : (sessionStorage.getItem('cl_product') || 'single');
@@ -1127,7 +1105,6 @@ function redirectToStripe(url){
   catch(e) { window.location = url || stripeUrlForSelection(); }
 }
 
-// ---- Build structured Worker payload from the DOM ----
 function getVal(id){ const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; }
 function getRadio(name){ const r = document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : ''; }
 
@@ -1153,7 +1130,6 @@ function scrapePersonBlocks(containerId){
 }
 
 function buildExecutors(){
-  // Each block has inputs in order: [first, last, relationship, email]
   return scrapePersonBlocks('executor-list')
     .map(b => {
       const first = b.texts[0] || '';
@@ -1162,14 +1138,13 @@ function buildExecutors(){
       return {
         name: (first + ' ' + last).trim(),
         relationship: rel,
-        address: '' // not collected per-executor in current form
+        address: ''
       };
     })
     .filter(e => e.name);
 }
 
 function buildGuardians(){
-  // guardian-section isn't an id container — it wraps a single .person-block
   const sec = document.getElementById('guardian-section');
   if(!sec || sec.style.display === 'none') return [];
   const block = sec.querySelector('.person-block');
@@ -1183,7 +1158,6 @@ function buildGuardians(){
 }
 
 function buildSpecificGifts(){
-  // Each #gifts-list block: [item/amount, recipient name, relationship]
   return scrapePersonBlocks('gifts-list')
     .map(b => ({
       gift: b.texts[0] || '',
@@ -1206,15 +1180,15 @@ function buildChildren(){
 function buildResiduary(children){
   const choice = getRadio('residuary');
   const partnerName = (getVal('p-first') + ' ' + getVal('p-last')).trim();
-  // Free-text box only present if "named" or "other"
-  const detailBox = document.querySelector('#residuary-detail textarea');
-  const detailText = detailBox ? (detailBox.value||'').trim() : '';
+  const detailText = getVal('f-residuary-detail');
 
+  if(choice === 'partner-only' && partnerName){
+    return [{ name: partnerName, relationship: 'Spouse/Civil Partner', share: 'Entire residuary estate' }];
+  }
   if(choice === 'partner-children'){
     if(partnerName){
       return [{ name: partnerName, relationship: 'Spouse/Civil Partner', share: 'Residuary estate (or to children equally if partner predeceases)' }];
     }
-    // fall through if no partner name
   }
   if(choice === 'children-only' || (choice === 'partner-children' && !partnerName)){
     if(children.length > 0){
@@ -1226,22 +1200,12 @@ function buildResiduary(children){
       return [{ name: 'See detailed instructions (notes)', relationship: choice, share: 'Residuary estate' }];
     }
   }
-  // Last resort: partner if specified, else empty (will fail validation → user sees message)
   if(partnerName) return [{ name: partnerName, relationship: 'Spouse/Civil Partner', share: 'Residuary estate' }];
   return [];
 }
 
 function buildNotes(residuaryDetail){
   const parts = [];
-  const funeralWishes = document.querySelector('#step-6 textarea');
-  const additional = document.querySelectorAll('#step-6 textarea')[1];
-
-  // Pre-qualifying answers (always include if present)
-  try {
-    var qLabels = {has_partner:'Has partner',has_children:'Has children',owns_home:'Owns home',lives_in_england_wales:'Lives in England/Wales',all_assets_in_uk:'All assets in UK',owns_business:'Owns business'};
-    var qLines = Object.keys(qualifyKeys).map(function(k){ var key = qualifyKeys[k]; var v = qualifyAnswers[key]; return v ? (qLabels[key] + ': ' + v) : null; }).filter(Boolean);
-    if(qLines.length) parts.push('QUALIFYING: ' + qLines.join(' · '));
-  } catch(e){}
 
   if(residuaryDetail){
     parts.push('RESIDUARY DETAIL: ' + residuaryDetail);
@@ -1249,36 +1213,54 @@ function buildNotes(residuaryDetail){
   const funeralPref = getRadio('funeral');
   if(funeralPref) parts.push('Funeral preference: ' + funeralPref);
 
-  const needsTrust = getRadio('needs-trust');
-  if(needsTrust && needsTrust !== 'no') parts.push('Trust advice requested: ' + needsTrust);
-
   const marital = getRadio('marital');
   if(marital) parts.push('Marital status: ' + marital);
+
+  // Business assets
+  if(getRadio('has-business') === 'yes'){
+    const bizName = getVal('biz-name');
+    const bizPlan = getVal('biz-plan');
+    if(bizName || bizPlan){
+      parts.push('BUSINESS ASSETS:\nName: ' + bizName + '\nPlan: ' + bizPlan);
+    }
+  }
+
+  // Property ownership detail for the drafter
+  if(getRadio('has-property') === 'yes'){
+    const propAddr = getVal('prop-addr1');
+    const propOwn = (document.getElementById('prop-ownership')?.value || '').trim();
+    if(propAddr || propOwn){
+      parts.push('PROPERTY: ' + [propAddr, propOwn].filter(Boolean).join(' · '));
+    }
+  }
+
+  // Children inheritance trust age
+  if(getRadio('has-children') === 'yes'){
+    const childAge = getVal('child-age');
+    if(childAge) parts.push('Minor children inherit at age: ' + childAge);
+  }
+
+  // Standard revocation note for the drafter
+  parts.push('REVOCATION: Testator confirmed this Will revokes all prior Wills and codicils (accepted at declaration).');
 
   return parts.length ? parts.join('\n\n') : '';
 }
 
-// Pay-first flow: if the page was opened from the onboarding email, the URL
-// contains ?ref=UUID pointing at an already-paid lead. In that case we skip
-// the Stripe redirect after submission and just show the confirmation page.
 function getPaidRefFromUrl(){
   try {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref') || '';
     if(/^[a-zA-Z0-9-]{8,64}$/.test(ref)) return ref;
-  } catch(e) { /* ignore */ }
+  } catch(e) {}
   return '';
 }
 
 function buildWorkerPayload(){
   const product = (document.querySelector('input[name="will-type"]:checked')?.value || sessionStorage.getItem('cl_product') || 'single');
   const children = buildChildren();
-  const residDetail = (document.querySelector('#residuary-detail textarea')?.value || '').trim();
-
-  // Additional wishes = the second textarea on step 6
-  const step6Textareas = document.querySelectorAll('#step-6 textarea');
-  const funeralWishes = step6Textareas[0] ? (step6Textareas[0].value||'').trim() : '';
-  const additional = step6Textareas[1] ? (step6Textareas[1].value||'').trim() : '';
+  const residDetail = getVal('f-residuary-detail');
+  const funeralWishes = getVal('f-funeral-wishes');
+  const additional = getVal('f-additional');
 
   const payload = {
     product: product === 'mirror' ? 'mirror' : 'single',
@@ -1295,25 +1277,20 @@ function buildWorkerPayload(){
     residuary: buildResiduary(children),
     funeralWishes: funeralWishes,
     notes: [buildNotes(residDetail), additional].filter(Boolean).join('\n\n'),
-    marketingOptIn: false,
-    qualifying: (typeof qualifyAnswers === 'object' && qualifyAnswers) ? qualifyAnswers : {}
+    marketingOptIn: false
   };
 
-  // Mirror wills: include partner
   if(payload.product === 'mirror'){
     const partnerFull = (getVal('p-first') + ' ' + getVal('p-last')).trim();
     if(partnerFull){
       payload.partner = {
         fullName: partnerFull,
-        address: buildTestatorAddress(), // assume shared address
+        address: buildTestatorAddress(),
         dob: getVal('p-dob')
       };
     }
   }
 
-  // Pay-first: if the page was opened from the onboarding email, forward the
-  // pre-paid ref so the Worker merges this questionnaire into the existing
-  // paid lead instead of creating a new one.
   const paidRef = getPaidRefFromUrl();
   if(paidRef){ payload.ref = paidRef; }
 
@@ -1332,30 +1309,24 @@ function submitForm(){
     const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
     if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Processing…'; }
 
-    // Fire Google Ads conversion (best-effort)
     try {
       if(typeof gtag === 'function'){
         gtag('event', 'conversion', {'send_to': 'AW-17990502106', 'value': 1.0, 'currency': 'GBP'});
       }
     } catch(e) {}
 
-    // Silent failsafe: also send the legacy flat payload to Formspree so leads aren't
-    // lost if the Worker is temporarily unavailable on day 1.
     fireLegacyBackup();
 
-    // Primary path: Worker → structured checkoutUrl with client_reference_id
     const workerPayload = buildWorkerPayload();
     submitToWorker(workerPayload);
   } catch(err) {
     console.error('submitForm error:', err);
     if(isPayFirst){
-      // NEVER redirect a paid customer to Stripe — they've already paid.
       showFormError('Sorry — something went wrong submitting your answers. Please try again, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
       const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
       return;
     }
-    // Questionnaire-first: safe to fall back to Stripe
     redirectToStripe();
   }
 }
@@ -1373,12 +1344,6 @@ function fireLegacyBackup(){
       if(el.type === 'radio' || el.type === 'checkbox'){ if(el.checked) legacy[key] = el.value; }
       else if(el.value != null && el.value !== ''){ legacy[key] = el.value; }
     });
-    // Pre-qualifying answers — flatten as qualify_<key>=value so Formspree captures them
-    try {
-      if(typeof qualifyAnswers === 'object' && qualifyAnswers){
-        Object.keys(qualifyAnswers).forEach(function(k){ legacy['qualify_' + k] = qualifyAnswers[k]; });
-      }
-    } catch(e) {}
     const opts = {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
@@ -1393,12 +1358,9 @@ function fireLegacyBackup(){
 }
 
 function submitToWorker(payload){
-  // In the pay-first flow we've ALREADY been paid, so never fall back to
-  // Stripe — that would charge the customer a second time.
   const isPayFirst = !!payload.ref;
   const fallbackUrl = stripeUrlForSelection();
 
-  // If Worker endpoint isn't set (e.g. preview), fall back immediately
   if(!WORKER_ENDPOINT || WORKER_ENDPOINT.indexOf('<') !== -1){
     if(isPayFirst){
       showFormError('Sorry — our intake service is not reachable. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
@@ -1410,8 +1372,6 @@ function submitToWorker(payload){
     return;
   }
 
-  // Timeout: if Worker takes >6s, fall back to static Stripe URL so the user isn't stuck.
-  // Pay-first customers NEVER go to Stripe — show an inline error instead.
   const timeoutId = setTimeout(function(){
     console.warn('Worker timeout');
     if(isPayFirst){
@@ -1435,8 +1395,6 @@ function submitToWorker(payload){
     try { if(data && data.ref){ sessionStorage.setItem('cl_ref', data.ref); } } catch(e) {}
 
     if(isPayFirst){
-      // Pay-first: Worker has started PDF generation. Show the confirmation
-      // step, which already reads as "thank you, we have your answers".
       showStep('confirm');
       return;
     }
@@ -1449,8 +1407,6 @@ function submitToWorker(payload){
     clearTimeout(timeoutId);
     console.error('Worker request failed:', err);
     if(isPayFirst){
-      // No fallback: customer has already paid. Show an inline error rather
-      // than sending them back to Stripe.
       showFormError('Sorry — we could not save your answers just now. Please try again in a moment, or reply to your confirmation email and we will sort it manually. Your payment has been received.');
       const submitBtn = document.getElementById('btn-submit') || document.querySelector('.btn-submit');
       if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = 'Submit Questionnaire →'; }
@@ -1461,7 +1417,7 @@ function submitToWorker(payload){
 }
 </script>
 
-<!-- Chat widget intentionally omitted on form pages: ClearLegacy is fully automated with no human advisors, and the widget eats mobile screen real estate next to the cookie banner. -->
+<!-- Chat widget intentionally omitted on form pages: ClearLegacy is fully automated. -->
 <!-- Cookie Consent -->
 <style>
 #cl-cookie{position:fixed;bottom:0;left:0;right:0;background:#1e293b;color:#e2e8f0;padding:12px 20px;z-index:9999;align-items:center;justify-content:space-between;gap:14px;font-family:Inter,sans-serif;font-size:14px;border-top:1px solid #334155;line-height:1.4}
@@ -1486,7 +1442,7 @@ body.cl-cookie-visible{padding-bottom:64px}
   }
   reserve();
   window.addEventListener('load', reserve);
-  window.addEventListener('resize', reserve);   /* mobile keyboard open/close + rotate */
+  window.addEventListener('resize', reserve);
   setTimeout(reserve, 400);
 })();
 </script>
@@ -1536,11 +1492,7 @@ body.cl-cookie-visible{padding-bottom:64px}
   </script>
 
 <script>
-/* Ideal Postcodes postcode lookup
- * API key: client-side, domain-restricted in Ideal Postcodes dashboard.
- * Pricing: £4 per 1,000 lookups, pay-as-you-go, no monthly minimum.
- * Docs: https://ideal-postcodes.co.uk/documentation/postcodes
- */
+/* Ideal Postcodes postcode lookup */
 (function(){
   const API_KEY = 'ak_molx208w5rESga01CEh2GX4VFbRIx';
   const ENDPOINT = 'https://api.ideal-postcodes.co.uk/v1/postcodes/';
@@ -1564,7 +1516,6 @@ body.cl-cookie-visible{padding-bottom:64px}
       const url = ENDPOINT + encodeURIComponent(postcode) + '?api_key=' + API_KEY;
       const resp = await fetch(url);
       if (!resp.ok) {
-        const txt = await resp.text();
         if (resp.status === 404) {
           status.textContent = 'No addresses found for that postcode.';
         } else if (resp.status === 401 || resp.status === 403) {
@@ -1608,7 +1559,6 @@ body.cl-cookie-visible{padding-bottom:64px}
     }
   };
 
-  // Allow Enter key in postcode fields to trigger lookup
   document.addEventListener('DOMContentLoaded', function(){
     ['f-post','prop-post'].forEach(function(id){
       const el = document.getElementById(id);
@@ -1627,9 +1577,7 @@ body.cl-cookie-visible{padding-bottom:64px}
 
 
 <script>
-/* Self-installing postcode lookup UI — companion to Ideal Postcodes JS above.
-   Wraps plain postcode fields with a Find address button + dropdown + status.
-   Idempotent and safe — re-renders nothing if already installed. */
+/* Self-installing postcode lookup UI */
 (function(){
   if (typeof window.clFindAddress !== 'function') return;
   if (!document.getElementById('cl-postcode-css')) {
@@ -1671,7 +1619,6 @@ body.cl-cookie-visible{padding-bottom:64px}
     });
   }
   function run() { installs.forEach(install); }
-  // Expose for dynamic property additions
   window.clInstallPostcodeOn = install;
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run);
@@ -1685,24 +1632,20 @@ body.cl-cookie-visible{padding-bottom:64px}
 <script id="cl-funnel-events">
 /* ClearLegacy — upper-funnel events for Smart Bidding signals.
    Fires:
-     - view_item       when user reaches the final step (Step 7)
-     - begin_checkout  when user clicks the Pay/Submit button
-   Both use transport:'beacon' so they survive the Stripe redirect. */
+     - view_item       when user reaches the final step (step-4 review)
+     - begin_checkout  when user clicks the Pay/Submit button */
 (function(){
   if (typeof window.gtag !== 'function') return;
   var fired = { view_item: false, begin_checkout: false };
 
-  // Try to read the selected pricing tier; fall back to £99 (mid-tier average)
   function selectedTier() {
-    // Look for a checked radio or selected option whose value/text mentions a tier
     var inputs = document.querySelectorAll('input[type=radio]:checked, input[type=hidden]');
     for (var i = 0; i < inputs.length; i++) {
       var v = (inputs[i].value || '').toLowerCase();
-      if (v.indexOf('comprehensive') >= 0 || v === '149') return { id: 'comprehensive', name: 'Comprehensive Will', price: 149 };
-      if (v.indexOf('mirror') >= 0 || v === '99')        return { id: 'mirror',        name: 'Mirror Wills',       price: 99  };
-      if (v.indexOf('single') >= 0 || v === '69')         return { id: 'single',        name: 'Single Will',        price: 69  };
+      if (v.indexOf('mirror') >= 0 || v === '99') return { id: 'mirror', name: 'Mirror Wills', price: 99 };
+      if (v.indexOf('single') >= 0 || v === '69') return { id: 'single', name: 'Single Will', price: 69 };
     }
-    return { id: 'unknown', name: 'Will writing service', price: 99 };
+    return { id: 'single', name: 'Single Will', price: 69 };
   }
 
   function fire(eventName) {
@@ -1717,7 +1660,6 @@ body.cl-cookie-visible{padding-bottom:64px}
     };
     try {
       window.gtag('event', eventName, payload);
-      // Mirror to Meta Pixel
       if (typeof window.fbq === 'function') {
         var fbqEvent = eventName === 'view_item' ? 'ViewContent' : 'InitiateCheckout';
         var fbqPayload = {
@@ -1730,7 +1672,6 @@ body.cl-cookie-visible{padding-bottom:64px}
         if (eventName === 'begin_checkout') fbqPayload.num_items = 1;
         window.fbq('track', fbqEvent, fbqPayload);
       }
-      // Mirror to Microsoft UET (event names match GA4 for consistency)
       if (window.uetq && typeof window.uetq.push === 'function') {
         window.uetq.push('event', eventName, {
           revenue_value: t.price,
@@ -1743,38 +1684,25 @@ body.cl-cookie-visible{padding-bottom:64px}
     }
   }
 
-  // --- view_item: detect when Step 7 (final step) becomes active ---
-  // Common patterns: <div class="step active"> or [data-step="7"].active or <section class="step-7 active">
   function checkActiveStep() {
-    // 1) Look for explicit step-7 indicators
-    var explicit = document.querySelector('.step-7.active, [data-step="7"].active, .step.active.step-7');
-    if (explicit) { fire('view_item'); return; }
-    // 2) Look for any "step" element that's active AND is the last one
-    var allSteps = document.querySelectorAll('.step, [data-step], .form-step');
-    if (allSteps.length === 0) return;
-    var last = allSteps[allSteps.length - 1];
-    if (last && last.classList && last.classList.contains('active')) {
-      fire('view_item');
-    }
-    // 3) Look for textual hints of the final step in the visible heading
-    var heading = document.querySelector('.step.active h1, .step.active h2, .step.active .step-title, .form-step.active h2');
+    var s4 = document.getElementById('step-4');
+    if (s4 && s4.classList.contains('active')) { fire('view_item'); return; }
+    var heading = document.querySelector('.step.active h2');
     if (heading) {
       var txt = (heading.textContent || '').toLowerCase();
-      if (txt.indexOf('review') >= 0 || txt.indexOf('payment') >= 0 || txt.indexOf('checkout') >= 0 || txt.indexOf('confirm') >= 0) {
+      if (txt.indexOf('review') >= 0 || txt.indexOf('confirm') >= 0) {
         fire('view_item');
       }
     }
   }
 
-  // --- begin_checkout: detect Pay button click ---
   function attachPayListener() {
     document.addEventListener('click', function(e) {
       var el = e.target;
-      // Walk up to find the clicked button/link
       while (el && el !== document.body) {
         if (el.tagName === 'BUTTON' || el.tagName === 'A' || (el.getAttribute && el.getAttribute('role') === 'button')) {
           var label = ((el.textContent || '') + ' ' + (el.getAttribute('aria-label') || '') + ' ' + (el.id || '') + ' ' + (el.className || '')).toLowerCase();
-          if (label.indexOf('pay') >= 0 || label.indexOf('checkout') >= 0 || label.indexOf('submit') >= 0 || label.indexOf('continue to payment') >= 0) {
+          if (label.indexOf('pay') >= 0 || label.indexOf('checkout') >= 0 || label.indexOf('submit') >= 0 || label.indexOf('get my will') >= 0) {
             fire('begin_checkout');
             return;
           }
@@ -1787,10 +1715,7 @@ body.cl-cookie-visible{padding-bottom:64px}
   function init() {
     checkActiveStep();
     attachPayListener();
-    // Watch for class/attribute changes (step navigation)
-    var observer = new MutationObserver(function(mutations) {
-      checkActiveStep();
-    });
+    var observer = new MutationObserver(function() { checkActiveStep(); });
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ['class', 'data-step'],
@@ -1824,15 +1749,13 @@ body.cl-cookie-visible{padding-bottom:64px}
   document.addEventListener('mouseout', function(e) {
     if (shown) return;
     if (e.clientY < 5 && e.relatedTarget == null) {
-      // Only show if user is partway through the form (step 2+)
       var active = document.querySelector('.step.active');
       if (active) {
         var id = active.id || '';
         var stepNum = parseInt(id.replace('step-',''), 10);
-        if (stepNum >= 2 && stepNum <= 7) {
+        if (stepNum >= 2 && stepNum <= 4) {
           document.getElementById('exit-popup').style.display = 'flex';
           shown = true;
-          // Trigger save + resume email
           if (typeof saveProgress === 'function') try { saveProgress(true); } catch(e){}
         }
       }
@@ -1850,7 +1773,6 @@ body.cl-cookie-visible{padding-bottom:64px}
   var emailSent = false;
   var lastSavedStep = 0;
 
-  // Check if this is a resume visit
   var resumeToken = new URLSearchParams(window.location.search).get('resume');
   if (resumeToken) {
     fetch('https://api.clearlegacy.co.uk/api/resume?token=' + encodeURIComponent(resumeToken), { cache: 'no-store' })
@@ -1864,7 +1786,6 @@ body.cl-cookie-visible{padding-bottom:64px}
   }
 
   function restoreForm(formData, step) {
-    // Restore input values
     if (formData.fields) {
       Object.keys(formData.fields).forEach(function(id) {
         var el = document.getElementById(id);
@@ -1873,32 +1794,29 @@ body.cl-cookie-visible{padding-bottom:64px}
         }
       });
     }
-    // Restore radios
     if (formData.radios) {
       Object.keys(formData.radios).forEach(function(name) {
         var radio = document.querySelector('input[name="' + name + '"][value="' + formData.radios[name] + '"]');
         if (radio) {
           radio.checked = true;
-          // Trigger onchange to show/hide sections
           if (radio.onchange) radio.onchange();
           var evt = new Event('change', {bubbles:true});
           radio.dispatchEvent(evt);
         }
       });
     }
-    // Restore checkboxes
     if (formData.checkboxes) {
       Object.keys(formData.checkboxes).forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.checked = formData.checkboxes[id];
       });
     }
-    // Jump to saved step
+    // Clamp restored step to current totalSteps so old saves don't break
     if (step > 1 && typeof showStep === 'function') {
-      currentStep = step;
-      showStep(step);
+      var safeStep = Math.min(step, 4);
+      currentStep = safeStep;
+      showStep(safeStep);
     }
-    // Show a small banner
     var wrap = document.querySelector('.form-wrap');
     if (wrap) {
       var banner = document.createElement('div');
@@ -1925,7 +1843,6 @@ body.cl-cookie-visible{padding-bottom:64px}
       }
     });
 
-    // Detect product
     var productRadio = document.querySelector('input[name="will-type"]:checked');
     if (productRadio) product = productRadio.value;
     else if (sessionStorage.getItem('cl_product')) product = sessionStorage.getItem('cl_product');
@@ -1944,7 +1861,7 @@ body.cl-cookie-visible{padding-bottom:64px}
   function saveProgress(triggerEmail) {
     var email = (document.getElementById('f-email') || {}).value || '';
     var firstName = (document.getElementById('f-first') || {}).value || '';
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return; // can't save without email
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return;
 
     var step = getCurrentStep();
     var formData = captureFormState();
@@ -1977,34 +1894,27 @@ body.cl-cookie-visible{padding-bottom:64px}
     }).catch(function(e){ console.warn('Resume email failed:', e); });
   }
 
-  // Auto-save after each step advance (hook into nextStep)
   var _origNextStep = window.nextStep;
   window.nextStep = function(n) {
     _origNextStep(n);
-    // Save after step 1 (when we have email) and on every subsequent step
     if (n >= 1) {
       setTimeout(function(){ saveProgress(false); }, 500);
     }
   };
 
-  // Send resume email on abandonment signals (only if step 2+)
-  // 1. Tab visibility change (user switches away)
   document.addEventListener('visibilitychange', function(){
     if (document.visibilityState === 'hidden' && getCurrentStep() >= 2) {
       saveProgress(true);
     }
   });
 
-  // 2. Before unload (tab close / navigate away)
   window.addEventListener('beforeunload', function(){
     if (getCurrentStep() >= 2) {
-      // Use sendBeacon for reliability
       var email = (document.getElementById('f-email') || {}).value || '';
       var firstName = (document.getElementById('f-first') || {}).value || '';
       if (email && savedToken && !emailSent) {
         navigator.sendBeacon(EMAIL_URL, JSON.stringify({ token: savedToken }));
       } else if (email && !savedToken) {
-        // Last-ditch save via sendBeacon
         var formData = captureFormState();
         navigator.sendBeacon(SAVE_URL, JSON.stringify({ email: email, firstName: firstName, step: getCurrentStep(), formData: formData }));
       }
